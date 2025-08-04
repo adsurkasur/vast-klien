@@ -53,44 +53,50 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
 
       {/* Main Action Cards */}
       <div className="px-6 space-y-4">
-        <Button
+        <div
           onClick={() => onNavigate('tips')}
-          className="w-full accent-tips text-foreground border-0 h-auto py-6 spring-tap"
+          className="card-elevated p-6 spring-tap cursor-pointer hover:shadow-card transition-all duration-200 bg-gradient-to-r from-pink-50 to-rose-50 border-l-4 border-pink-400"
         >
           <div className="flex items-center space-x-4">
-            <Heart size={24} />
-            <div className="text-left">
-              <div className="font-semibold">Healthy Tips</div>
-              <div className="text-sm opacity-80">Wellness advice for you</div>
+            <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center">
+              <Heart className="text-pink-600" size={24} />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold text-foreground mb-1">Healthy Tips</h3>
+              <p className="text-sm text-muted-foreground">Wellness advice for your cycle</p>
             </div>
           </div>
-        </Button>
+        </div>
 
-        <Button
+        <div
           onClick={() => onNavigate('calendar')}
-          className="w-full accent-calendar text-foreground border-0 h-auto py-6 spring-tap"
+          className="card-elevated p-6 spring-tap cursor-pointer hover:shadow-card transition-all duration-200 bg-gradient-to-r from-purple-50 to-indigo-50 border-l-4 border-purple-400"
         >
           <div className="flex items-center space-x-4">
-            <Calendar size={24} />
-            <div className="text-left">
-              <div className="font-semibold">My Calendar</div>
-              <div className="text-sm opacity-80">Track your cycle</div>
+            <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+              <Calendar className="text-purple-600" size={24} />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold text-foreground mb-1">My Calendar</h3>
+              <p className="text-sm text-muted-foreground">Track your cycle and symptoms</p>
             </div>
           </div>
-        </Button>
+        </div>
 
-        <Button
+        <div
           onClick={() => onNavigate('community')}
-          className="w-full accent-community text-foreground border-0 h-auto py-6 spring-tap"
+          className="card-elevated p-6 spring-tap cursor-pointer hover:shadow-card transition-all duration-200 bg-gradient-to-r from-blue-50 to-cyan-50 border-l-4 border-blue-400"
         >
           <div className="flex items-center space-x-4">
-            <Users size={24} />
-            <div className="text-left">
-              <div className="font-semibold">My Community</div>
-              <div className="text-sm opacity-80">Connect with others</div>
+            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+              <Users className="text-blue-600" size={24} />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold text-foreground mb-1">My Community</h3>
+              <p className="text-sm text-muted-foreground">Connect with other women</p>
             </div>
           </div>
-        </Button>
+        </div>
       </div>
     </div>
   );
