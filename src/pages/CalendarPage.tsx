@@ -1,26 +1,271 @@
-import React, { useState } from 'react';
-import { PeriodCalendar } from '@/components/ui/PeriodCalendar';
+import React, { useState, useEffect } from 'react';
 import { SymptomsModal } from '@/components/ui/SymptomsModal';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/button';
-import { Bell, BellOff, BarChart3, Heart, Calendar, Clock } from 'lucide-react';
+import { Bell, BellOff, BarChart3, Heart, Calendar, Clock, TrendingUp, Droplets, ChevronLeft, ChevronRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+interface CycleData {
+  periodDays: Array<{
+    date: string;
+    isPeriod: boolean;
+    symptoms: string[];
+    flow?: 'light' | 'medium' | 'heavy';
+    mood?: string[];
+    notes?: string;
+  }>;
+  cycleHistory: Array<{
+    startDate: string;
+    endDate: string;
+    cycleLength: number;
+  }>;
+  averageCycleLength: number;
+  lastPeriodStart?: string;
+  nextPeriodPrediction?: string;
+}
 
 export const CalendarPage = () => {
   const [isSymptomModalOpen, setIsSymptomModalOpen] = useState(false);
   const [selectedDateForSymptoms, setSelectedDateForSymptoms] = useState<string>('');
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-  const [nextPeriodDays, setNextPeriodDays] = useState(7); // Days until next period
   const [selectedCalendarDate, setSelectedCalendarDate] = useState<string | null>(null);
+  const [cycleData, setCycleData] = useState<CycleData>({
+    periodDays: [],
+    cycleHistory: [],
+    averageCycleLength: 28
+  });
+  const [showReports, setShowReports] = useState(false);
+
+  // Calendar state
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  // Calendar constants
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  // Load cycle data from localStorage on startup
+  useEffect(() => {
+    const savedCycleData = localStorage.getItem('cycleData');
+    if (savedCycleData) {
+      try {
+        const parsedData = JSON.parse(savedCycleData);
+        setCycleData(parsedData);
+      } catch (error) {
+        console.error('Error loading cycle data:', error);
+      }
+    }
+  }, []);
+
+  // Load notifications setting from localStorage
+  useEffect(() => {
+    const savedNotifications = localStorage.getItem('notificationsEnabled');
+    if (savedNotifications !== null) {
+      setNotificationsEnabled(JSON.parse(savedNotifications));
+    }
+  }, []);
+
+  // Save notifications setting to localStorage
+  useEffect(() => {
+    localStorage.setItem('notificationsEnabled', JSON.stringify(notificationsEnabled));
+  }, [notificationsEnabled]);
 
   const handleOpenSymptoms = (date: string) => {
     setSelectedDateForSymptoms(date);
     setIsSymptomModalOpen(true);
   };
 
-  const handleTogglePeriod = (date: string) => {
-    // This will be handled by the PeriodCalendar component internally
-    console.log('Toggle period for date:', date);
+  const calculateNextPeriodDays = () => {
+    if (!cycleData.lastPeriodStart) return null;
+    
+    const lastPeriod = new Date(cycleData.lastPeriodStart);
+    const nextPeriod = new Date(lastPeriod);
+    nextPeriod.setDate(nextPeriod.getDate() + cycleData.averageCycleLength);
+    
+    const today = new Date();
+    const diffTime = nextPeriod.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    return diffDays;
   };
+
+  const updatePeriodData = (dateStr: string, isPeriodToggle: boolean = true) => {
+    setCycleData(prev => {
+      const existing = prev.periodDays.find(day => day.date === dateStr);
+      let newPeriodDays;
+      
+      if (existing) {
+        newPeriodDays = prev.periodDays.map(day => 
+          day.date === dateStr 
+            ? { ...day, isPeriod: isPeriodToggle ? !day.isPeriod : true }
+            : day
+        );
+      } else {
+        newPeriodDays = [...prev.periodDays, { 
+          date: dateStr, 
+          isPeriod: true, 
+          symptoms: [],
+          flow: 'medium' as const
+        }];
+      }
+
+      // Calculate cycle statistics
+      const periodStarts = newPeriodDays
+        .filter(day => day.isPeriod)
+        .map(day => new Date(day.date))
+        .sort((a, b) => a.getTime() - b.getTime());
+
+      const cycleHistory = [];
+      for (let i = 1; i < periodStarts.length; i++) {
+        const cycleLength = Math.floor((periodStarts[i].getTime() - periodStarts[i-1].getTime()) / (1000 * 60 * 60 * 24));
+        cycleHistory.push({
+          startDate: periodStarts[i-1].toISOString().split('T')[0],
+          endDate: periodStarts[i].toISOString().split('T')[0],
+          cycleLength
+        });
+      }
+
+      const averageCycleLength = cycleHistory.length > 0 
+        ? Math.round(cycleHistory.reduce((sum, cycle) => sum + cycle.cycleLength, 0) / cycleHistory.length)
+        : 28;
+
+      const updatedData = {
+        ...prev,
+        periodDays: newPeriodDays,
+        cycleHistory,
+        averageCycleLength,
+        lastPeriodStart: periodStarts.length > 0 ? periodStarts[periodStarts.length - 1].toISOString().split('T')[0] : undefined
+      };
+
+      // Save to localStorage
+      localStorage.setItem('cycleData', JSON.stringify(updatedData));
+
+      return updatedData;
+    });
+  };
+
+  const handleQuickRecordToday = () => {
+    const today = new Date().toISOString().split('T')[0];
+    setSelectedCalendarDate(today);
+    updatePeriodData(today, true);
+  };
+
+  const togglePeriodDay = (dateStr: string) => {
+    updatePeriodData(dateStr, true);
+  };
+
+  const handleLogSymptomsToday = () => {
+    const today = new Date().toISOString().split('T')[0];
+    setSelectedCalendarDate(today);
+    setSelectedDateForSymptoms(today);
+    setIsSymptomModalOpen(true);
+  };
+
+  // Calendar navigation
+  const navigateMonth = (direction: 'prev' | 'next') => {
+    setCurrentDate(prev => {
+      const newDate = new Date(prev);
+      if (direction === 'prev') {
+        newDate.setMonth(prev.getMonth() - 1);
+      } else {
+        newDate.setMonth(prev.getMonth() + 1);
+      }
+      return newDate;
+    });
+  };
+
+  // Calendar helper functions
+  const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+  const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
+
+  const formatDateString = (day: number) => {
+    return `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  };
+
+  const isPeriodDay = (dateStr: string) => {
+    return cycleData.periodDays.find(day => day.date === dateStr)?.isPeriod || false;
+  };
+
+  const hasSymptoms = (dateStr: string) => {
+    const day = cycleData.periodDays.find(day => day.date === dateStr);
+    return day && day.symptoms.length > 0;
+  };
+
+  const renderCalendarDays = () => {
+    const days = [];
+    
+    // Empty cells for days before the first day of the month
+    for (let i = 0; i < firstDayOfMonth; i++) {
+      days.push(<div key={`empty-${i}`} className="p-3"></div>);
+    }
+    
+    // Days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      const dateStr = formatDateString(day);
+      const isSelected = selectedCalendarDate === dateStr;
+      const isPeriod = isPeriodDay(dateStr);
+      const hasSymptom = hasSymptoms(dateStr);
+      const dayData = cycleData.periodDays.find(d => d.date === dateStr);
+      const isToday = dateStr === new Date().toISOString().split('T')[0];
+      
+      days.push(
+        <button
+          key={day}
+          onClick={() => {
+            if (selectedCalendarDate === dateStr) {
+              // If clicking the same date twice, toggle period
+              togglePeriodDay(dateStr);
+            } else {
+              // First click: select the date
+              setSelectedCalendarDate(dateStr);
+            }
+          }}
+          onDoubleClick={() => handleOpenSymptoms(dateStr)}
+          className={cn(
+            "p-2 text-sm font-medium rounded-xl transition-all duration-200 spring-tap relative min-h-[40px] flex flex-col items-center justify-center",
+            "hover:bg-accent-100 border-2 border-transparent",
+            // Today styling (gold/yellow theme for better distinction)
+            isToday && !isSelected && "border-yellow-400 bg-yellow-50 text-yellow-800 shadow-sm",
+            // Selected day styling (blue theme for better distinction) 
+            isSelected && !isPeriod && "border-blue-500 bg-blue-100 text-blue-800 shadow-md ring-2 ring-blue-200",
+            isSelected && isPeriod && "border-red-500 bg-red-500 text-white shadow-lg ring-2 ring-red-300",
+            // Period day styling (not selected)
+            isPeriod && !isSelected && "bg-red-100 text-red-800 border-red-300",
+            // Symptom day styling (not period, not selected)
+            hasSymptom && !isPeriod && !isSelected && "bg-blue-50 border-blue-200 text-blue-800"
+          )}
+        >
+          <span className="text-center leading-none">{day}</span>
+          {/* Visual indicators */}
+          <div className="flex space-x-1 mt-1">
+            {isPeriod && (
+              <div className={cn(
+                "w-1.5 h-1.5 rounded-full",
+                dayData?.flow === 'light' && "bg-pink-400",
+                dayData?.flow === 'medium' && "bg-red-500",
+                dayData?.flow === 'heavy' && "bg-red-700",
+                !dayData?.flow && "bg-red-500",
+                // Make dots white when selected
+                isSelected && "bg-white"
+              )} />
+            )}
+            {hasSymptom && !isPeriod && (
+              <div className={cn(
+                "w-1.5 h-1.5 rounded-full bg-blue-500",
+                isSelected && "bg-white"
+              )} />
+            )}
+          </div>
+        </button>
+      );
+    }
+    
+    return days;
+  };
+
+  const nextPeriodDays = calculateNextPeriodDays();
 
   return (
     <div className="space-y-6 pb-32">
@@ -30,15 +275,76 @@ export const CalendarPage = () => {
       {/* Custom Calendar for Period Tracking */}
       <div className="px-6">
         <div className="card-soft p-6">
-          <div className="flex items-center space-x-2 mb-4">
-            <Calendar className="text-accent-600" size={20} />
-            <h2 className="text-lg font-semibold text-foreground">Period Tracker</h2>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center space-x-2">
+              <Calendar className="text-accent-600" size={20} />
+              <h2 className="text-lg font-semibold text-foreground">Period Tracker</h2>
+            </div>
+            <div className="text-xs text-muted-foreground text-right">
+              <p>Click dates to track periods</p>
+              <p>Click twice to toggle</p>
+            </div>
           </div>
-          <PeriodCalendar 
-            onOpenSymptoms={handleOpenSymptoms}
-            onTogglePeriod={handleTogglePeriod}
-            selectedDate={selectedCalendarDate}
-          />
+          <div className="space-y-6">
+            {/* Calendar Header */}
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-foreground">
+                {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+              </h3>
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigateMonth('prev')}
+                  className="h-8 w-8 p-0 hover:bg-primary-muted"
+                >
+                  <ChevronLeft size={16} />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigateMonth('next')}
+                  className="h-8 w-8 p-0 hover:bg-primary-muted"
+                >
+                  <ChevronRight size={16} />
+                </Button>
+              </div>
+            </div>
+
+            {/* Day Names */}
+            <div className="grid grid-cols-7 gap-1">
+              {dayNames.map(day => (
+                <div key={day} className="p-3 text-xs font-medium text-muted-foreground text-center">
+                  {day}
+                </div>
+              ))}
+            </div>
+
+            {/* Calendar Grid */}
+            <div className="grid grid-cols-7 gap-1">
+              {renderCalendarDays()}
+            </div>
+
+            {/* Legend */}
+            <div className="flex flex-wrap gap-4 text-xs text-muted-foreground justify-center pt-4 border-t border-accent-100">
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 bg-red-100 border border-red-300 rounded"></div>
+                <span>Period Day</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 bg-blue-50 border border-blue-200 rounded"></div>
+                <span>Symptoms</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 bg-yellow-50 border border-yellow-400 rounded"></div>
+                <span>Today</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 bg-blue-100 border-2 border-blue-500 rounded"></div>
+                <span>Selected</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -49,10 +355,20 @@ export const CalendarPage = () => {
             <Clock className="text-accent-600" size={20} />
             <div>
               <p className="font-semibold text-foreground">
-                {nextPeriodDays <= 3 ? 'Period starting soon!' : 'Next Period'}
+                {nextPeriodDays === null 
+                  ? 'Start tracking to see predictions'
+                  : nextPeriodDays <= 3 
+                    ? 'Period starting soon!' 
+                    : 'Next Period'
+                }
               </p>
               <p className="text-sm text-muted-foreground">
-                Expected in {nextPeriodDays} day{nextPeriodDays !== 1 ? 's' : ''}
+                {nextPeriodDays === null 
+                  ? 'Mark your period days to get cycle predictions'
+                  : nextPeriodDays <= 0
+                    ? 'Expected now or overdue'
+                    : `Expected in ${nextPeriodDays} day${nextPeriodDays !== 1 ? 's' : ''}`
+                }
               </p>
             </div>
           </div>
@@ -63,17 +379,66 @@ export const CalendarPage = () => {
       <div className="px-6">
         <Button
           className="w-full bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white h-12 spring-tap shadow-lg"
-          onClick={() => {
-            // Handle record period
-            console.log('Recording period...');
-          }}
+          onClick={handleQuickRecordToday}
         >
           <div className="flex items-center space-x-2">
             <Heart size={20} />
-            <span className="font-semibold">Record Period</span>
+            <span className="font-semibold">Quick Record Today</span>
           </div>
         </Button>
       </div>
+
+      {/* Reports Section */}
+      {showReports && (
+        <div className="px-6">
+          <div className="card-soft p-6 space-y-4">
+            <div className="flex items-center space-x-2 mb-4">
+              <TrendingUp className="text-accent-600" size={20} />
+              <h3 className="text-lg font-semibold text-foreground">Cycle Statistics</h3>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div className="card-elevated p-4 text-center">
+                <div className="text-2xl font-bold text-accent-600">
+                  {cycleData.averageCycleLength}
+                </div>
+                <div className="text-sm text-muted-foreground">Average Cycle Length</div>
+              </div>
+              
+              <div className="card-elevated p-4 text-center">
+                <div className="text-2xl font-bold text-accent-600">
+                  {cycleData.cycleHistory.length}
+                </div>
+                <div className="text-sm text-muted-foreground">Cycles Tracked</div>
+              </div>
+            </div>
+
+            {cycleData.cycleHistory.length > 0 && (
+              <div className="space-y-2">
+                <h4 className="font-medium text-foreground">Recent Cycles</h4>
+                {cycleData.cycleHistory.slice(-3).reverse().map((cycle, index) => (
+                  <div key={index} className="flex justify-between items-center p-2 bg-accent-50 rounded-lg">
+                    <span className="text-sm text-foreground">
+                      {new Date(cycle.startDate).toLocaleDateString()}
+                    </span>
+                    <span className="text-sm font-medium text-accent-600">
+                      {cycle.cycleLength} days
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <Button
+              variant="outline"
+              onClick={() => setShowReports(false)}
+              className="w-full"
+            >
+              Close Reports
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Bottom Action Buttons */}
       <div className="px-6">
@@ -96,22 +461,21 @@ export const CalendarPage = () => {
           <Button
             variant="outline"
             className="w-full h-16 spring-tap flex flex-col items-center justify-center space-y-1 hover:bg-accent-50"
-            onClick={() => {
-              // Handle report and graph
-              console.log('Opening reports...');
-            }}
+            onClick={() => setShowReports(!showReports)}
           >
             <BarChart3 className="text-accent-600" size={20} />
-            <span className="text-xs font-medium">Reports</span>
+            <span className="text-xs font-medium">
+              {showReports ? 'Hide Reports' : 'View Reports'}
+            </span>
           </Button>
           
           <Button
             variant="outline"
             className="w-full h-16 spring-tap flex flex-col items-center justify-center space-y-1 hover:bg-accent-50"
-            onClick={() => setIsSymptomModalOpen(true)}
+            onClick={handleLogSymptomsToday}
           >
             <Heart className="text-accent-600" size={20} />
-            <span className="text-xs font-medium">Symptoms</span>
+            <span className="text-xs font-medium">Log Symptoms</span>
           </Button>
         </div>
       </div>
