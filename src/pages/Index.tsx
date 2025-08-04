@@ -6,6 +6,7 @@ import { CalendarPage } from './CalendarPage';
 import { CommunityPage } from './CommunityPage';
 import { ProfilePage } from './ProfilePage';
 import { ContactPage } from './ContactPage';
+import { TrolleyPage } from './TrolleyPage';
 
 const Index = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home');
@@ -14,16 +15,18 @@ const Index = () => {
     switch (currentPage) {
       case 'home':
         return <HomePage onNavigate={setCurrentPage} />;
+      case 'profile':
+        return <ProfilePage />;
+      case 'contact':
+        return <ContactPage />;
       case 'tips':
         return <HealthyTipsPage />;
       case 'calendar':
         return <CalendarPage />;
       case 'community':
         return <CommunityPage />;
-      case 'profile':
-        return <ProfilePage />;
-      case 'contact':
-        return <ContactPage />;
+      case 'trolley':
+        return <TrolleyPage />;
       default:
         return <HomePage onNavigate={setCurrentPage} />;
     }

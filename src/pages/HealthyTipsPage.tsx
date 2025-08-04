@@ -1,5 +1,6 @@
 import React from 'react';
 import { Heart, Droplets, Moon, Activity } from 'lucide-react';
+import { PageHeader } from '../components/layout/PageHeader';
 
 const tipCategories = [
   {
@@ -48,14 +49,11 @@ const tipCategories = [
   }
 ];
 
-export const HealthyTipsPage: React.FC = () => {
+export const HealthyTipsPage = () => {
   return (
     <div className="space-y-6 pb-32">
       {/* Header */}
-      <div className="sticky top-0 bg-background/80 backdrop-blur-lg z-10 py-6 px-6 border-b border-card-border">
-        <h1 className="text-2xl font-bold text-foreground text-center">Healthy Tips</h1>
-        <p className="text-muted-foreground text-center mt-1">Wellness guidance for every day</p>
-      </div>
+      <PageHeader title="Healthy Tips" subtitle="Wellness guidance for every day" />
 
       {/* Featured Tip */}
       <div className="px-6">
@@ -75,28 +73,30 @@ export const HealthyTipsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Tip Categories */}
-      <div className="px-6 space-y-6">
-        {tipCategories.map((category) => (
-          <div key={category.id} className="card-soft p-6">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="text-2xl">{category.icon}</div>
-              <h3 className="text-lg font-semibold text-foreground">{category.title}</h3>
+      {/* Tip Categories - 2x2 Grid Layout (wireframe) */}
+      <div className="px-6">
+        <div className="grid grid-cols-2 gap-4">
+          {tipCategories.map((category) => (
+            <div key={category.id} className="card-soft p-4">
+              <div className="flex items-center space-x-2 mb-3">
+                <div className="text-xl">{category.icon}</div>
+                <h3 className="text-sm font-semibold text-foreground">{category.title}</h3>
+              </div>
+              
+              <div className="space-y-2">
+                {category.tips.slice(0, 2).map((tip, index) => (
+                  <div
+                    key={index}
+                    className="flex items-start space-x-2 p-2 bg-white/50 rounded-lg"
+                  >
+                    <div className="w-1.5 h-1.5 bg-primary rounded-full mt-1.5 flex-shrink-0" />
+                    <p className="text-xs text-foreground">{tip}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-            
-            <div className="space-y-3">
-              {category.tips.map((tip, index) => (
-                <div
-                  key={index}
-                  className="flex items-start space-x-3 p-3 bg-white/50 rounded-xl"
-                >
-                  <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
-                  <p className="text-sm text-foreground">{tip}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {/* Quick Actions */}

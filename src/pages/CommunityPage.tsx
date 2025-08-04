@@ -1,131 +1,109 @@
 import React from 'react';
-import { MessageCircle, Users, Heart, TrendingUp } from 'lucide-react';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { Users, MessageCircle, Heart, Share2, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-const communityPosts = [
-  {
-    id: 1,
-    author: 'Sarah M.',
-    time: '2h ago',
-    content: 'Has anyone tried yoga for period cramps? Looking for recommendations!',
-    likes: 24,
-    replies: 8,
-    category: 'Health'
-  },
-  {
-    id: 2,
-    author: 'Emma L.',
-    time: '4h ago',
-    content: 'Sharing my experience with the menstrual cup - happy to answer questions!',
-    likes: 45,
-    replies: 12,
-    category: 'Products'
-  },
-  {
-    id: 3,
-    author: 'Maya K.',
-    time: '6h ago',
-    content: 'Mood swings are hitting hard this cycle. Anyone else feeling this way?',
-    likes: 18,
-    replies: 15,
-    category: 'Support'
-  }
-];
+export const CommunityPage = () => {
+  const communityLinks = [
+    {
+      name: 'Join Our Telegram Group',
+      description: 'Connect with women sharing similar experiences',
+      icon: MessageCircle,
+      url: 'https://t.me/vastcommunity',
+      color: 'bg-blue-100 text-blue-700',
+      members: '2.5k+'
+    },
+    {
+      name: 'Follow on Instagram',
+      description: 'Daily tips and wellness content',
+      icon: Heart,
+      url: 'https://instagram.com/vast.pkm',
+      color: 'bg-pink-100 text-pink-700',
+      members: '1.2k+'
+    },
+    {
+      name: 'Facebook Community',
+      description: 'Share stories and support each other',
+      icon: Users,
+      url: 'https://facebook.com/groups/vastcommunity',
+      color: 'bg-purple-100 text-purple-700',
+      members: '890+'
+    }
+  ];
 
-const communityStats = [
-  { label: 'Active Members', value: '12.5K', icon: Users },
-  { label: 'Posts Today', value: '89', icon: MessageCircle },
-  { label: 'Trending Topics', value: '15', icon: TrendingUp }
-];
-
-export const CommunityPage: React.FC = () => {
   return (
     <div className="space-y-6 pb-32">
-      {/* Header */}
-      <div className="sticky top-0 bg-background/80 backdrop-blur-lg z-10 py-6 px-6 border-b border-card-border">
-        <h1 className="text-2xl font-bold text-foreground text-center">My Community</h1>
-        <p className="text-muted-foreground text-center mt-1">Connect, share, and support</p>
-      </div>
+      {/* Header with Logo and Title */}
+      <PageHeader title="Community" subtitle="Connect with others" />
 
-      {/* Community Stats */}
+      {/* Hero Section */}
       <div className="px-6">
-        <div className="grid grid-cols-3 gap-4">
-          {communityStats.map((stat) => (
-            <div key={stat.label} className="card-soft p-4 text-center">
-              <stat.icon size={20} className="mx-auto mb-2 text-primary" />
-              <div className="text-lg font-semibold text-foreground">{stat.value}</div>
-              <div className="text-xs text-muted-foreground">{stat.label}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Featured Community Section */}
-      <div className="px-6">
-        <div className="card-elevated p-6 accent-community">
-          <h2 className="text-lg font-semibold text-foreground mb-4">💬 Join the Conversation</h2>
-          <p className="text-foreground mb-4">
-            Connect with women worldwide sharing similar experiences. Share tips, ask questions, 
-            and find support in our safe community space.
+        <div className="card-soft p-6 text-center">
+          <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+            <Users className="text-white" size={24} />
+          </div>
+          <h1 className="text-2xl font-bold text-foreground mb-2">
+            Join Our Community
+          </h1>
+          <p className="text-muted-foreground">
+            Connect with thousands of women on their wellness journey. Share experiences, get support, and find inspiration.
           </p>
-          <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl spring-tap">
-            Create New Post
-          </Button>
         </div>
       </div>
 
-      {/* Recent Posts */}
-      <div className="px-6">
-        <h3 className="text-lg font-semibold text-foreground mb-4">Recent Discussions</h3>
-        <div className="space-y-4">
-          {communityPosts.map((post) => (
-            <div key={post.id} className="card-soft p-5 space-y-3">
-              {/* Post Header */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-primary-muted rounded-full flex items-center justify-center">
-                    <span className="text-xs font-medium text-foreground">
-                      {post.author.charAt(0)}
-                    </span>
-                  </div>
-                  <div>
-                    <div className="font-medium text-foreground text-sm">{post.author}</div>
-                    <div className="text-xs text-muted-foreground">{post.time}</div>
+      {/* Community Links */}
+      <div className="px-6 space-y-4">
+        {communityLinks.map((link) => (
+          <div key={link.name} className="card-elevated p-6">
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex items-center space-x-4">
+                <div className={`p-3 rounded-xl ${link.color}`}>
+                  <link.icon size={24} />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-foreground mb-1">{link.name}</h3>
+                  <p className="text-sm text-muted-foreground mb-2">{link.description}</p>
+                  <div className="flex items-center space-x-1">
+                    <Users size={14} className="text-muted-foreground" />
+                    <span className="text-xs text-muted-foreground">{link.members} members</span>
                   </div>
                 </div>
-                <span className="text-xs bg-primary-muted text-foreground px-2 py-1 rounded-lg">
-                  {post.category}
-                </span>
               </div>
-
-              {/* Post Content */}
-              <p className="text-foreground text-sm">{post.content}</p>
-
-              {/* Post Actions */}
-              <div className="flex items-center space-x-4 pt-2">
-                <button className="flex items-center space-x-1 text-muted-foreground hover:text-primary transition-colors spring-tap">
-                  <Heart size={16} />
-                  <span className="text-xs">{post.likes}</span>
-                </button>
-                <button className="flex items-center space-x-1 text-muted-foreground hover:text-primary transition-colors spring-tap">
-                  <MessageCircle size={16} />
-                  <span className="text-xs">{post.replies}</span>
-                </button>
-              </div>
+              <ExternalLink size={20} className="text-muted-foreground" />
             </div>
-          ))}
-        </div>
+
+            <a
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block"
+            >
+              <Button 
+                className="w-full spring-tap"
+                variant="outline"
+              >
+                <Share2 size={16} className="mr-2" />
+                Join Community
+              </Button>
+            </a>
+          </div>
+        ))}
       </div>
 
       {/* Community Guidelines */}
       <div className="px-6">
-        <div className="card-soft p-4 bg-accent-community/30">
-          <h4 className="font-medium text-foreground mb-2">Community Guidelines</h4>
-          <ul className="text-sm text-muted-foreground space-y-1">
-            <li>• Be respectful and supportive</li>
-            <li>• Share experiences, not medical advice</li>
-            <li>• Keep discussions relevant and helpful</li>
-          </ul>
+        <div className="card-soft p-6">
+          <h3 className="font-semibold text-foreground mb-3 flex items-center space-x-2">
+            <Heart className="text-accent-600" size={20} />
+            <span>Community Guidelines</span>
+          </h3>
+          <div className="space-y-2 text-sm text-muted-foreground">
+            <p>• Be respectful and supportive to all members</p>
+            <p>• Share experiences and tips openly</p>
+            <p>• Respect privacy and confidentiality</p>
+            <p>• Report any inappropriate content</p>
+            <p>• Consult healthcare professionals for medical advice</p>
+          </div>
         </div>
       </div>
     </div>

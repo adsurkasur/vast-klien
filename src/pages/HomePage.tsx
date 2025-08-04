@@ -2,6 +2,7 @@ import React from 'react';
 import { Heart, Calendar, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Page } from '@/components/layout/BottomNavigation';
+import { PageHeader } from '../components/layout/PageHeader';
 
 interface HomePageProps {
   onNavigate: (page: Page) => void;
@@ -31,23 +32,19 @@ const newsItems = [
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
   return (
     <div className="space-y-8 pb-32">
-      {/* Header */}
-      <div className="text-center py-8">
-        <h1 className="text-3xl font-bold text-foreground mb-2">Vast</h1>
-        <p className="text-muted-foreground">Your wellness companion</p>
-      </div>
+      {/* Header with Logo */}
+      <PageHeader title="Home" subtitle="Welcome back" />
 
-      {/* Quick News Cards */}
-      <div>
-        <h2 className="text-lg font-semibold text-foreground mb-4 px-6">Latest Updates</h2>
-        <div className="flex overflow-x-auto space-x-4 px-6 pb-2">
+      {/* Quick News Cards - 3 buttons in a row (wireframe layout) */}
+      <div className="px-6">
+        <div className="grid grid-cols-3 gap-4">
           {newsItems.map((item) => (
             <div
               key={item.id}
-              className="flex-shrink-0 w-48 card-soft p-4 spring-tap cursor-pointer hover:shadow-card transition-all duration-200"
+              className="card-soft p-4 spring-tap cursor-pointer hover:shadow-card transition-all duration-200 text-center"
             >
               <div className="text-2xl mb-2">{item.image}</div>
-              <h3 className="font-medium text-foreground text-sm mb-1">{item.title}</h3>
+              <h3 className="font-medium text-foreground text-xs mb-1">{item.title}</h3>
               <p className="text-xs text-muted-foreground">{item.category}</p>
             </div>
           ))}

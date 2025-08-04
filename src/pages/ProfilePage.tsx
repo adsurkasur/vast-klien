@@ -3,6 +3,7 @@ import { Edit, User, Shield, Bell, Heart, Calendar, Settings } from 'lucide-reac
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { VastLogo } from '@/components/icons/SocialIcons';
 
 export const ProfilePage: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -24,8 +25,22 @@ export const ProfilePage: React.FC = () => {
     <div className="space-y-6 pb-32">
       {/* Header */}
       <div className="sticky top-0 bg-background/80 backdrop-blur-lg z-10 py-6 px-6 border-b border-card-border">
-        <h1 className="text-2xl font-bold text-foreground text-center">My Profile</h1>
-        <p className="text-muted-foreground text-center mt-1">Personalize your experience</p>
+        <div className="flex items-center justify-between">
+          {/* Vast Logo */}
+          <div className="text-left flex items-center gap-3">
+            <VastLogo size={40} className="text-accent-600" />
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">Vast</h1>
+              <p className="text-xs text-muted-foreground">Your wellness companion</p>
+            </div>
+          </div>
+          
+          {/* Page Title */}
+          <div className="text-right">
+            <h2 className="text-xl font-semibold text-foreground">My Profile</h2>
+            <p className="text-xs text-muted-foreground">Personalize your experience</p>
+          </div>
+        </div>
       </div>
 
       {/* Profile Card */}
@@ -74,7 +89,7 @@ export const ProfilePage: React.FC = () => {
                   />
                 </div>
               </div>
-              
+
               <div>
                 <Label htmlFor="email" className="text-sm font-medium text-foreground">Email</Label>
                 <Input
@@ -167,11 +182,11 @@ export const ProfilePage: React.FC = () => {
           <h3 className="text-lg font-semibold text-foreground mb-4">Privacy Notice</h3>
           <div className="text-sm text-foreground space-y-3">
             <p>
-              Your health data is private and secure. Vast uses end-to-end encryption to protect 
+              Your health data is private and secure. Vast uses end-to-end encryption to protect
               your personal information and menstrual cycle data.
             </p>
             <p>
-              We never share your data with third parties without your explicit consent. 
+              We never share your data with third parties without your explicit consent.
               You have full control over your data and can export or delete it at any time.
             </p>
             <div className="pt-3 border-t border-card-border">
