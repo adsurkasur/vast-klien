@@ -1,42 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Vast App Design System - Elegant, Minimalist, Serene */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
+    /* Core Brand Colors */
+    --background: 217 25% 96%; /* #F4F6F9 - Off-White Canvas */
+    --foreground: 210 11% 15%; /* #212529 - Charcoal Gray */
+    
+    /* Dusty Rose Accent */
+    --primary: 346 85% 61%; /* #EF476F - Dusty Rose */
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 346 85% 85%; /* Lighter version */
+    --primary-muted: 346 45% 91%; /* Very light version */
+    
+    /* Card and Surface Colors */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
+    --card-foreground: 210 11% 15%;
+    --card-border: 220 13% 91%;
+    
+    /* Interactive Elements */
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 210 11% 15%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 215 16% 47%;
+    
+    /* Accent Colors for Different Sections */
+    --accent-tips: 39 100% 85%; /* Golden for Tips */
+    --accent-calendar: 196 78% 85%; /* Soft Blue for Calendar */
+    --accent-community: 120 39% 85%; /* Soft Green for Community */
+    --accent-profile: 306 78% 85%; /* Soft Purple for Profile */
+    
+    /* Functional Colors */
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 346 85% 61%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
+    
+    /* Design System Variables */
+    --radius: 1rem;
+    --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
+    --shadow-card: 0 8px 30px -4px rgba(0, 0, 0, 0.12);
+    --shadow-floating: 0 20px 40px -8px rgba(0, 0, 0, 0.15);
+    
+    /* Glassmorphism */
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-light)));
+    --gradient-soft: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.6));
+    --gradient-card: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.8));
+    
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-spring: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
     --sidebar-background: 0 0% 98%;
 
@@ -94,12 +117,96 @@ All colors MUST be HSL.
   }
 }
 
+}
+
 @layer base {
   * {
     @apply border-border;
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-inter antialiased;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+}
+
+@layer components {
+  /* Elegant Card Components */
+  .card-elevated {
+    @apply bg-card rounded-2xl shadow-card border border-card-border;
+    background: var(--gradient-card);
+    backdrop-filter: blur(10px);
+  }
+  
+  .card-soft {
+    @apply bg-card rounded-xl shadow-soft border border-card-border;
+  }
+  
+  /* Glassmorphism Navigation */
+  .nav-glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-floating);
+  }
+  
+  /* Elegant Buttons */
+  .btn-primary {
+    @apply bg-primary text-primary-foreground rounded-xl px-6 py-3 font-medium;
+    background: var(--gradient-primary);
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition-spring);
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card);
+  }
+  
+  .btn-soft {
+    @apply bg-white/80 text-foreground rounded-xl px-6 py-3 font-medium border border-card-border;
+    backdrop-filter: blur(10px);
+    transition: var(--transition-smooth);
+  }
+  
+  .btn-soft:hover {
+    @apply bg-white/90;
+    transform: translateY(-1px);
+  }
+  
+  /* Section Specific Accents */
+  .accent-tips {
+    background: linear-gradient(135deg, hsl(var(--accent-tips)), hsl(39 100% 90%));
+  }
+  
+  .accent-calendar {
+    background: linear-gradient(135deg, hsl(var(--accent-calendar)), hsl(196 78% 90%));
+  }
+  
+  .accent-community {
+    background: linear-gradient(135deg, hsl(var(--accent-community)), hsl(120 39% 90%));
+  }
+  
+  .accent-profile {
+    background: linear-gradient(135deg, hsl(var(--accent-profile)), hsl(306 78% 90%));
+  }
+  
+  /* Period Tracking Calendar Styles */
+  .period-day {
+    @apply bg-primary text-primary-foreground;
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
+  }
+  
+  .period-day-light {
+    @apply bg-primary-muted text-foreground;
+  }
+  
+  /* Spring Animation */
+  .spring-tap {
+    transition: var(--transition-spring);
+  }
+  
+  .spring-tap:active {
+    transform: scale(0.95);
   }
 }
