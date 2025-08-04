@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, ChevronLeft, ChevronRight, Plus, BarChart3, Heart } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -11,11 +11,17 @@ interface PeriodDay {
 
 interface PeriodCalendarProps {
   onOpenSymptoms: (date: string) => void;
+  onTogglePeriod?: (date: string) => void;
+  selectedDate?: string | null;
 }
 
-export const PeriodCalendar: React.FC<PeriodCalendarProps> = ({ onOpenSymptoms }) => {
+export const PeriodCalendar: React.FC<PeriodCalendarProps> = ({ 
+  onOpenSymptoms, 
+  onTogglePeriod,
+  selectedDate: externalSelectedDate 
+}) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(externalSelectedDate || null);
   const [periodDays, setPeriodDays] = useState<PeriodDay[]>([]);
 
   const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
@@ -100,7 +106,7 @@ export const PeriodCalendar: React.FC<PeriodCalendarProps> = ({ onOpenSymptoms }
   };
 
   return (
-    <div className="card-elevated p-6 space-y-6">
+    <div className="space-y-6">
       {/* Calendar Header */}
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-foreground">
@@ -138,56 +144,6 @@ export const PeriodCalendar: React.FC<PeriodCalendarProps> = ({ onOpenSymptoms }
       {/* Calendar Grid */}
       <div className="grid grid-cols-7 gap-1">
         {renderCalendarDays()}
-      </div>
-
-      {/* Period Prediction Notice */}
-      <div className="bg-accent-calendar rounded-xl p-4">
-        <p className="text-sm font-medium text-foreground">
-          Upcoming period in 5 days
-        </p>
-      </div>
-
-      {/* Action Buttons */}
-      <div className="space-y-3">
-        <Button
-          onClick={togglePeriodDay}
-          disabled={!selectedDate}
-          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl py-3 spring-tap"
-        >
-          <Plus size={20} className="mr-2" />
-          Record Period
-        </Button>
-        
-        <div className="grid grid-cols-3 gap-3">
-          <Button
-            variant="outline"
-            size="sm"
-            className="flex flex-col items-center space-y-1 h-auto py-3 bg-white/50 border-card-border hover:bg-white/70"
-          >
-            <Calendar size={16} />
-            <span className="text-xs">Notifications</span>
-          </Button>
-          
-          <Button
-            variant="outline"
-            size="sm"
-            className="flex flex-col items-center space-y-1 h-auto py-3 bg-white/50 border-card-border hover:bg-white/70"
-          >
-            <BarChart3 size={16} />
-            <span className="text-xs">Reports</span>
-          </Button>
-          
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => selectedDate && onOpenSymptoms(selectedDate)}
-            disabled={!selectedDate}
-            className="flex flex-col items-center space-y-1 h-auto py-3 bg-white/50 border-card-border hover:bg-white/70"
-          >
-            <Heart size={16} />
-            <span className="text-xs">Symptoms</span>
-          </Button>
-        </div>
       </div>
     </div>
   );

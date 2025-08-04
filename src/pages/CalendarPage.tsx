@@ -10,10 +10,16 @@ export const CalendarPage = () => {
   const [selectedDateForSymptoms, setSelectedDateForSymptoms] = useState<string>('');
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [nextPeriodDays, setNextPeriodDays] = useState(7); // Days until next period
+  const [selectedCalendarDate, setSelectedCalendarDate] = useState<string | null>(null);
 
   const handleOpenSymptoms = (date: string) => {
     setSelectedDateForSymptoms(date);
     setIsSymptomModalOpen(true);
+  };
+
+  const handleTogglePeriod = (date: string) => {
+    // This will be handled by the PeriodCalendar component internally
+    console.log('Toggle period for date:', date);
   };
 
   return (
@@ -28,7 +34,11 @@ export const CalendarPage = () => {
             <Calendar className="text-accent-600" size={20} />
             <h2 className="text-lg font-semibold text-foreground">Period Tracker</h2>
           </div>
-          <PeriodCalendar onOpenSymptoms={handleOpenSymptoms} />
+          <PeriodCalendar 
+            onOpenSymptoms={handleOpenSymptoms}
+            onTogglePeriod={handleTogglePeriod}
+            selectedDate={selectedCalendarDate}
+          />
         </div>
       </div>
 
