@@ -218,12 +218,10 @@ export const PeriodCalendar: React.FC<PeriodCalendarProps> = ({
 
   const renderCalendarDays = () => {
     const days = [];
-    
     // Empty cells for days before the first day of the month
     for (let i = 0; i < firstDayOfMonth; i++) {
-      days.push(<div key={`empty-${i}`} className="p-3"></div>);
+      days.push(<div key={`empty-${i}`} className="p-3" aria-hidden="true"></div>);
     }
-    
     // Days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       const dateStr = formatDateString(day);
@@ -232,7 +230,11 @@ export const PeriodCalendar: React.FC<PeriodCalendarProps> = ({
       const hasSymptom = hasSymptoms(dateStr);
       const dayData = cycleData.periodDays.find(d => d.date === dateStr);
       const isToday = dateStr === new Date().toISOString().split('T')[0];
-      
+      // Edge case: invalid date
+      if (isNaN(new Date(dateStr).getTime())) {
+        days.push(<div key={`invalid-${day}`} className="p-3 text-xs text-red-500">Invalid</div>);
+        continue;
+      }
       days.push(
         <button
           key={day}
@@ -245,7 +247,7 @@ export const PeriodCalendar: React.FC<PeriodCalendarProps> = ({
             }
           }}
           className={cn(
-            "p-2 text-sm font-medium rounded-xl transition-all duration-200 spring-tap relative min-h-[40px] flex flex-col items-center justify-center",
+            "p-2 text-sm font-medium rounded-xl transition-all duration-200 spring-tap relative min-h-[40px] flex flex-col items-center justify-center focus:outline-none focus:ring-2 focus:ring-primary",
             "hover:bg-accent-100 border-2 border-transparent",
             // Today styling (gold/yellow theme for better distinction)
             isToday && !isSelected && "border-yellow-400 bg-yellow-50 text-yellow-800 shadow-sm",
@@ -257,6 +259,9 @@ export const PeriodCalendar: React.FC<PeriodCalendarProps> = ({
             // Symptom day styling (not period, not selected)
             hasSymptom && !isPeriod && !isSelected && "bg-blue-50 border-blue-200 text-blue-800"
           )}
+          aria-label={`Day ${day}, ${isPeriod ? 'Period' : ''} ${hasSymptom ? 'Symptoms' : ''} ${isToday ? 'Today' : ''}`}
+          aria-selected={isSelected}
+          tabIndex={0}
         >
           <span className="text-center leading-none">{day}</span>
           {/* Visual indicators */}
@@ -282,15 +287,18 @@ export const PeriodCalendar: React.FC<PeriodCalendarProps> = ({
         </button>
       );
     }
-    
+    // Edge case: empty data
+    if (days.length === 0) {
+      days.push(<div key="empty" className="p-3 text-xs text-muted-foreground">No days</div>);
+    }
     return days;
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" role="table" aria-label="Period Calendar">
       {/* Calendar Header */}
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-foreground">
+        <h3 className="text-lg font-semibold text-foreground" id="calendar-title">
           {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
         </h3>
         <div className="flex items-center space-x-2">
@@ -299,6 +307,7 @@ export const PeriodCalendar: React.FC<PeriodCalendarProps> = ({
             size="sm"
             onClick={() => navigateMonth('prev')}
             className="h-8 w-8 p-0 hover:bg-primary-muted"
+            aria-label="Previous month"
           >
             <ChevronLeft size={16} />
           </Button>
@@ -307,6 +316,7 @@ export const PeriodCalendar: React.FC<PeriodCalendarProps> = ({
             size="sm"
             onClick={() => navigateMonth('next')}
             className="h-8 w-8 p-0 hover:bg-primary-muted"
+            aria-label="Next month"
           >
             <ChevronRight size={16} />
           </Button>
@@ -314,35 +324,35 @@ export const PeriodCalendar: React.FC<PeriodCalendarProps> = ({
       </div>
 
       {/* Day Names */}
-      <div className="grid grid-cols-7 gap-1">
+      <div className="grid grid-cols-7 gap-1" role="row">
         {dayNames.map(day => (
-          <div key={day} className="p-3 text-xs font-medium text-muted-foreground text-center">
+          <div key={day} className="p-3 text-xs font-medium text-muted-foreground text-center" role="columnheader">
             {day}
           </div>
         ))}
       </div>
 
       {/* Calendar Grid */}
-      <div className="grid grid-cols-7 gap-1">
+      <div className="grid grid-cols-7 gap-1" role="rowgroup">
         {renderCalendarDays()}
       </div>
 
       {/* Legend */}
       <div className="flex flex-wrap gap-4 text-xs text-muted-foreground justify-center pt-4 border-t border-accent-100">
         <div className="flex items-center space-x-2">
-          <div className="w-4 h-4 bg-red-100 border border-red-300 rounded"></div>
+          <div className="w-4 h-4 bg-red-100 border border-red-300 rounded" aria-label="Period Day"></div>
           <span>Period Day</span>
         </div>
         <div className="flex items-center space-x-2">
-          <div className="w-4 h-4 bg-blue-50 border border-blue-200 rounded"></div>
+          <div className="w-4 h-4 bg-blue-50 border-blue-200 rounded" aria-label="Symptoms"></div>
           <span>Symptoms</span>
         </div>
         <div className="flex items-center space-x-2">
-          <div className="w-4 h-4 bg-yellow-50 border border-yellow-400 rounded"></div>
+          <div className="w-4 h-4 bg-yellow-50 border-yellow-400 rounded" aria-label="Today"></div>
           <span>Today</span>
         </div>
         <div className="flex items-center space-x-2">
-          <div className="w-4 h-4 bg-blue-100 border-2 border-blue-500 rounded"></div>
+          <div className="w-4 h-4 bg-blue-100 border-2 border-blue-500 rounded" aria-label="Selected"></div>
           <span>Selected</span>
         </div>
       </div>

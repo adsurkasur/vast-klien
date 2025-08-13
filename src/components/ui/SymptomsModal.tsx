@@ -42,6 +42,15 @@ export const SymptomsModal: React.FC<SymptomsModalProps> = ({
 }) => {
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
 
+
+  // Focus trap for accessibility
+  const modalRef = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    if (isOpen && modalRef.current) {
+      modalRef.current.focus();
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const toggleSymptom = (symptom: string) => {
@@ -53,24 +62,29 @@ export const SymptomsModal: React.FC<SymptomsModalProps> = ({
   };
 
   const saveSymptoms = () => {
+    if (selectedSymptoms.length === 0) {
+      alert('Please select at least one symptom.');
+      return;
+    }
     // Here you would save to your state management system
     console.log('Saving symptoms for', selectedDate, selectedSymptoms);
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="symptoms-modal-title" ref={modalRef} tabIndex={-1}>
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/20 backdrop-blur-sm"
         onClick={onClose}
+        aria-label="Close modal"
       />
       
       {/* Modal */}
       <div className="relative card-elevated w-full max-w-md max-h-[80vh] overflow-y-auto animate-in zoom-in-95 duration-200">
         {/* Header */}
         <div className="flex items-center justify-between p-6 pb-4">
-          <h3 className="text-lg font-semibold text-foreground">
+          <h3 className="text-lg font-semibold text-foreground" id="symptoms-modal-title">
             Daily Symptoms
           </h3>
           <Button
@@ -78,6 +92,7 @@ export const SymptomsModal: React.FC<SymptomsModalProps> = ({
             size="sm"
             onClick={onClose}
             className="h-8 w-8 p-0 hover:bg-primary-muted"
+            aria-label="Close"
           >
             <X size={16} />
           </Button>
@@ -114,6 +129,8 @@ export const SymptomsModal: React.FC<SymptomsModalProps> = ({
                         : 'bg-white/50 text-foreground hover:bg-white/70 border border-card-border'
                       }
                     `}
+                    aria-pressed={selectedSymptoms.includes(symptom)}
+                    aria-label={symptom}
                   >
                     <span className="text-xs">{symptom}</span>
                     {selectedSymptoms.includes(symptom) && (
@@ -131,6 +148,8 @@ export const SymptomsModal: React.FC<SymptomsModalProps> = ({
           <Button
             onClick={saveSymptoms}
             className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl py-3"
+            aria-label="Save symptoms"
+            disabled={selectedSymptoms.length === 0}
           >
             Save Symptoms ({selectedSymptoms.length})
           </Button>
@@ -138,6 +157,7 @@ export const SymptomsModal: React.FC<SymptomsModalProps> = ({
             onClick={onClose}
             variant="outline"
             className="w-full bg-white/50 border-card-border hover:bg-white/70"
+            aria-label="Cancel"
           >
             Cancel
           </Button>
