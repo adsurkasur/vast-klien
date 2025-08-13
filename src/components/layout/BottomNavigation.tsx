@@ -1,8 +1,8 @@
 import React from 'react';
-import { Home, ShoppingCart, Phone, User } from 'lucide-react';
+import { Home, ShoppingCart, Phone, User, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-export type Page = 'home' | 'tips' | 'calendar' | 'community' | 'profile' | 'contact' | 'trolley';
+export type Page = 'home' | 'tips' | 'calendar' | 'community' | 'profile' | 'contact' | 'trolley' | 'about';
 
 interface BottomNavigationProps {
   currentPage: Page;
@@ -39,28 +39,6 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
               <span className="text-xs font-medium">Home</span>
             </button>
 
-            {/* Trolley */}
-            <button
-              onClick={() => onNavigate('trolley')}
-              className={cn(
-                "flex flex-col items-center space-y-1 px-3 py-2 rounded-xl spring-tap",
-                "transition-all duration-300",
-                currentPage === 'trolley'
-                  ? "text-primary scale-110"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-              aria-label="Trolley"
-            >
-              <ShoppingCart 
-                size={20} 
-                className={cn(
-                  "transition-all duration-300",
-                  currentPage === 'trolley' && "scale-110"
-                )}
-              />
-              <span className="text-xs font-medium">Shop</span>
-            </button>
-
             {/* Contact */}
             <button
               onClick={() => onNavigate('contact')}
@@ -82,6 +60,33 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
               />
               <span className="text-xs font-medium">Contact</span>
             </button>
+
+            {/* Trolley */}
+            <div className="relative flex flex-col items-center">
+              <button
+                onClick={() => onNavigate('trolley')}
+                className={cn(
+                  "flex flex-col items-center justify-center spring-tap",
+                  "transition-all duration-300",
+                  "w-16 h-16 rounded-full bg-red-500 shadow-lg border-4 border-background",
+                  "absolute -top-8",
+                  currentPage === 'trolley'
+                    ? "scale-110 ring-2 ring-red-400"
+                    : "hover:scale-105"
+                )}
+                aria-label="Trolley"
+                style={{zIndex: 2}}
+              >
+                <ShoppingCart
+                  size={24}
+                  className={cn(
+                    "text-white transition-all duration-300 drop-shadow",
+                    currentPage === 'trolley' && "scale-110"
+                  )}
+                />
+              </button>
+              <span className="text-base font-bold mt-8 text-red-500 drop-shadow">Shop</span>
+            </div>
 
             {/* Profile */}
             <button
@@ -105,6 +110,28 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
                 </div>
               </div>
               <span className="text-xs font-medium">Profile</span>
+            </button>
+
+            {/* About */}
+            <button
+              onClick={() => onNavigate('about')}
+              className={cn(
+                "flex flex-col items-center space-y-1 px-3 py-2 rounded-xl spring-tap",
+                "transition-all duration-300",
+                currentPage === 'about'
+                  ? "text-primary scale-110"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+              aria-label="About"
+            >
+              <Info
+                size={20}
+                className={cn(
+                  "transition-all duration-300",
+                  currentPage === 'about' && "scale-110"
+                )}
+              />
+              <span className="text-xs font-medium">About</span>
             </button>
           </div>
         </nav>
