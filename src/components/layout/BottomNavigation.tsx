@@ -14,28 +14,30 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
   onNavigate,
 }) => {
   return (
-    <div className="fixed bottom-6 left-4 right-4 z-50">
-        <nav className="nav-glass rounded-2xl px-4 py-3">
-          <div className="flex items-center justify-around">
+    <div className="fixed bottom-6 left-0 right-0 z-50 pointer-events-none">
+        <nav className="nav-glass rounded-2xl px-4 py-3 max-w-md w-full mx-auto pointer-events-auto">
+          <div className="flex items-center justify-between gap-x-2">
             {/* Home */}
             <button
               onClick={() => onNavigate('home')}
               className={cn(
-                "flex flex-col items-center space-y-1 px-3 py-2 rounded-xl spring-tap",
+                "w-16 flex flex-col items-center space-y-1 px-3 py-2 rounded-xl spring-tap",
                 "transition-all duration-300",
                 currentPage === 'home'
-                  ? "text-primary scale-110"
+                  ? "text-primary"
                   : "text-muted-foreground hover:text-foreground"
               )}
               aria-label="Home"
             >
-              <Home 
-                size={20} 
-                className={cn(
-                  "transition-all duration-300",
-                  currentPage === 'home' && "scale-110"
-                )}
-              />
+              <div className={cn(
+                "w-6 h-6 flex items-center justify-center transition-all duration-300",
+                currentPage === 'home' && "scale-110"
+              )}>
+                <Home 
+                  size={20}
+                  className="transition-all duration-300"
+                />
+              </div>
               <span className="text-xs font-medium">Home</span>
             </button>
 
@@ -43,26 +45,28 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
             <button
               onClick={() => onNavigate('contact')}
               className={cn(
-                "flex flex-col items-center space-y-1 px-3 py-2 rounded-xl spring-tap",
+                "w-16 flex flex-col items-center space-y-1 px-3 py-2 rounded-xl spring-tap",
                 "transition-all duration-300",
                 currentPage === 'contact'
-                  ? "text-primary scale-110"
+                  ? "text-primary"
                   : "text-muted-foreground hover:text-foreground"
               )}
               aria-label="Contact"
             >
-              <Phone 
-                size={20} 
-                className={cn(
-                  "transition-all duration-300",
-                  currentPage === 'contact' && "scale-110"
-                )}
-              />
+              <div className={cn(
+                "w-6 h-6 flex items-center justify-center transition-all duration-300",
+                currentPage === 'contact' && "scale-110"
+              )}>
+                <Phone 
+                  size={20}
+                  className="transition-all duration-300"
+                />
+              </div>
               <span className="text-xs font-medium">Contact</span>
             </button>
 
             {/* Trolley */}
-            <div className="relative flex flex-col items-center">
+            <div className="relative flex flex-col items-center w-16">
               <button
                 onClick={() => onNavigate('trolley')}
                 className={cn(
@@ -92,7 +96,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
             <button
               onClick={() => onNavigate('profile')}
               className={cn(
-                "flex flex-col items-center space-y-1 px-3 py-2 rounded-xl spring-tap",
+                "w-16 flex flex-col items-center space-y-1 px-3 py-2 rounded-xl spring-tap",
                 "transition-all duration-300",
                 currentPage === 'profile'
                   ? "text-primary scale-110"
@@ -116,21 +120,23 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
             <button
               onClick={() => onNavigate('about')}
               className={cn(
-                "flex flex-col items-center space-y-1 px-3 py-2 rounded-xl spring-tap",
+                "w-16 flex flex-col items-center space-y-1 px-3 py-2 rounded-xl spring-tap",
                 "transition-all duration-300",
                 currentPage === 'about'
-                  ? "text-primary scale-110"
+                  ? "text-primary"
                   : "text-muted-foreground hover:text-foreground"
               )}
               aria-label="About"
             >
-              <Info
-                size={20}
-                className={cn(
-                  "transition-all duration-300",
-                  currentPage === 'about' && "scale-110"
-                )}
-              />
+              <div className={cn(
+                "w-6 h-6 flex items-center justify-center transition-all duration-300",
+                currentPage === 'about' && "scale-110"
+              )}>
+                <Info
+                  size={20}
+                  className="transition-all duration-300"
+                />
+              </div>
               <span className="text-xs font-medium">About</span>
             </button>
           </div>
