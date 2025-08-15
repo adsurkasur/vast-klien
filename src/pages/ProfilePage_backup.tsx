@@ -46,14 +46,25 @@ export const ProfilePage: React.FC = () => {
       {/* Profile Card */}
       <div className="px-6">
         <div className="card-elevated p-6 accent-profile">
-          <div className="flex items-center mb-6 space-x-4">
-            <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center">
-              <User size={24} className="text-primary-foreground" />
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center space-x-4">
+              <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center">
+                <User size={24} className="text-primary-foreground" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold text-foreground">{profile.name}</h2>
+                <p className="text-muted-foreground">{profile.email}</p>
+              </div>
             </div>
-            <div>
-              <h2 className="text-xl font-semibold text-foreground">{profile.name}</h2>
-              <p className="text-muted-foreground">{profile.email}</p>
-            </div>
+            <Button
+              onClick={() => setIsEditing(!isEditing)}
+              variant="outline"
+              size="sm"
+              className="bg-white/50 border-card-border hover:bg-white/70 spring-tap"
+            >
+              <Edit size={16} className="mr-2" />
+              {isEditing ? 'Cancel' : 'Edit'}
+            </Button>
           </div>
 
           {isEditing ? (
@@ -133,19 +144,6 @@ export const ProfilePage: React.FC = () => {
                 <span className="ml-2 font-medium text-foreground">{profile.periodLength} days</span>
               </div>
             </div>
-          )}
-          
-          {/* Move Edit button to bottom */}
-          {!isEditing && (
-            <Button
-              onClick={() => setIsEditing(!isEditing)}
-              variant="outline"
-              size="sm"
-              className="bg-white/50 border-card-border hover:bg-white/70 spring-tap w-full mt-4"
-            >
-              <Edit size={16} className="mr-2" />
-              Edit
-            </Button>
           )}
         </div>
       </div>
