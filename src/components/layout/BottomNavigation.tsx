@@ -14,7 +14,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
   onNavigate,
 }) => {
   return (
-    <div className="fixed bottom-6 left-0 right-0 z-50 pointer-events-none">
+  <div className="fixed bottom-6 z-50 pointer-events-none" style={{ left: '50vw', transform: 'translateX(-50%)' }}>
         <nav className="nav-glass rounded-2xl px-4 py-3 max-w-md w-full mx-auto pointer-events-auto">
           <div className="flex items-center justify-between gap-x-2">
             {/* Home */}
