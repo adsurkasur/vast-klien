@@ -9,19 +9,19 @@ export const TrolleyPage: React.FC = () => {
       name: 'Tokopedia',
       icon: ShoppingBag,
       url: 'https://tokopedia.com',
-      color: 'bg-orange-100 text-orange-700',
-      rating: 4.8,
-      deliveryTime: '1-2 days',
-      features: ['Free Shipping', 'Cash on Delivery', 'Official Store']
+      color: ' bg-green-100 text-green-700',
+      rating: null, //4.8,
+      deliveryTime: null, //'1-2 days',
+      features: null //['Free Shipping', 'Cash on Delivery', 'Official Store']
     },
     {
       name: 'Shopee',
       icon: ShoppingBag,
       url: 'https://shopee.co.id',
-      color: 'bg-green-100 text-green-700',
-      rating: 4.7,
-      deliveryTime: '2-3 days',
-      features: ['Free Shipping', 'Shopee Guarantee', 'Flash Sale']
+      color: 'bg-orange-100 text-orange-700',
+      rating: null, //4.7,
+      deliveryTime: null, //'2-3 days',
+      features: null //'Free Shipping', 'Shopee Guarantee', 'Flash Sale']
     },
     {
       name: 'Find Store Near You',
@@ -29,8 +29,8 @@ export const TrolleyPage: React.FC = () => {
       url: 'https://maps.google.com',
       color: 'bg-blue-100 text-blue-700',
       rating: null,
-      deliveryTime: 'Same day',
-      features: ['In-store pickup', 'Personal consultation', 'Immediate availability']
+      deliveryTime: null, //'Same day',
+      features: null //['In-store pickup', 'Personal consultation', 'Immediate availability']
     }
   ];
 
@@ -90,16 +90,22 @@ export const TrolleyPage: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold text-foreground">{shop.name}</h3>
-                    {shop.rating && (
+                  {/*  Disable shop rating
+                  
+                  {shop.rating && (
                       <div className="flex items-center space-x-1 mt-1">
                         <Star className="text-yellow-500 fill-current" size={16} />
                         <span className="text-sm text-muted-foreground">{shop.rating}/5</span>
                       </div>
-                    )}
+                    )} 
+                     
+                     */}
                   </div>
                 </div>
                 <ExternalLink size={20} className="text-muted-foreground" />
               </div>
+
+              {/* Disable shop delivery time
 
               <div className="flex items-center space-x-4 mb-4">
                 <div className="flex items-center space-x-1">
@@ -107,6 +113,10 @@ export const TrolleyPage: React.FC = () => {
                   <span className="text-sm text-muted-foreground">{shop.deliveryTime}</span>
                 </div>
               </div>
+
+              */}
+
+              {/* Disable shop features
 
               <div className="flex flex-wrap gap-2 mb-4">
                 {shop.features.map((feature, index) => (
@@ -117,7 +127,9 @@ export const TrolleyPage: React.FC = () => {
                     {feature}
                   </span>
                 ))}
-              </div>
+              </div> 
+              
+              */}
 
               <a
                 href={shop.url}
@@ -125,12 +137,12 @@ export const TrolleyPage: React.FC = () => {
                 rel="noopener noreferrer"
                 className="block"
               >
-                <Button 
-                  className="w-full spring-tap"
-                  variant={shop.name === 'Tokopedia' ? 'default' : 'outline'}
-                >
-                  Shop on {shop.name}
-                </Button>
+                  <Button 
+                    className="w-full spring-tap"
+                    variant="default"
+                  >
+                    Shop on {shop.name}
+                  </Button>
               </a>
             </div>
           ))}
