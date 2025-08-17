@@ -62,12 +62,17 @@ export const CommunityPage = () => {
                 </div>
                 <div className="flex-1">
                   <h3 className="font-semibold text-foreground mb-1">{link.name}</h3>
+                 {/* Description and Members
+
                   <p className="text-sm text-muted-foreground mb-2">{link.description}</p>
                   <div className="flex items-center space-x-1">
                     <Users size={14} className="text-muted-foreground" />
                     <span className="text-xs text-muted-foreground">{link.members} members</span>
                   </div>
+                  
+                  */}
                 </div>
+
               </div>
               <ExternalLink size={20} className="text-muted-foreground" />
             </div>
