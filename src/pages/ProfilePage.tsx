@@ -3,7 +3,6 @@ import { Edit, User, Shield, Bell, Heart, Calendar, Settings } from 'lucide-reac
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { VastLogo } from '@/components/icons/SocialIcons';
 import { PageHeader } from '../components/layout/PageHeader';
 
 export const ProfilePage: React.FC = () => {
