@@ -20,7 +20,7 @@ export const PageHeader = ({ title, subtitle }: PageHeaderProps) => {
         
         {/* Page Title */}
         <div className="text-right">
-          <h2 className="text-xl font-semibold text-foreground">{title}</h2>
+          <h2 className="text-2xl font-semibold text-foreground">{title}</h2>
           {subtitle && <p className="text-xs text-muted-foreground">{subtitle}</p>}
         </div>
       </div>
