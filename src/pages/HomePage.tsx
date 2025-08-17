@@ -51,50 +51,56 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         </div>
       </div>
 
-      {/* Main Action Cards */}
-      <div className="px-6 space-y-4">
+      {/* Main Action Cards - Updated color and theme */}
+      <div className="px-4 md:px-6 grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+        {/* Healthy Tips */}
         <div
           onClick={() => onNavigate('tips')}
-          className="card-elevated p-6 spring-tap cursor-pointer hover:shadow-card transition-all duration-200 bg-gradient-to-r from-pink-50 to-rose-50 border-l-4 border-pink-400"
+          className="cursor-pointer rounded-2xl shadow-lg bg-gradient-to-br from-pink-500 via-rose-400 to-pink-100 border-2 border-pink-400 hover:scale-[1.03] hover:shadow-2xl transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-pink-300"
+          tabIndex={0}
+          role="button"
+          aria-label="Healthy Tips"
         >
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center">
-              <Heart className="text-pink-600" size={24} />
+          <div className="flex flex-col items-center justify-center py-8 px-6">
+            <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mb-4 shadow-md">
+              <Heart className="text-pink-600" size={32} />
             </div>
-            <div className="flex-1">
-              <h3 className="font-semibold text-foreground mb-1">Healthy Tips</h3>
-              <p className="text-sm text-muted-foreground">Wellness advice for your cycle</p>
-            </div>
+            <h3 className="font-bold text-lg text-pink-800 mb-2">Healthy Tips</h3>
+            <p className="text-sm text-pink-900/80 text-center">Wellness advice for your cycle</p>
           </div>
         </div>
 
+        {/* My Calendar */}
         <div
           onClick={() => onNavigate('calendar')}
-          className="card-elevated p-6 spring-tap cursor-pointer hover:shadow-card transition-all duration-200 bg-gradient-to-r from-purple-50 to-indigo-50 border-l-4 border-purple-400"
+          className="cursor-pointer rounded-2xl shadow-lg bg-gradient-to-br from-indigo-500 via-purple-400 to-indigo-100 border-2 border-indigo-400 hover:scale-[1.03] hover:shadow-2xl transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-indigo-300"
+          tabIndex={0}
+          role="button"
+          aria-label="My Calendar"
         >
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-              <Calendar className="text-purple-600" size={24} />
+          <div className="flex flex-col items-center justify-center py-8 px-6">
+            <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mb-4 shadow-md">
+              <Calendar className="text-indigo-600" size={32} />
             </div>
-            <div className="flex-1">
-              <h3 className="font-semibold text-foreground mb-1">My Calendar</h3>
-              <p className="text-sm text-muted-foreground">Track your cycle and symptoms</p>
-            </div>
+            <h3 className="font-bold text-lg text-indigo-800 mb-2">My Calendar</h3>
+            <p className="text-sm text-indigo-900/80 text-center">Track your cycle and symptoms</p>
           </div>
         </div>
 
+        {/* My Community */}
         <div
           onClick={() => onNavigate('community')}
-          className="card-elevated p-6 spring-tap cursor-pointer hover:shadow-card transition-all duration-200 bg-gradient-to-r from-blue-50 to-cyan-50 border-l-4 border-blue-400"
+          className="cursor-pointer rounded-2xl shadow-lg bg-gradient-to-br from-cyan-500 via-blue-400 to-cyan-100 border-2 border-cyan-400 hover:scale-[1.03] hover:shadow-2xl transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-cyan-300"
+          tabIndex={0}
+          role="button"
+          aria-label="My Community"
         >
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-              <Users className="text-blue-600" size={24} />
+          <div className="flex flex-col items-center justify-center py-8 px-6">
+            <div className="w-16 h-16 bg-cyan-100 rounded-full flex items-center justify-center mb-4 shadow-md">
+              <Users className="text-cyan-600" size={32} />
             </div>
-            <div className="flex-1">
-              <h3 className="font-semibold text-foreground mb-1">My Community</h3>
-              <p className="text-sm text-muted-foreground">Connect with other women</p>
-            </div>
+            <h3 className="font-bold text-lg text-cyan-800 mb-2">My Community</h3>
+            <p className="text-sm text-cyan-900/80 text-center">Connect with other women</p>
           </div>
         </div>
       </div>
