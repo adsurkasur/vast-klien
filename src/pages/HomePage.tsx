@@ -38,6 +38,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       {/* Quick News Cards - 3 buttons in a row (wireframe layout) */}
       <div className="px-6">
         <div className="grid grid-cols-3 gap-4">
+          <h1 className="col-span-3 text-lg font-semibold text-foreground">
+            News
+          </h1>
           {newsItems.map((item) => (
             <div
               key={item.id}

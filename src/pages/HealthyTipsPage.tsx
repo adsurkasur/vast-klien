@@ -99,7 +99,8 @@ export const HealthyTipsPage = () => {
         </div>
       </div>
 
-      {/* Quick Actions */}
+      {/* Quick Actions 
+      
       <div className="px-6">
         <div className="grid grid-cols-2 gap-4">
           <div className="card-soft p-4 text-center spring-tap cursor-pointer hover:shadow-card transition-all duration-200">
@@ -115,6 +116,8 @@ export const HealthyTipsPage = () => {
           </div>
         </div>
       </div>
+      */}
+
     </div>
   );
 };

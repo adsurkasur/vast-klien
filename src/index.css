@@ -30,7 +30,7 @@
     --muted-foreground: 215 16% 47%;
     
     /* Accent Colors for Different Sections */
-    --accent-tips: 39 100% 85%; /* Golden for Tips */
+    --accent-tips: 0 0% 100%; /* White for Tips */
     --accent-calendar: 196 78% 85%; /* Soft Blue for Calendar */
     --accent-community: 120 39% 85%; /* Soft Green for Community */
     --accent-profile: 306 78% 85%; /* Soft Purple for Profile */
@@ -174,7 +174,7 @@
   
   /* Section Specific Accents */
   .accent-tips {
-    background: linear-gradient(135deg, hsl(var(--accent-tips)), hsl(39 100% 90%));
+    background: linear-gradient(135deg, hsl(var(--accent-tips)), hsl(0 0% 100%));
   }
   
   .accent-calendar {
