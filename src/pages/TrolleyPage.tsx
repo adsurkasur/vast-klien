@@ -65,14 +65,11 @@ export const TrolleyPage: React.FC = () => {
           <h2 className="text-lg font-semibold text-foreground mb-4">
             Why Choose Vast?
           </h2>
-          <div className="space-y-3">
-            {productFeatures.map((feature, index) => (
-              <div key={index} className="flex items-start space-x-3">
-                <div className="w-2 h-2 bg-accent-500 rounded-full mt-2 flex-shrink-0" />
-                <span className="text-muted-foreground">{feature}</span>
-              </div>
-            ))}
-          </div>
+            <ul className="list-disc pl-4 space-y-2 text-muted-foreground">
+              {productFeatures.map((feature, index) => (
+                <li key={index}>{feature}</li>
+              ))}
+            </ul>
         </div>
 
         {/* Shopping Options */}
