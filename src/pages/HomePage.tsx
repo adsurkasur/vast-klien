@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { toast } from '@/hooks/use-toast';
 import { Heart, Calendar, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Page } from '@/components/layout/BottomNavigation';
@@ -30,6 +31,36 @@ const newsItems = [
 ];
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
+  const backPressedOnce = useRef(false);
+  const timeoutRef = useRef<number | null>(null);
+
+  React.useEffect(() => {
+    // Push a dummy state on mount so first back stays in app
+    window.history.pushState({ dummy: true }, "");
+
+    function handlePopState() {
+      if (!backPressedOnce.current) {
+        toast({ title: 'Press back again to exit', description: 'You are on the home page.' });
+        backPressedOnce.current = true;
+        // Push another dummy state so user stays in app
+        window.history.pushState({ dummy: true }, "");
+        // Reset flag after 2s
+        if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+        timeoutRef.current = window.setTimeout(() => { backPressedOnce.current = false; }, 2000);
+      } else {
+        // Allow exit: go back two states (skip both dummy states)
+        backPressedOnce.current = false;
+        if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+        window.history.go(-2);
+      }
+    }
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+      if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
   return (
     <div className="space-y-8 pb-32">
       {/* Header with Logo */}
@@ -110,3 +141,5 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
     </div>
   );
 };
+
+export default HomePage;
