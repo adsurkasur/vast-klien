@@ -139,10 +139,12 @@ export const ProfilePage: React.FC = () => {
         <div className="space-y-3">
           {[
             { icon: Bell, label: 'Notifications', sublabel: 'Period reminders and tips' },
-            { icon: Shield, label: 'Privacy', sublabel: 'Data and account security' },
-            { icon: Heart, label: 'Health Data', sublabel: 'Export your cycle data' },
-            { icon: Calendar, label: 'Sync Calendar', sublabel: 'Connect with your calendar app' },
-            { icon: Settings, label: 'App Preferences', sublabel: 'Customize your experience' }
+            
+          //  { icon: Shield, label: 'Privacy', sublabel: 'Data and account security' },
+          //  { icon: Heart, label: 'Health Data', sublabel: 'Export your cycle data' },
+          //  { icon: Calendar, label: 'Sync Calendar', sublabel: 'Connect with your calendar app' },
+          //  { icon: Settings, label: 'App Preferences', sublabel: 'Customize your experience' }
+          
           ].map((item) => (
             <div
               key={item.label}
