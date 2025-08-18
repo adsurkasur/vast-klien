@@ -20,11 +20,12 @@ export const useBackNavigation = (
       console.log('useBackNavigation: Pushing to historyStack', { newPage: currentPage, stack: [...historyStack.current] });
       historyStack.current.push(currentPage);
       // Any forward navigation resets the double-back-to-exit flag.
-      console.log('useBackNavigation: Forward navigation, resetting backPressedOnce.');
       backPressedOnce.current = false;
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
+      // Push a new state to browser history for navigation
+      window.history.pushState(null, '');
     }
   }, [currentPage]);
 
@@ -32,53 +33,44 @@ export const useBackNavigation = (
   React.useEffect(() => {
     console.log('useBackNavigation: Setting up popstate listener.');
 
+    // Push initial state on mount
+    window.history.pushState(null, '');
+    console.log('useBackNavigation: Pushed initial state on mount.');
+
     const handlePopState = () => {
       const lastPage = historyStack.current[historyStack.current.length - 1];
       console.log('handlePopState: Fired!', { lastPage, backPressedOnce: backPressedOnce.current, stack: [...historyStack.current] });
 
-      if (lastPage === 'home') {
-        console.log('handlePopState: On home page.');
-        if (backPressedOnce.current) {
-          console.log('handlePopState: Second back press on home. Allowing exit.');
-          // On the second press, we allow the app to exit by doing nothing here,
-          // letting the browser complete its default back action.
-          return;
-        }
-
-        console.log('handlePopState: First back press on home.');
-        backPressedOnce.current = true;
-        toast({ title: 'Press back again to exit' });
-        console.log('handlePopState: Toast shown, setting timeout.');
-        timeoutRef.current = window.setTimeout(() => {
-          console.log('handlePopState: Timeout fired, resetting backPressedOnce.');
-          backPressedOnce.current = false;
-        }, 2000);
-
-        // We push a new history state to "catch" this back press and prevent exit.
-        console.log('handlePopState: Pushing state to prevent exit.');
-        window.history.pushState(null, '');
-      } else {
-        console.log('handlePopState: Not on home page. Navigating internally.');
-        // Any back press on a non-home page should reset the exit flag.
+      if (historyStack.current.length > 1) {
+        // Pop the stack and navigate to previous page
+        historyStack.current.pop();
+        const prevPage = historyStack.current[historyStack.current.length - 1];
+        setCurrentPageRef.current(prevPage);
         backPressedOnce.current = false;
         if (timeoutRef.current) {
           clearTimeout(timeoutRef.current);
         }
-
-        if (historyStack.current.length > 1) {
-          historyStack.current.pop();
-          const prevPage = historyStack.current[historyStack.current.length - 1];
-          console.log('handlePopState: Popped stack. Navigating to', { prevPage, stack: [...historyStack.current] });
-          setCurrentPageRef.current(prevPage);
-        } else {
-          console.log('handlePopState: History stack has only one item. Navigating to home.');
-          setCurrentPageRef.current('home');
+      } else if (lastPage === 'home') {
+        // Only allow exit if at home and stack length is 1
+        if (backPressedOnce.current) {
+          // Second back press at home: allow exit
+          return;
         }
-
-        // We must push a state here as well to prevent the browser from
-        // actually leaving the page.
-        console.log('handlePopState: Pushing state to prevent exit on non-home page.');
+        // First back press at home: show toast, set flag, and prevent exit
+        backPressedOnce.current = true;
+        toast({ title: 'Press back again to exit' });
+        timeoutRef.current = window.setTimeout(() => {
+          backPressedOnce.current = false;
+        }, 2000);
+        // Prevent exit by pushing new state
         window.history.pushState(null, '');
+      } else {
+        // If stack is empty or not at home, go to home
+        setCurrentPageRef.current('home');
+        backPressedOnce.current = false;
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
       }
     };
 
@@ -91,10 +83,6 @@ export const useBackNavigation = (
 
     window.addEventListener('popstate', handlePopState);
     window.addEventListener('keydown', handleKeyDown);
-
-    // We need to push an initial state when the hook mounts.
-    console.log('useBackNavigation: Pushing initial state.');
-    window.history.pushState(null, '');
 
     return () => {
       console.log('useBackNavigation: Cleaning up listeners.');
