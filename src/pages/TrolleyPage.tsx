@@ -5,18 +5,22 @@ import { PageHeader } from '@/components/layout/PageHeader';
 
 export const TrolleyPage: React.FC = () => {
   const shopLinks = [
-    {
-      name: 'Tokopedia',
-      icon: ShoppingBag,
-      url: 'https://tokopedia.com',
-      color: ' bg-green-100 text-green-700',
-      rating: null, //4.8,
-      deliveryTime: null, //'1-2 days',
-      features: null //['Free Shipping', 'Cash on Delivery', 'Official Store']
-    },
+      {
+        name: 'Tokopedia',
+        icon: null, // will use SVG
+        svgIcon: true,
+        svgPath: '/svg/tokopedia.svg',
+        url: 'https://tokopedia.com',
+        color: ' bg-green-100 text-green-700',
+        rating: null, //4.8,
+        deliveryTime: null, //'1-2 days',
+        features: null //['Free Shipping', 'Cash on Delivery', 'Official Store']
+      },
     {
       name: 'Shopee',
-      icon: ShoppingBag,
+      icon: null, // will use SVG
+      svgIcon: true,
+      svgPath: '/svg/shopee.svg',
       url: 'https://shopee.co.id',
       color: 'bg-orange-100 text-orange-700',
       rating: null, //4.7,
@@ -83,7 +87,11 @@ export const TrolleyPage: React.FC = () => {
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center space-x-3">
                   <div className={`p-3 rounded-xl ${shop.color}`}>
-                    <shop.icon size={24} />
+                    {shop.svgIcon ? (
+                      <img src={shop.svgPath} alt={shop.name} style={{ width: 24, height: 24 }} />
+                    ) : (
+                      shop.icon && <shop.icon size={24} />
+                    )}
                   </div>
                   <div>
                     <h3 className="font-semibold text-foreground">{shop.name}</h3>
