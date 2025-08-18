@@ -8,83 +8,11 @@ import { ProfilePage } from './ProfilePage';
 import { ContactPage } from './ContactPage';
 import { TrolleyPage } from './TrolleyPage';
 import AboutPage from './AboutPage';
+import { useBackNavigation } from '@/hooks/useBackNavigation';
 
 const Index = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home');
-
-  const historyStack = React.useRef<Page[]>(['home']);
-  const backPressedOnce = React.useRef(false);
-  const timeoutRef = React.useRef<number | null>(null);
-
-  React.useEffect(() => {
-    // On initial mount, push a single dummy state
-    if (window.history.state?.dummy !== true) {
-      window.history.replaceState({ dummy: true }, "");
-    }
-  }, []);
-
-  React.useEffect(() => {
-    // Track local history stack and push dummy state on every navigation
-    if (historyStack.current[historyStack.current.length - 1] !== currentPage) {
-      historyStack.current.push(currentPage);
-      window.history.pushState({ dummy: true }, "");
-    }
-  }, [currentPage]);
-
-  React.useEffect(() => {
-    function handlePopState() {
-      // Pop from local history stack first
-      if (historyStack.current.length > 1) {
-        historyStack.current.pop(); // Remove current
-      }
-      const prev = historyStack.current[historyStack.current.length - 1];
-
-      // Home detection logic runs first
-      if (prev === 'home') {
-        setCurrentPage('home');
-        historyStack.current = ['home'];
-        window.history.replaceState({ dummy: true }, "");
-        backPressedOnce.current = false; // Reset flag only when landing on home
-        return; // Stop further navigation logic
-      }
-
-      // If not home, process normal navigation
-      setCurrentPage(prev);
-    }
-    window.addEventListener('popstate', handlePopState);
-    return () => {
-      window.removeEventListener('popstate', handlePopState);
-      if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
-    };
-  }, []);
-
-  // Show double-back-to-exit toast only when user is already on home and presses back
-  React.useEffect(() => {
-    function handleHomeBack() {
-      if (currentPage === 'home') {
-        if (!backPressedOnce.current) {
-          import('@/hooks/use-toast').then(({ toast }) => {
-            toast({ title: 'Press back again to exit', description: 'You are on the home page.' });
-          });
-          backPressedOnce.current = true;
-          if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
-          timeoutRef.current = window.setTimeout(() => { backPressedOnce.current = false; }, 2000);
-          window.history.pushState({ dummy: true }, ""); // Stay on home
-        } else {
-          backPressedOnce.current = false;
-          if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
-          window.history.back(); // Go to previous browser page
-        }
-      }
-    }
-    if (currentPage === 'home') {
-      window.addEventListener('popstate', handleHomeBack);
-      return () => {
-        window.removeEventListener('popstate', handleHomeBack);
-        if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
-      };
-    }
-  }, [currentPage]);
+  useBackNavigation(currentPage, setCurrentPage);
 
   const renderPage = () => {
     switch (currentPage) {
