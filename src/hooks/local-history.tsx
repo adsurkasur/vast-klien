@@ -1,20 +1,15 @@
-import React, { createContext, useContext, useRef } from "react";
+import React, { useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { LocalHistoryContext } from "./local-history-context";
 
-interface LocalHistoryContextType {
+export interface LocalHistoryContextType {
   history: string[];
   push: (path: string) => void;
   pop: () => string | undefined;
   clear: () => void;
 }
 
-const LocalHistoryContext = createContext<LocalHistoryContextType | undefined>(undefined);
-
-export function useLocalHistory() {
-  const ctx = useContext(LocalHistoryContext);
-  if (!ctx) throw new Error("useLocalHistory must be used within LocalHistoryProvider");
-  return ctx;
-}
+// LocalHistoryContext is now imported from local-history-context.ts
 
 export function LocalHistoryProvider({ children }: { children: React.ReactNode }) {
   const historyRef = useRef<string[]>([]);

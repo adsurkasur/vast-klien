@@ -32,15 +32,35 @@ const Index = () => {
   }, [currentPage]);
 
   React.useEffect(() => {
-    // Reset local and browser history when reaching home
-    if (currentPage === 'home') {
-      historyStack.current = ['home'];
-      window.history.replaceState({ dummy: true }, "");
-    }
-  }, [currentPage]);
-
-  React.useEffect(() => {
     function handlePopState() {
+      // Pop from local history stack first
+      if (historyStack.current.length > 1) {
+        historyStack.current.pop(); // Remove current
+      }
+      const prev = historyStack.current[historyStack.current.length - 1];
+
+      // Home detection logic runs first
+      if (prev === 'home') {
+        setCurrentPage('home');
+        historyStack.current = ['home'];
+        window.history.replaceState({ dummy: true }, "");
+        backPressedOnce.current = false; // Reset flag only when landing on home
+        return; // Stop further navigation logic
+      }
+
+      // If not home, process normal navigation
+      setCurrentPage(prev);
+    }
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+      if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
+  // Show double-back-to-exit toast only when user is already on home and presses back
+  React.useEffect(() => {
+    function handleHomeBack() {
       if (currentPage === 'home') {
         if (!backPressedOnce.current) {
           import('@/hooks/use-toast').then(({ toast }) => {
@@ -49,29 +69,21 @@ const Index = () => {
           backPressedOnce.current = true;
           if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
           timeoutRef.current = window.setTimeout(() => { backPressedOnce.current = false; }, 2000);
-          // Only push dummy state on home
-          window.history.pushState({ dummy: true }, "");
+          window.history.pushState({ dummy: true }, ""); // Stay on home
         } else {
           backPressedOnce.current = false;
           if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
-          // Allow exit: go back in browser history
-          window.history.go(-1);
-        }
-      } else {
-        // Navigate to previous page in local history
-        if (historyStack.current.length > 1) {
-          historyStack.current.pop(); // Remove current
-          const prev = historyStack.current[historyStack.current.length - 1];
-          setCurrentPage(prev);
-          // No need to push dummy state here, already handled on navigation
+          window.history.back(); // Go to previous browser page
         }
       }
     }
-    window.addEventListener('popstate', handlePopState);
-    return () => {
-      window.removeEventListener('popstate', handlePopState);
-      if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
-    };
+    if (currentPage === 'home') {
+      window.addEventListener('popstate', handleHomeBack);
+      return () => {
+        window.removeEventListener('popstate', handleHomeBack);
+        if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+      };
+    }
   }, [currentPage]);
 
   const renderPage = () => {
