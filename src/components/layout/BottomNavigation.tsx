@@ -63,12 +63,12 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
               <span className="text-xs font-medium">Contact</span>
             </button>
 
-            {/* Trolley - popping out effect, synchronized animation */}
-            <div className="relative flex flex-col items-center w-16" style={{zIndex: 10}}>
+            {/* Trolley - popping out effect, scale and ring only */}
+            <div className="relative w-full flex flex-col items-center" style={{zIndex: 10}}>
               <button
                 onClick={() => onNavigate('trolley')}
                 className={cn(
-                  "spring-tap w-16 h-16 rounded-full bg-red-500 flex items-center justify-center border-4 border-background absolute -top-6 left-1/2 -translate-x-1/2 transition-all duration-300",
+                  "spring-tap w-16 h-16 rounded-full bg-red-500 flex items-center justify-center border-4 border-background absolute -top-6 inset-x-0 mx-auto transition-all duration-300 origin-center",
                   currentPage === 'trolley'
                     ? "scale-110"
                     : "hover:scale-105"
