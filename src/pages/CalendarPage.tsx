@@ -47,10 +47,10 @@ export const CalendarPage = () => {
 
   // Calendar constants
   const monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
   ];
-  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const dayNames = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
 
   // Load cycle data from localStorage on startup
   useEffect(() => {
@@ -324,7 +324,7 @@ export const CalendarPage = () => {
   return (
     <div className="space-y-6 pb-32">
       {/* Header with Logo and Title */}
-      <PageHeader title="My Calendar" subtitle="Track your cycle and symptoms" />
+  <PageHeader title="Kalender Saya" subtitle="Lacak siklus dan gejala Anda" />
 
       {/* Custom Calendar for Period Tracking */}
       <div className="px-6">
@@ -332,11 +332,11 @@ export const CalendarPage = () => {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-2">
               <Calendar className="text-accent-600" size={20} />
-              <h2 className="text-lg font-semibold text-foreground">Period Tracker</h2>
+              <h2 className="text-lg font-semibold text-foreground">Pelacak Menstruasi</h2>
             </div>
             <div className="text-xs text-muted-foreground text-right">
-              <p>Click dates to track periods</p>
-              <p>Click twice to toggle</p>
+              <p>Klik tanggal untuk melacak menstruasi</p>
+              <p>Klik dua kali untuk mengubah status</p>
             </div>
           </div>
           <div className="space-y-6">
@@ -383,19 +383,19 @@ export const CalendarPage = () => {
             <div className="flex flex-wrap gap-4 text-xs text-muted-foreground justify-center pt-4 border-t border-accent-100">
               <div className="flex items-center space-x-2">
                 <div className="w-4 h-4 bg-red-100 border border-red-300 rounded"></div>
-                <span>Period Day</span>
+                <span>Hari Menstruasi</span>
               </div>
               <div className="flex items-center space-x-2">
                 <div className="w-4 h-4 bg-blue-50 border border-blue-200 rounded"></div>
-                <span>Symptoms</span>
+                <span>Gejala</span>
               </div>
               <div className="flex items-center space-x-2">
                 <div className="w-4 h-4 bg-yellow-50 border border-yellow-400 rounded"></div>
-                <span>Today</span>
+                <span>Hari Ini</span>
               </div>
               <div className="flex items-center space-x-2">
                 <div className="w-4 h-4 bg-blue-100 border-2 border-blue-500 rounded"></div>
-                <span>Selected</span>
+                <span>Terpilih</span>
               </div>
             </div>
           </div>
@@ -410,18 +410,18 @@ export const CalendarPage = () => {
             <div>
               <p className="font-semibold text-foreground">
                 {nextPeriodDays === null 
-                  ? 'Start tracking to see predictions'
+                  ? 'Mulai lacak untuk melihat prediksi'
                   : nextPeriodDays <= 3 
-                    ? 'Period starting soon!' 
-                    : 'Next Period'
+                    ? 'Menstruasi segera dimulai!'
+                    : 'Menstruasi berikutnya'
                 }
               </p>
               <p className="text-sm text-muted-foreground">
                 {nextPeriodDays === null 
-                  ? 'Mark your period days to get cycle predictions'
+                  ? 'Tandai hari menstruasi untuk mendapatkan prediksi siklus'
                   : nextPeriodDays <= 0
-                    ? 'Expected now or overdue'
-                    : `Expected in ${nextPeriodDays} day${nextPeriodDays !== 1 ? 's' : ''}`
+                    ? 'Diperkirakan sekarang atau terlambat'
+                    : `Diperkirakan dalam ${nextPeriodDays} hari`
                 }
               </p>
             </div>
@@ -437,7 +437,7 @@ export const CalendarPage = () => {
         >
           <div className="flex items-center space-x-2">
             <Heart size={20} />
-            <span className="font-semibold">Quick Record Today</span>
+            <span className="font-semibold">Catat Hari Ini</span>
           </div>
         </Button>
       </div>
@@ -466,7 +466,7 @@ export const CalendarPage = () => {
               <BellOff className="text-muted-foreground" size={20} />
             )}
             <span className="text-xs font-medium">
-              {notificationsEnabled ? 'Notifications On' : 'Notifications Off'}
+              {notificationsEnabled ? 'Notifikasi Aktif' : 'Notifikasi Nonaktif'}
             </span>
           </Button>
           <Button
@@ -475,7 +475,7 @@ export const CalendarPage = () => {
             onClick={() => setReportsModalOpen(true)}
           >
             <BarChart3 className="text-accent-600" size={20} />
-            <span className="text-xs font-medium">View Reports</span>
+            <span className="text-xs font-medium">Lihat Laporan</span>
           </Button>
           <Button
             variant="outline"
@@ -483,7 +483,7 @@ export const CalendarPage = () => {
             onClick={handleLogSymptomsToday}
           >
             <Heart className="text-accent-600" size={20} />
-            <span className="text-xs font-medium">Log Symptoms</span>
+            <span className="text-xs font-medium">Catat Gejala</span>
           </Button>
         </div>
       </div>

@@ -6,24 +6,24 @@ import { Button } from '@/components/ui/button';
 export const CommunityPage = () => {
   const communityLinks = [
     {
-      name: 'Join Our Telegram Group',
-      description: 'Connect with women sharing similar experiences',
+      name: 'Gabung Grup Telegram Kami',
+      description: 'Terhubung dengan wanita dengan pengalaman serupa',
       icon: MessageCircle,
       url: 'https://t.me/vastcommunity',
       color: 'bg-blue-100 text-blue-700',
       members: '2.5k+'
     },
     {
-      name: 'Follow on Instagram',
-      description: 'Daily tips and wellness content',
+      name: 'Ikuti di Instagram',
+      description: 'Tips harian dan konten kesehatan',
       icon: Heart,
       url: 'https://instagram.com/vast.pkm',
       color: 'bg-pink-100 text-pink-700',
       members: '1.2k+'
     },
     {
-      name: 'Facebook Community',
-      description: 'Share stories and support each other',
+      name: 'Komunitas Facebook',
+      description: 'Berbagi cerita dan saling mendukung',
       icon: Users,
       url: 'https://facebook.com/groups/vastcommunity',
       color: 'bg-purple-100 text-purple-700',
@@ -34,7 +34,7 @@ export const CommunityPage = () => {
   return (
     <div className="space-y-6 pb-32">
       {/* Header with Logo and Title */}
-      <PageHeader title="Community" subtitle="Connect with others" />
+  <PageHeader title="Komunitas" subtitle="Terhubung dengan orang lain" />
 
       {/* Hero Section */}
       <div className="px-6">
@@ -43,10 +43,10 @@ export const CommunityPage = () => {
             <Users className="text-white" size={24} />
           </div>
           <h1 className="text-2xl font-bold text-foreground mb-2">
-            Join Our Community
+            Bergabung dengan Komunitas Kami
           </h1>
           <p className="text-muted-foreground">
-            Connect with thousands of women on their wellness journey. Share experiences, get support, and find inspiration.
+            Terhubung dengan ribuan wanita dalam perjalanan kesehatan mereka. Berbagi pengalaman, dapatkan dukungan, dan temukan inspirasi.
           </p>
         </div>
       </div>
@@ -88,7 +88,7 @@ export const CommunityPage = () => {
                 variant="outline"
               >
                 <Share2 size={16} className="mr-2" />
-                Join Community
+                Gabung Komunitas
               </Button>
             </a>
           </div>
@@ -100,14 +100,14 @@ export const CommunityPage = () => {
         <div className="card-soft p-6">
           <h3 className="font-semibold text-foreground mb-3 flex items-center space-x-2">
             <Heart className="text-accent-600" size={20} />
-            <span>Community Guidelines</span>
+            <span>Panduan Komunitas</span>
           </h3>
           <div className="space-y-2 text-sm text-muted-foreground">
-            <p>• Be respectful and supportive to all members</p>
-            <p>• Share experiences and tips openly</p>
-            <p>• Respect privacy and confidentiality</p>
-            <p>• Report any inappropriate content</p>
-            <p>• Consult healthcare professionals for medical advice</p>
+            <p>• Bersikap hormat dan mendukung semua anggota</p>
+            <p>• Berbagi pengalaman dan tips secara terbuka</p>
+            <p>• Hormati privasi dan kerahasiaan</p>
+            <p>• Laporkan konten yang tidak pantas</p>
+            <p>• Konsultasikan dengan profesional kesehatan untuk saran medis</p>
           </div>
         </div>
       </div>

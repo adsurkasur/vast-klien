@@ -37,13 +37,13 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
   return (
     <div className="space-y-8 pb-32">
       {/* Header with Logo */}
-      <PageHeader title="Home" subtitle="Welcome back" />
+      <PageHeader title="Beranda" subtitle="Selamat datang kembali" />
 
       {/* Quick News Cards - 3 buttons in a row (wireframe layout) */}
       <div className="px-6">
         <div className="grid grid-cols-3 gap-4">
           <h1 className="col-span-3 text-lg font-semibold text-foreground">
-            News
+            Berita
           </h1>
           {newsItems.map((item) => (
             <div
@@ -66,14 +66,14 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
           className="cursor-pointer rounded-2xl shadow-lg bg-gradient-to-br from-pink-500 via-rose-400 to-pink-100 border-2 border-pink-400 hover:scale-[1.03] hover:shadow-2xl transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-pink-300"
           tabIndex={0}
           role="button"
-          aria-label="Healthy Tips"
+          aria-label="Tips Sehat"
         >
           <div className="flex flex-col items-center justify-center py-8 px-6">
             <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mb-4 shadow-md">
               <Heart className="text-pink-600" size={32} />
             </div>
-            <h3 className="font-bold text-lg text-pink-800 mb-2">Healthy Tips</h3>
-            <p className="text-sm text-pink-900/80 text-center">Wellness advice for your cycle</p>
+            <h3 className="font-bold text-lg text-pink-800 mb-2">Tips Sehat</h3>
+            <p className="text-sm text-pink-900/80 text-center">Panduan kesehatan untuk siklus Anda</p>
           </div>
         </div>
 
@@ -83,14 +83,14 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
           className="cursor-pointer rounded-2xl shadow-lg bg-gradient-to-br from-indigo-500 via-purple-400 to-indigo-100 border-2 border-indigo-400 hover:scale-[1.03] hover:shadow-2xl transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-indigo-300"
           tabIndex={0}
           role="button"
-          aria-label="My Calendar"
+          aria-label="Kalender Saya"
         >
           <div className="flex flex-col items-center justify-center py-8 px-6">
             <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mb-4 shadow-md">
               <Calendar className="text-indigo-600" size={32} />
             </div>
-            <h3 className="font-bold text-lg text-indigo-800 mb-2">My Calendar</h3>
-            <p className="text-sm text-indigo-900/80 text-center">Track your cycle and symptoms</p>
+            <h3 className="font-bold text-lg text-indigo-800 mb-2">Kalender Saya</h3>
+            <p className="text-sm text-indigo-900/80 text-center">Lacak siklus dan gejala Anda</p>
           </div>
         </div>
 
@@ -100,14 +100,14 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
           className="cursor-pointer rounded-2xl shadow-lg bg-gradient-to-br from-cyan-500 via-blue-400 to-cyan-100 border-2 border-cyan-400 hover:scale-[1.03] hover:shadow-2xl transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-cyan-300"
           tabIndex={0}
           role="button"
-          aria-label="My Community"
+          aria-label="Komunitas Saya"
         >
           <div className="flex flex-col items-center justify-center py-8 px-6">
             <div className="w-16 h-16 bg-cyan-100 rounded-full flex items-center justify-center mb-4 shadow-md">
               <Users className="text-cyan-600" size={32} />
             </div>
-            <h3 className="font-bold text-lg text-cyan-800 mb-2">My Community</h3>
-            <p className="text-sm text-cyan-900/80 text-center">Connect with other women</p>
+            <h3 className="font-bold text-lg text-cyan-800 mb-2">Komunitas Saya</h3>
+            <p className="text-sm text-cyan-900/80 text-center">Terhubung dengan wanita lain</p>
           </div>
         </div>
       </div>

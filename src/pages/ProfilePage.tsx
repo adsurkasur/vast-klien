@@ -48,7 +48,7 @@ export const ProfilePage: React.FC = () => {
   return (
     <div className="space-y-6 pb-32">
       {/* Unified Page Header */}
-      <PageHeader title="My Profile" subtitle="Personalize your experience" />
+  <PageHeader title="Profil Saya" subtitle="Personalisasi pengalaman Anda" />
 
   {/* Profile Card */}
   {/* Google Auth and Cloud Sync Placeholder UI */}
@@ -60,15 +60,15 @@ export const ProfilePage: React.FC = () => {
               <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-2">
                 <User size={28} className="text-primary-foreground" />
               </div>
-              <h2 className="text-xl font-semibold text-foreground">Not registered</h2>
-              <p className="text-muted-foreground text-center">Sign in to personalize your experience and sync your cycle data securely.</p>
+              <h2 className="text-xl font-semibold text-foreground">Belum terdaftar</h2>
+              <p className="text-muted-foreground text-center">Masuk untuk personalisasi pengalaman Anda dan sinkronkan data siklus Anda dengan aman.</p>
               <Button
                 onClick={handleGoogleLogin}
                 className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl spring-tap"
               >
                 {/* Placeholder for Google icon */}
                 <span className="mr-2">G</span>
-                Login with Google
+                Masuk dengan Google
               </Button>
             </div>
           ) : (
@@ -87,7 +87,7 @@ export const ProfilePage: React.FC = () => {
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="name" className="text-sm font-medium text-foreground">Name</Label>
+                      <Label htmlFor="name" className="text-sm font-medium text-foreground">Nama</Label>
                       <Input
                         id="name"
                         value={profile.name}
@@ -96,7 +96,7 @@ export const ProfilePage: React.FC = () => {
                       />
                     </div>
                     <div>
-                      <Label htmlFor="age" className="text-sm font-medium text-foreground">Age</Label>
+                      <Label htmlFor="age" className="text-sm font-medium text-foreground">Usia</Label>
                       <Input
                         id="age"
                         value={profile.age}
@@ -119,7 +119,7 @@ export const ProfilePage: React.FC = () => {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="cycleLength" className="text-sm font-medium text-foreground">Cycle Length (days)</Label>
+                      <Label htmlFor="cycleLength" className="text-sm font-medium text-foreground">Panjang Siklus (hari)</Label>
                       <Input
                         id="cycleLength"
                         value={profile.cycleLength}
@@ -128,7 +128,7 @@ export const ProfilePage: React.FC = () => {
                       />
                     </div>
                     <div>
-                      <Label htmlFor="periodLength" className="text-sm font-medium text-foreground">Period Length (days)</Label>
+                      <Label htmlFor="periodLength" className="text-sm font-medium text-foreground">Panjang Menstruasi (hari)</Label>
                       <Input
                         id="periodLength"
                         value={profile.periodLength}
@@ -142,22 +142,22 @@ export const ProfilePage: React.FC = () => {
                     onClick={handleSave}
                     className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl spring-tap"
                   >
-                    Save Changes
+                    Simpan Perubahan
                   </Button>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <span className="text-muted-foreground">Age:</span>
-                    <span className="ml-2 font-medium text-foreground">{profile.age} years</span>
+                    <span className="text-muted-foreground">Usia:</span>
+                    <span className="ml-2 font-medium text-foreground">{profile.age} tahun</span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Cycle:</span>
-                    <span className="ml-2 font-medium text-foreground">{profile.cycleLength} days</span>
+                    <span className="text-muted-foreground">Siklus:</span>
+                    <span className="ml-2 font-medium text-foreground">{profile.cycleLength} hari</span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Period:</span>
-                    <span className="ml-2 font-medium text-foreground">{profile.periodLength} days</span>
+                    <span className="text-muted-foreground">Menstruasi:</span>
+                    <span className="ml-2 font-medium text-foreground">{profile.periodLength} hari</span>
                   </div>
                 </div>
               )}
@@ -179,7 +179,7 @@ export const ProfilePage: React.FC = () => {
                     size="sm"
                     className="w-full mt-2 text-destructive border-card-border spring-tap"
                   >
-                    Log out
+                    Keluar
                   </Button>
                 </>
               )}
@@ -194,10 +194,10 @@ export const ProfilePage: React.FC = () => {
         Google Auth is only used for data syncing.
       */}
       <div className="px-6">
-        <h3 className="text-lg font-semibold text-foreground mb-4">Settings</h3>
+  <h3 className="text-lg font-semibold text-foreground mb-4">Pengaturan</h3>
         <div className="space-y-3">
           {[
-            { icon: Bell, label: 'Notifications', sublabel: 'Period reminders and tips' },
+            { icon: Bell, label: 'Notifikasi', sublabel: 'Pengingat menstruasi dan tips' },
             //  { icon: Shield, label: 'Privacy', sublabel: 'Data and account security' },
             //  { icon: Heart, label: 'Health Data', sublabel: 'Export your cycle data' },
             //  { icon: Calendar, label: 'Sync Calendar', sublabel: 'Connect with your calendar app' },
@@ -223,19 +223,19 @@ export const ProfilePage: React.FC = () => {
       {/* Privacy Notice (always show) */}
       <div className="px-6">
         <div className="card-elevated p-6 accent-profile">
-          <h3 className="text-lg font-semibold text-foreground mb-4">Privacy Notice</h3>
+          <h3 className="text-lg font-semibold text-foreground mb-4">Pemberitahuan Privasi</h3>
           <div className="text-sm text-foreground space-y-3">
             <p>
-              Your health data is private and secure. Vast uses end-to-end encryption to protect
-              your personal information and menstrual cycle data.
+              Data kesehatan Anda bersifat pribadi dan aman. Vast menggunakan enkripsi end-to-end untuk melindungi
+              informasi pribadi dan data siklus menstruasi Anda.
             </p>
             <p>
-              We never share your data with third parties without your explicit consent.
-              You have full control over your data and can export or delete it at any time.
+              Kami tidak pernah membagikan data Anda kepada pihak ketiga tanpa persetujuan Anda.
+              Anda memiliki kendali penuh atas data Anda dan dapat mengekspor atau menghapusnya kapan saja.
             </p>
             <div className="pt-3 border-t border-card-border">
               <p className="text-xs text-muted-foreground">
-                Last updated: January 2024 • <span className="text-primary cursor-pointer">Read full privacy policy</span>
+                Terakhir diperbarui: Januari 2024 • <span className="text-primary cursor-pointer">Baca kebijakan privasi lengkap</span>
               </p>
             </div>
           </div>
