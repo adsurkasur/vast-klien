@@ -5,46 +5,46 @@ import { PageHeader } from '../components/layout/PageHeader';
 const tipCategories = [
   {
     id: 1,
-    title: 'Nutrition & Diet',
+    title: 'Nutrisi & Diet',
     icon: '🥗',
     color: 'bg-green-100',
     tips: [
-      'Eat iron-rich foods during your period',
-      'Stay hydrated with herbal teas',
-      'Include omega-3 fatty acids in your diet'
+      'Konsumsi makanan kaya zat besi saat menstruasi',
+      'Tetap terhidrasi dengan teh herbal',
+      'Tambahkan asam lemak omega-3 ke dalam diet Anda'
     ]
   },
   {
     id: 2,
-    title: 'Exercise & Movement',
+    title: 'Olahraga & Gerakan',
     icon: '🧘‍♀️',
     color: 'bg-blue-100',
     tips: [
-      'Light yoga can help with cramps',
-      'Walking reduces period pain',
-      'Gentle stretching improves mood'
+      'Yoga ringan dapat membantu meredakan kram',
+      'Jalan kaki mengurangi nyeri haid',
+      'Peregangan ringan meningkatkan suasana hati'
     ]
   },
   {
     id: 3,
-    title: 'Mental Wellness',
+    title: 'Kesehatan Mental',
     icon: '🧠',
     color: 'bg-purple-100',
     tips: [
-      'Practice mindfulness meditation',
-      'Keep a mood journal',
-      'Get enough quality sleep'
+      'Latihan meditasi mindfulness',
+      'Catat suasana hati Anda',
+      'Dapatkan tidur berkualitas yang cukup'
     ]
   },
   {
     id: 4,
-    title: 'Self Care',
+    title: 'Perawatan Diri',
     icon: '💆‍♀️',
     color: 'bg-pink-100',
     tips: [
-      'Take warm baths to ease tension',
-      'Use heat therapy for cramps',
-      'Practice deep breathing exercises'
+      'Mandi air hangat untuk meredakan ketegangan',
+      'Gunakan terapi panas untuk kram',
+      'Latihan pernapasan dalam'
     ]
   }
 ];
@@ -53,22 +53,22 @@ export const HealthyTipsPage = () => {
   return (
     <div className="space-y-6 pb-32">
       {/* Header */}
-      <PageHeader title="Healthy Tips" subtitle="Wellness guidance for every day" />
+  <PageHeader title="Tips Sehat" subtitle="Panduan kesehatan setiap hari" />
 
       {/* Featured Tip */}
       <div className="px-6">
         <div className="card-elevated p-6 accent-tips">
           <div className="flex items-center space-x-3 mb-4">
             <Heart className="text-primary" size={24} />
-            <h2 className="text-lg font-semibold text-foreground">Today's Featured Tip</h2>
+            <h2 className="text-lg font-semibold text-foreground">Tips Unggulan Hari Ini</h2>
           </div>
           <p className="text-foreground mb-4">
-            Stay hydrated! Drinking plenty of water can help reduce bloating and ease period symptoms. 
-            Aim for 8-10 glasses throughout the day.
+            Tetap terhidrasi! Minum banyak air dapat membantu mengurangi kembung dan meredakan gejala menstruasi.
+            Usahakan minum 8-10 gelas sepanjang hari.
           </p>
           <div className="flex items-center space-x-2 text-sm text-muted-foreground">
             <Droplets size={16} />
-            <span>Hydration • Wellness</span>
+            <span>Hidrasi • Kesehatan</span>
           </div>
         </div>
       </div>

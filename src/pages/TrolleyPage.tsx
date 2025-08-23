@@ -13,8 +13,8 @@ export const TrolleyPage: React.FC = () => {
         url: 'https://tokopedia.com',
         color: ' bg-green-100 text-green-700',
         rating: null, //4.8,
-        deliveryTime: null, //'1-2 days',
-        features: null //['Free Shipping', 'Cash on Delivery', 'Official Store']
+        deliveryTime: null, //'1-2 hari',
+        features: null //['Gratis Ongkir', 'Bayar di Tempat', 'Toko Resmi']
       },
     {
       name: 'Shopee',
@@ -24,31 +24,31 @@ export const TrolleyPage: React.FC = () => {
       url: 'https://shopee.co.id',
       color: 'bg-orange-100 text-orange-700',
       rating: null, //4.7,
-      deliveryTime: null, //'2-3 days',
-      features: null //'Free Shipping', 'Shopee Guarantee', 'Flash Sale']
+      deliveryTime: null, //'2-3 hari',
+      features: null //'Gratis Ongkir', 'Garansi Shopee', 'Flash Sale']
     },
     {
-      name: 'Find Store Near You',
+      name: 'Cari Toko Terdekat',
       icon: MapPin,
       url: 'https://maps.google.com',
       color: 'bg-blue-100 text-blue-700',
       rating: null,
-      deliveryTime: null, //'Same day',
-      features: null //['In-store pickup', 'Personal consultation', 'Immediate availability']
+      deliveryTime: null, //'Hari yang sama',
+      features: null //['Ambil di toko', 'Konsultasi pribadi', 'Tersedia langsung']
     }
   ];
 
   const productFeatures = [
-    'Helps reduce menstrual pain naturally',
-    'Made from premium herbal ingredients',
-    'Easy to consume powder format',
-    'Clinically tested and safe',
-    'Suitable for daily consumption'
+    'Membantu mengurangi nyeri haid secara alami',
+    'Terbuat dari bahan herbal premium',
+    'Format bubuk yang mudah dikonsumsi',
+    'Teruji secara klinis dan aman',
+    'Cocok untuk konsumsi harian'
   ];
 
   return (
     <div className="min-h-screen bg-background pb-32">
-      <PageHeader title="Shop Vast" subtitle="Get your herbal supplements" />
+  <PageHeader title="Belanja Vast" subtitle="Dapatkan suplemen herbal Anda" />
       
       <div className="p-6 space-y-8">
         {/* Hero Section */}
@@ -57,17 +57,17 @@ export const TrolleyPage: React.FC = () => {
             <ShoppingBag className="text-white" size={24} />
           </div>
           <h1 className="text-2xl font-bold text-foreground mb-2">
-            Shop Vast Products
+            Produk Vast
           </h1>
           <p className="text-muted-foreground">
-            Get your Vast herbal supplement for menstrual pain relief from trusted online stores
+            Dapatkan suplemen herbal Vast untuk meredakan nyeri haid dari toko online terpercaya
           </p>
         </div>
 
         {/* Product Benefits */}
         <div className="card-soft p-6">
           <h2 className="text-lg font-semibold text-foreground mb-4">
-            Why Choose Vast?
+            Kenapa Pilih Vast?
           </h2>
             <ul className="list-disc pl-4 space-y-2 text-muted-foreground">
               {productFeatures.map((feature, index) => (
@@ -79,7 +79,7 @@ export const TrolleyPage: React.FC = () => {
         {/* Shopping Options */}
         <div className="space-y-4">
           <h2 className="text-lg font-semibold text-foreground">
-            Where to Buy
+            Tempat Pembelian
           </h2>
           
           {shopLinks.map((shop) => (
@@ -146,7 +146,7 @@ export const TrolleyPage: React.FC = () => {
                     className="w-full spring-tap"
                     variant="default"
                   >
-                    Shop on {shop.name}
+                    Beli di {shop.name}
                   </Button>
               </a>
             </div>
@@ -156,14 +156,14 @@ export const TrolleyPage: React.FC = () => {
         {/* Additional Info */}
         <div className="card-soft p-6">
           <h3 className="font-semibold text-foreground mb-3">
-            Need Help?
+            Butuh Bantuan?
           </h3>
           <p className="text-muted-foreground text-sm mb-4">
-            If you need assistance with your order or have questions about our products, 
-            feel free to contact our customer support team.
+            Jika Anda membutuhkan bantuan dengan pesanan atau memiliki pertanyaan tentang produk kami,
+            silakan hubungi tim dukungan pelanggan kami.
           </p>
           <Button variant="outline" className="w-full">
-            Contact Support
+            Hubungi Dukungan
           </Button>
         </div>
       </div>

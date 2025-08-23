@@ -11,29 +11,29 @@ interface SymptomsModalProps {
 }
 
 const symptomCategories = {
-  physical: [
-    'Cramps',
-    'Headache',
-    'Fatigue',
-    'Bloating',
-    'Breast tenderness',
-    'Back pain',
-    'Nausea'
+  fisik: [
+    'Kram',
+    'Sakit kepala',
+    'Lelah',
+    'Kembung',
+    'Nyeri payudara',
+    'Sakit punggung',
+    'Mual'
   ],
-  emotional: [
-    'Mood swings',
-    'Irritability',
-    'Anxiety',
-    'Depression',
-    'Crying spells',
-    'Food cravings'
+  emosional: [
+    'Perubahan suasana hati',
+    'Mudah marah',
+    'Cemas',
+    'Depresi',
+    'Menangis',
+    'Ngidam makanan'
   ],
-  flow: [
-    'Light flow',
-    'Medium flow',
-    'Heavy flow',
-    'Spotting',
-    'Clots'
+  aliran: [
+    'Aliran ringan',
+    'Aliran sedang',
+    'Aliran berat',
+    'Flek',
+    'Gumpalan darah'
   ]
 };
 
@@ -71,7 +71,7 @@ export const SymptomsModal: React.FC<SymptomsModalProps> = ({
 
   const saveSymptoms = () => {
     if (selectedSymptoms.length === 0) {
-      alert('Please select at least one symptom.');
+      alert('Silakan pilih minimal satu gejala.');
       return;
     }
     if (onSaveSymptoms) {
@@ -94,7 +94,7 @@ export const SymptomsModal: React.FC<SymptomsModalProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between p-6 pb-4">
           <h3 className="text-lg font-semibold text-foreground" id="symptoms-modal-title">
-            Daily Symptoms
+            Gejala Harian
           </h3>
           <Button
             variant="ghost"
@@ -110,7 +110,7 @@ export const SymptomsModal: React.FC<SymptomsModalProps> = ({
         {/* Date */}
         <div className="px-6 pb-4">
           <p className="text-sm text-muted-foreground">
-            {new Date(selectedDate).toLocaleDateString('en-US', {
+            {new Date(selectedDate).toLocaleDateString('id-ID', {
               weekday: 'long',
               year: 'numeric',
               month: 'long',
@@ -124,7 +124,7 @@ export const SymptomsModal: React.FC<SymptomsModalProps> = ({
           {Object.entries(symptomCategories).map(([category, symptoms]) => (
             <div key={category}>
               <h4 className="text-sm font-medium text-foreground mb-3 capitalize">
-                {category} Symptoms
+                {category === 'fisik' ? 'Gejala Fisik' : category === 'emosional' ? 'Gejala Emosional' : 'Gejala Aliran'}
               </h4>
               <div className="grid grid-cols-2 gap-2">
                 {symptoms.map(symptom => (
@@ -157,18 +157,18 @@ export const SymptomsModal: React.FC<SymptomsModalProps> = ({
           <Button
             onClick={saveSymptoms}
             className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl py-3"
-            aria-label="Save symptoms"
+            aria-label="Simpan gejala"
             disabled={selectedSymptoms.length === 0}
           >
-            Save Symptoms ({selectedSymptoms.length})
+            Simpan Gejala ({selectedSymptoms.length})
           </Button>
           <Button
             onClick={onClose}
             variant="outline"
             className="w-full bg-white/50 border-card-border hover:bg-white/70"
-            aria-label="Cancel"
+            aria-label="Batal"
           >
-            Cancel
+            Batal
           </Button>
         </div>
       </div>

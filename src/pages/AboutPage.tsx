@@ -4,16 +4,16 @@ import { PageHeader } from '../components/layout/PageHeader';
 const AboutPage: React.FC = () => {
   return (
     <div className="space-y-8 pb-32">
-      <PageHeader title="About" subtitle="Tentang VAST" />
+  <PageHeader title="Tentang" subtitle="Tentang VAST" />
       <div className="px-6">
-        <h2 className="text-2xl font-bold text-foreground mb-2 tracking-tight">VAST: Serene Cycle Companion</h2>
+        <h2 className="text-2xl font-bold text-foreground mb-2 tracking-tight">VAST: Pendamping Siklus yang Tenang</h2>
         <p className="text-base text-muted-foreground mb-6">
           Mendukung perjalanan kesehatan perempuan dengan inovasi berbasis sains dan teknologi pangan.
         </p>
 
         {/* Our Product Section */}
         <div className="mt-10">
-          <h3 className="text-lg font-semibold mb-4 text-primary">Our Product</h3>
+          <h3 className="text-lg font-semibold mb-4 text-primary">Produk Kami</h3>
           <div className="flex flex-col md:flex-row items-center gap-8 mb-6">
             <div className="bg-card rounded-xl shadow-sm p-4 flex flex-col items-center w-full md:w-1/2">
               <img src="/png/kotak.png" alt="Vast Product Box and Sachet" className="w-full max-w-xs object-contain mb-2" />
@@ -29,7 +29,7 @@ const AboutPage: React.FC = () => {
         </div>
 
         <div className="rounded-xl bg-card p-6 shadow-sm mb-8 border border-border">
-          <h3 className="text-lg font-semibold mb-3 text-primary">VAST Innovation</h3>
+          <h3 className="text-lg font-semibold mb-3 text-primary">Inovasi VAST</h3>
           <hr className="mb-4 border-muted-foreground/20" />
           <p className="text-base text-muted-foreground leading-relaxed">
             Dismenore merupakan gangguan menstruasi yang umum dialami perempuan dan sering diatasi dengan analgenik, 
@@ -43,10 +43,10 @@ const AboutPage: React.FC = () => {
         </div>
 
         <div className="rounded-xl bg-card p-4 shadow-sm mb-6">
-          <h3 className="text-lg font-semibold mb-2 text-primary">Our Mission</h3>
+          <h3 className="text-lg font-semibold mb-2 text-primary">Misi Kami</h3>
           <hr className="mb-3 border-muted-foreground/20" />
           <p className="text-base text-muted-foreground">
-            Empowering individuals to understand and embrace their cycle with serenity and confidence.
+            Memberdayakan individu untuk memahami dan menerima siklus mereka dengan ketenangan dan percaya diri.
           </p>
         </div>
       </div>

@@ -7,7 +7,7 @@ export const ContactPage = () => {
   return (
     <div className="space-y-6 pb-32">
       {/* Header */}
-      <PageHeader title="Contact" subtitle="Get in touch with us" />
+  <PageHeader title="Kontak" subtitle="Hubungi kami" />
 
       {/* Linktree Recreation */}
       <div className="px-6">
@@ -23,7 +23,7 @@ export const ContactPage = () => {
               <h1 className="text-2xl font-bold mb-2">Vast.PKM_K</h1>
               <div className="flex items-center justify-center space-x-2 mb-6">
                 <Leaf size={16} />
-                <p className="text-lg">Loose Your Sorrow with Ease</p>
+                <p className="text-lg">Lepaskan Kesedihanmu dengan Mudah</p>
               </div>
               
               {/* Social Icons */}
