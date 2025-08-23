@@ -211,7 +211,7 @@ const ProfilePage = () => {
             </p>
             <div className="pt-3 border-t border-card-border">
               <p className="text-xs text-muted-foreground">
-                Terakhir diperbarui: Januari 2024 • <Link href="/privacypolicy" className="text-primary underline cursor-pointer">Baca kebijakan privasi lengkap</Link>
+                Terakhir diperbarui: Agustus 2025 • <Link href="/privacypolicy" className="text-primary underline cursor-pointer">Baca kebijakan privasi lengkap</Link>
               </p>
             </div>
           </div>
