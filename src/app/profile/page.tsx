@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Edit, User, Shield, Bell, Heart, Calendar, Settings } from 'lucide-react';
 import { Button } from '../../components/ui/button';
+import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
@@ -195,14 +196,23 @@ const ProfilePage = () => {
                 <div className="text-xs text-muted-foreground">Pengingat menstruasi dan tips</div>
               </div>
             </div>
-            <Button
-              variant={notificationsEnabled ? "default" : "outline"}
-              size="sm"
-              className="ml-4"
+            {/* Pill Toggle */}
+            <button
+              className={cn(
+                "relative w-14 h-7 flex items-center bg-gray-200 rounded-full p-1 transition-colors duration-200 focus:outline-none",
+                notificationsEnabled ? "bg-primary/80" : "bg-gray-200"
+              )}
+              aria-pressed={notificationsEnabled}
+              aria-label="Aktifkan/Nonaktifkan Notifikasi"
               onClick={() => setNotificationsEnabled(!notificationsEnabled)}
             >
-              {notificationsEnabled ? "Aktif" : "Nonaktif"}
-            </Button>
+              <span
+                className={cn(
+                  "absolute left-1 top-1 w-5 h-5 rounded-full bg-white shadow-md transition-transform duration-200",
+                  notificationsEnabled ? "translate-x-7" : "translate-x-0"
+                )}
+              />
+            </button>
           </div>
           {/* Add other settings items here if needed */}
         </div>
