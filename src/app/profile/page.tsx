@@ -175,10 +175,10 @@ const ProfilePage = () => {
         <div className="space-y-3">
           {[
             { icon: Bell, label: 'Notifikasi', sublabel: 'Pengingat menstruasi dan tips' },
-            { icon: Shield, label: 'Privasi', sublabel: 'Keamanan data dan akun' },
-            { icon: Heart, label: 'Data Kesehatan', sublabel: 'Ekspor data siklus Anda' },
-            { icon: Calendar, label: 'Sinkronisasi Kalender', sublabel: 'Hubungkan dengan aplikasi kalender Anda' },
-            { icon: Settings, label: 'Preferensi Aplikasi', sublabel: 'Sesuaikan pengalaman Anda' }
+            // { icon: Shield, label: 'Privasi', sublabel: 'Keamanan data dan akun' },
+            // { icon: Heart, label: 'Data Kesehatan', sublabel: 'Ekspor data siklus Anda' },
+            // { icon: Calendar, label: 'Sinkronisasi Kalender', sublabel: 'Hubungkan dengan aplikasi kalender Anda' },
+            // { icon: Settings, label: 'Preferensi Aplikasi', sublabel: 'Sesuaikan pengalaman Anda' }
           ].map((item) => (
             <div
               key={item.label}
