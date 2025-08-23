@@ -2,7 +2,7 @@ import React from 'react';
 import { Home, ShoppingCart, Phone, User, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-export type Page = 'home' | 'tips' | 'calendar' | 'community' | 'profile' | 'contact' | 'trolley' | 'about';
+export type Page = 'home' | 'tips' | 'calendar' | 'community' | 'profile' | 'contact' | 'trolley' | 'about' | 'privacy';
 
 interface BottomNavigationProps {
   currentPage: Page;

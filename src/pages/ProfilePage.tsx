@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Edit, User, Shield, Bell, Heart, Calendar, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { PageHeader } from '../components/layout/PageHeader';
 
-export const ProfilePage: React.FC = () => {
+import { Page } from '@/components/layout/BottomNavigation';
+
+interface ProfilePageProps {
+  onNavigate?: (page: Page) => void;
+}
+
+export const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate }) => {
   // Registration state: false = not registered, true = registered
   const [isRegistered, setIsRegistered] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -235,7 +242,7 @@ export const ProfilePage: React.FC = () => {
             </p>
             <div className="pt-3 border-t border-card-border">
               <p className="text-xs text-muted-foreground">
-                Terakhir diperbarui: Januari 2024 • <span className="text-primary cursor-pointer">Baca kebijakan privasi lengkap</span>
+                Terakhir diperbarui: Januari 2024 • <span className="text-primary underline cursor-pointer" onClick={() => typeof onNavigate === 'function' && onNavigate('privacy')}>Baca kebijakan privasi lengkap</span>
               </p>
             </div>
           </div>

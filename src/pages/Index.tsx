@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { BottomNavigation, Page } from '@/components/layout/BottomNavigation';
+import PrivacyPolicyContent from './PrivacyPolicyPage';
 import { HomePage } from './HomePage';
 import { HealthyTipsPage } from './HealthyTipsPage';
 import { CalendarPage } from './CalendarPage';
@@ -19,7 +20,7 @@ const Index = () => {
       case 'home':
         return <HomePage onNavigate={setCurrentPage} />;
       case 'profile':
-        return <ProfilePage />;
+        return <ProfilePage onNavigate={setCurrentPage} />;
       case 'contact':
         return <ContactPage />;
       case 'tips':
@@ -32,6 +33,8 @@ const Index = () => {
         return <TrolleyPage />;
       case 'about':
         return <AboutPage />;
+      case 'privacy':
+        return <PrivacyPolicyContent />;
       default:
         return <HomePage onNavigate={setCurrentPage} />;
     }

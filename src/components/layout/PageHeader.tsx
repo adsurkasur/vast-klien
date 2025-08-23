@@ -5,6 +5,7 @@ interface PageHeaderProps {
   subtitle?: string;
 }
 
+
 export const PageHeader = ({ title, subtitle }: PageHeaderProps) => {
   return (
     <div className="sticky top-0 bg-background/80 backdrop-blur-lg z-10 py-6 px-6 border-b border-card-border">
@@ -17,7 +18,6 @@ export const PageHeader = ({ title, subtitle }: PageHeaderProps) => {
             <p className="text-xs text-muted-foreground">Your wellness companion</p>
           </div>
         </div>
-        
         {/* Page Title */}
         <div className="text-right">
           <h2 className="text-2xl font-semibold text-foreground">{title}</h2>
