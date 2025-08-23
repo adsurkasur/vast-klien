@@ -1,6 +1,6 @@
 
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Edit, User, Shield, Bell, Heart, Calendar, Settings } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import Link from 'next/link';
@@ -37,6 +37,20 @@ const ProfilePage = () => {
     setIsEditing(false);
     console.log('Saving profile:', profile);
   };
+
+  // Notification toggle state
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+
+  useEffect(() => {
+    const savedNotifications = localStorage.getItem('notificationsEnabled');
+    if (savedNotifications !== null) {
+      setNotificationsEnabled(JSON.parse(savedNotifications));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('notificationsEnabled', JSON.stringify(notificationsEnabled));
+  }, [notificationsEnabled]);
 
   return (
     <div className="space-y-6 pb-32">
@@ -173,27 +187,24 @@ const ProfilePage = () => {
       <div className="px-6">
         <h3 className="text-lg font-semibold text-foreground mb-4">Pengaturan</h3>
         <div className="space-y-3">
-          {[
-            { icon: Bell, label: 'Notifikasi', sublabel: 'Pengingat menstruasi dan tips' },
-            // { icon: Shield, label: 'Privasi', sublabel: 'Keamanan data dan akun' },
-            // { icon: Heart, label: 'Data Kesehatan', sublabel: 'Ekspor data siklus Anda' },
-            // { icon: Calendar, label: 'Sinkronisasi Kalender', sublabel: 'Hubungkan dengan aplikasi kalender Anda' },
-            // { icon: Settings, label: 'Preferensi Aplikasi', sublabel: 'Sesuaikan pengalaman Anda' }
-          ].map((item) => (
-            <div
-              key={item.label}
-              className="card-soft p-4 flex items-center justify-between spring-tap cursor-pointer hover:shadow-card transition-all duration-200"
-            >
-              <div className="flex items-center space-x-3">
-                <item.icon size={20} className="text-primary" />
-                <div>
-                  <div className="font-medium text-foreground text-sm">{item.label}</div>
-                  <div className="text-xs text-muted-foreground">{item.sublabel}</div>
-                </div>
+          <div className="card-soft p-4 flex items-center justify-between spring-tap cursor-pointer hover:shadow-card transition-all duration-200">
+            <div className="flex items-center space-x-3">
+              <Bell size={20} className={notificationsEnabled ? "text-primary" : "text-muted-foreground"} />
+              <div>
+                <div className="font-medium text-foreground text-sm">Notifikasi</div>
+                <div className="text-xs text-muted-foreground">Pengingat menstruasi dan tips</div>
               </div>
-              <div className="w-5 h-5 border border-card-border rounded bg-white/50" />
             </div>
-          ))}
+            <Button
+              variant={notificationsEnabled ? "default" : "outline"}
+              size="sm"
+              className="ml-4"
+              onClick={() => setNotificationsEnabled(!notificationsEnabled)}
+            >
+              {notificationsEnabled ? "Aktif" : "Nonaktif"}
+            </Button>
+          </div>
+          {/* Add other settings items here if needed */}
         </div>
       </div>
       {/* Privacy Notice */}

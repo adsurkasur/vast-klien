@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { getExpectedMenstruationDate, triggerMenstruationNotification } from '@/lib/notifications';
 import { SymptomsModal } from '@/components/ui/SymptomsModal';
 import { ModalEditDelete } from '../../components/ui/ModalEditDelete';
 import { PageHeader } from '@/components/layout/PageHeader';
@@ -129,6 +130,19 @@ const CalendarPage = () => {
   useEffect(() => {
     localStorage.setItem('notificationsEnabled', JSON.stringify(notificationsEnabled));
   }, [notificationsEnabled]);
+
+  // Notification logic: trigger 3 days before expected menstruation
+  useEffect(() => {
+    if (!notificationsEnabled) return;
+    // Use lastPeriodStart and averageCycleLength for prediction
+    if (cycleData.lastPeriodStart && cycleData.averageCycleLength) {
+      const expectedDate = getExpectedMenstruationDate({
+        cycleLength: cycleData.averageCycleLength,
+        lastPeriodDate: cycleData.lastPeriodStart
+      });
+      triggerMenstruationNotification({ expectedDate });
+    }
+  }, [cycleData.lastPeriodStart, cycleData.averageCycleLength, notificationsEnabled]);
 
   const handleOpenSymptoms = (date: string) => {
     setSelectedDateForSymptoms(date);
