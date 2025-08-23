@@ -27,7 +27,7 @@ export const ReportsModal: React.FC<ReportsModalProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  // Calculate most common symptoms
+  // Hitung gejala paling sering
   const symptomCounts: Record<string, number> = {};
   periodDays.forEach(day => {
     day.symptoms.forEach(symptom => {
@@ -38,33 +38,33 @@ export const ReportsModal: React.FC<ReportsModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
-      <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={onClose} aria-label="Close modal" />
+      <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={onClose} aria-label="Tutup modal" />
       <div className="relative card-elevated w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200">
         <div className="flex items-center justify-between p-6 pb-4">
-          <h3 className="text-lg font-semibold text-foreground">Cycle & Symptom Reports</h3>
-          <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0 hover:bg-primary-muted" aria-label="Close">✕</Button>
+          <h3 className="text-lg font-semibold text-foreground">Laporan Siklus & Gejala</h3>
+          <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0 hover:bg-primary-muted" aria-label="Tutup">✕</Button>
         </div>
         <div className="px-6 pb-4 space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="card-elevated p-4 text-center">
-              <div className="text-2xl font-bold text-accent-600">{averageCycleLength}</div>
-              <div className="text-sm text-muted-foreground">Average Cycle Length</div>
+              <div className="text-2xl font-bold text-accent-600">{averageCycleLength != null ? averageCycleLength : '-'}</div>
+              <div className="text-sm text-muted-foreground">Rata-rata Panjang Siklus</div>
             </div>
             <div className="card-elevated p-4 text-center">
-              <div className="text-2xl font-bold text-accent-600">{averagePeriodLength}</div>
-              <div className="text-sm text-muted-foreground">Average Period Length</div>
+              <div className="text-2xl font-bold text-accent-600">{averagePeriodLength != null ? averagePeriodLength : '-'}</div>
+              <div className="text-sm text-muted-foreground">Rata-rata Panjang Menstruasi</div>
             </div>
           </div>
           <div className="space-y-2">
-            <h4 className="font-medium text-foreground">All Cycles</h4>
+            <h4 className="font-medium text-foreground">Semua Siklus</h4>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr>
-                    <th className="text-left">Start Date</th>
-                    <th className="text-left">End Date</th>
-                    <th className="text-left">Cycle Length</th>
-                    <th className="text-left">Period Length</th>
+                    <th className="text-left">Tanggal Mulai</th>
+                    <th className="text-left">Tanggal Selesai</th>
+                    <th className="text-left">Panjang Siklus</th>
+                    <th className="text-left">Panjang Menstruasi</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -81,9 +81,9 @@ export const ReportsModal: React.FC<ReportsModalProps> = ({
             </div>
           </div>
           <div className="space-y-2">
-            <h4 className="font-medium text-foreground">Most Common Symptoms</h4>
+            <h4 className="font-medium text-foreground">Gejala Paling Sering</h4>
             {sortedSymptoms.length === 0 ? (
-              <div className="text-muted-foreground">No symptoms tracked yet.</div>
+              <div className="text-muted-foreground">Belum ada gejala yang dicatat.</div>
             ) : (
               <ul className="list-disc pl-6">
                 {sortedSymptoms.map(([symptom, count]) => (
@@ -94,7 +94,7 @@ export const ReportsModal: React.FC<ReportsModalProps> = ({
           </div>
         </div>
         <div className="px-6 pb-6">
-          <Button onClick={onClose} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl py-3" aria-label="Close">Close</Button>
+          <Button onClick={onClose} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl py-3" aria-label="Tutup">Tutup</Button>
         </div>
       </div>
     </div>

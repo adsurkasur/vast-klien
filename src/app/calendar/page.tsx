@@ -2,11 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { SymptomsModal } from '@/components/ui/SymptomsModal';
-import { ReportsModal } from '@/components/ui/ReportsModal';
+import { ModalEditDelete } from '../../components/ui/ModalEditDelete';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/button';
 import { Bell, BellOff, BarChart3, Heart, Calendar, Clock, TrendingUp, Droplets, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ReportsModal } from '../../components/ui/ReportsModal';
 
 interface CycleData {
   periodDays: Array<{
@@ -23,13 +24,47 @@ interface CycleData {
     cycleLength: number;
     periodLength?: number;
   }>;
-  averageCycleLength: number;
-  averagePeriodLength: number;
+  averageCycleLength: number | null;
+  averagePeriodLength: number | null;
   lastPeriodStart?: string;
   nextPeriodPrediction?: string;
 }
 
 const CalendarPage = () => {
+  // Modular calendar controller
+  const calendarController = {
+    trackDate: (dateStr: string) => {
+      setSelectedCalendarDate(dateStr);
+      updatePeriodData(dateStr, true);
+      setSelectedDateForSymptoms(dateStr);
+      const updatedDay = cycleData.periodDays.find(d => d.date === dateStr);
+      setSymptomsModalInitial(updatedDay?.symptoms ?? []);
+      setIsSymptomModalOpen(true);
+    },
+    editDate: (dateStr: string) => {
+      setSelectedDateForSymptoms(dateStr);
+      const updatedDay = cycleData.periodDays.find(d => d.date === dateStr);
+      setSymptomsModalInitial(updatedDay?.symptoms ?? []);
+      setIsSymptomModalOpen(true);
+    },
+    deleteDate: (dateStr: string) => {
+      // Always clear tracked date and symptoms
+      updatePeriodData(dateStr, false); // false means clear, not toggle
+    },
+    showEditDeletePopup: (dateStr: string) => {
+      const day = cycleData.periodDays.find(d => d.date === dateStr);
+      if (day && day.isPeriod) {
+        setPopupState({ open: true, date: dateStr });
+      } else {
+        setPopupState({ open: false, date: null });
+      }
+    }
+  };
+
+  // Popup state for edit/delete
+  const [popupState, setPopupState] = useState<{ open: boolean; date: string | null }>({ open: false, date: null });
+  const [popupLoading, setPopupLoading] = useState(false);
+  const [popupError, setPopupError] = useState<string | null>(null);
   // Unified function: track period and open symptoms modal
   const trackPeriodAndOpenSymptoms = (dateStr: string) => {
     // Determine previous tracking state
@@ -105,8 +140,8 @@ const CalendarPage = () => {
   const calculateNextPeriodDays = () => {
     if (!cycleData.lastPeriodStart) return null;
     const lastPeriod = new Date(cycleData.lastPeriodStart);
-    const nextPeriod = new Date(lastPeriod);
-    nextPeriod.setDate(nextPeriod.getDate() + cycleData.averageCycleLength);
+  const nextPeriod = new Date(lastPeriod);
+  nextPeriod.setDate(nextPeriod.getDate() + (cycleData.averageCycleLength ?? 28));
     const today = new Date();
     const diffTime = nextPeriod.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -120,6 +155,10 @@ const CalendarPage = () => {
       if (existing) {
         newPeriodDays = prev.periodDays.map(day => {
           if (day.date === dateStr) {
+            // If isPeriodToggle is false, always untrack and clear symptoms
+            if (!isPeriodToggle) {
+              return { ...day, isPeriod: false, symptoms: [] };
+            }
             // If toggling from tracked to untracked, clear symptoms
             if (isPeriodToggle && day.isPeriod) {
               return { ...day, isPeriod: false, symptoms: [] };
@@ -130,12 +169,15 @@ const CalendarPage = () => {
           return day;
         });
       } else {
-        newPeriodDays = [...prev.periodDays, {
-          date: dateStr,
-          isPeriod: true,
-          symptoms: [],
-          flow: 'medium' as const
-        }];
+        // Only add new tracked day if isPeriodToggle is true
+        newPeriodDays = isPeriodToggle
+          ? [...prev.periodDays, {
+              date: dateStr,
+              isPeriod: true,
+              symptoms: [],
+              flow: 'medium' as const
+            }]
+          : [...prev.periodDays];
       }
       newPeriodDays = newPeriodDays.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
       const cycles = [];
@@ -183,10 +225,10 @@ const CalendarPage = () => {
       }
       const averageCycleLength = cycleHistory.length > 0
         ? Math.round(cycleHistory.reduce((sum, cycle) => sum + cycle.cycleLength, 0) / cycleHistory.length)
-        : 28;
+        : null;
       const averagePeriodLength = cycles.length > 0
         ? Math.round(cycles.reduce((sum, cycle) => sum + cycle.periodLength, 0) / cycles.length)
-        : 5;
+        : null;
       const updatedData = {
         ...prev,
         periodDays: newPeriodDays,
@@ -260,12 +302,10 @@ const CalendarPage = () => {
         <button
           key={day}
           onClick={() => {
-            if (selectedCalendarDate === dateStr) {
-              // Second click: track period and open modal
-              trackPeriodAndOpenSymptoms(dateStr);
+            if (isPeriod) {
+              calendarController.showEditDeletePopup(dateStr);
             } else {
-              // First click: select date only
-              setSelectedCalendarDate(dateStr);
+              calendarController.trackDate(dateStr);
             }
           }}
           className={cn(
@@ -414,11 +454,18 @@ const CalendarPage = () => {
       <div className="px-6">
         <Button
           className="w-full bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white h-12 spring-tap shadow-lg"
-          onClick={handleQuickRecordToday}
+          onClick={() => {
+            const today = new Date().toISOString().split('T')[0];
+            if (isPeriodDay(today)) {
+              calendarController.editDate(today);
+            } else {
+              calendarController.trackDate(today);
+            }
+          }}
         >
           <div className="flex items-center space-x-2">
             <Heart size={20} />
-            <span className="font-semibold">Catat Hari Ini</span>
+            <span className="font-semibold">{isPeriodDay(new Date().toISOString().split('T')[0]) ? 'Sesuaikan Catatan Hari Ini' : 'Catat Hari Ini'}</span>
           </div>
         </Button>
       </div>
@@ -471,8 +518,36 @@ const CalendarPage = () => {
         initialSymptoms={symptomsModalInitial}
         onSaveSymptoms={handleSaveSymptoms}
       />
+      <ModalEditDelete
+        open={popupState.open}
+        date={popupState.date}
+        onEdit={() => {
+          if (popupState.date) {
+            calendarController.editDate(popupState.date);
+          }
+          setPopupState({ open: false, date: null });
+          setPopupLoading(false);
+          setPopupError(null);
+        }}
+        onDelete={() => {
+          if (popupState.date) {
+            calendarController.deleteDate(popupState.date);
+          }
+          setPopupState({ open: false, date: null });
+          setPopupLoading(false);
+          setPopupError(null);
+        }}
+        onClose={() => {
+          setPopupState({ open: false, date: null });
+          setPopupLoading(false);
+          setPopupError(null);
+        }}
+        loading={popupLoading}
+        error={popupError}
+      />
     </div>
   );
 };
 
 export default CalendarPage;
+// ...existing code...
