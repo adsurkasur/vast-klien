@@ -3,7 +3,7 @@ import { PageHeader } from '../components/layout/PageHeader';
 
 const PrivacyPolicyContent: React.FC = () => {
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8 space-y-8 pb-32">
+    <div className="space-y-6 pb-32">
       <PageHeader title="Kebijakan Privasi" subtitle="Perlindungan data Anda adalah prioritas kami" />
       <div className="card-elevated p-6 accent-profile space-y-6">
         <h2 className="text-xl font-bold mb-4">Kebijakan Privasi Serene Cycle Companion</h2>
