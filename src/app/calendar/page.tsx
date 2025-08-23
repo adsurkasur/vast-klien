@@ -118,11 +118,17 @@ const CalendarPage = () => {
       const existing = prev.periodDays.find(day => day.date === dateStr);
       let newPeriodDays;
       if (existing) {
-        newPeriodDays = prev.periodDays.map(day =>
-          day.date === dateStr
-            ? { ...day, isPeriod: isPeriodToggle ? !day.isPeriod : true }
-            : day
-        );
+        newPeriodDays = prev.periodDays.map(day => {
+          if (day.date === dateStr) {
+            // If toggling from tracked to untracked, clear symptoms
+            if (isPeriodToggle && day.isPeriod) {
+              return { ...day, isPeriod: false, symptoms: [] };
+            }
+            // If toggling from untracked to tracked, preserve symptoms
+            return { ...day, isPeriod: isPeriodToggle ? !day.isPeriod : true };
+          }
+          return day;
+        });
       } else {
         newPeriodDays = [...prev.periodDays, {
           date: dateStr,
