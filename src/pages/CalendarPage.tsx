@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { SymptomsModal } from '@/components/ui/SymptomsModal';
+import { ReportsModal } from '@/components/ui/ReportsModal';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/button';
 import { Bell, BellOff, BarChart3, Heart, Calendar, Clock, TrendingUp, Droplets, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -18,8 +19,10 @@ interface CycleData {
     startDate: string;
     endDate: string;
     cycleLength: number;
+    periodLength?: number;
   }>;
   averageCycleLength: number;
+  averagePeriodLength: number;
   lastPeriodStart?: string;
   nextPeriodPrediction?: string;
 }
@@ -27,14 +30,17 @@ interface CycleData {
 export const CalendarPage = () => {
   const [isSymptomModalOpen, setIsSymptomModalOpen] = useState(false);
   const [selectedDateForSymptoms, setSelectedDateForSymptoms] = useState<string>('');
+  const [symptomsModalInitial, setSymptomsModalInitial] = useState<string[]>([]);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [selectedCalendarDate, setSelectedCalendarDate] = useState<string | null>(null);
   const [cycleData, setCycleData] = useState<CycleData>({
     periodDays: [],
     cycleHistory: [],
-    averageCycleLength: 28
+    averageCycleLength: 28,
+    averagePeriodLength: 5
   });
   const [showReports, setShowReports] = useState(false);
+  const [reportsModalOpen, setReportsModalOpen] = useState(false);
 
   // Calendar state
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -73,8 +79,10 @@ export const CalendarPage = () => {
   }, [notificationsEnabled]);
 
   const handleOpenSymptoms = (date: string) => {
-    setSelectedDateForSymptoms(date);
-    setIsSymptomModalOpen(true);
+  setSelectedDateForSymptoms(date);
+  const day = cycleData.periodDays.find(d => d.date === date);
+  setSymptomsModalInitial(day?.symptoms ?? []);
+  setIsSymptomModalOpen(true);
   };
 
   const calculateNextPeriodDays = () => {
@@ -95,53 +103,88 @@ export const CalendarPage = () => {
     setCycleData(prev => {
       const existing = prev.periodDays.find(day => day.date === dateStr);
       let newPeriodDays;
-      
       if (existing) {
-        newPeriodDays = prev.periodDays.map(day => 
-          day.date === dateStr 
+        newPeriodDays = prev.periodDays.map(day =>
+          day.date === dateStr
             ? { ...day, isPeriod: isPeriodToggle ? !day.isPeriod : true }
             : day
         );
       } else {
-        newPeriodDays = [...prev.periodDays, { 
-          date: dateStr, 
-          isPeriod: true, 
+        newPeriodDays = [...prev.periodDays, {
+          date: dateStr,
+          isPeriod: true,
           symptoms: [],
           flow: 'medium' as const
         }];
       }
 
-      // Calculate cycle statistics
-      const periodStarts = newPeriodDays
-        .filter(day => day.isPeriod)
-        .map(day => new Date(day.date))
-        .sort((a, b) => a.getTime() - b.getTime());
+      // Sort by date
+      newPeriodDays = newPeriodDays.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
+      // Group consecutive period days into cycles
+      const cycles = [];
+      let currentCycle = null;
+      for (let i = 0; i < newPeriodDays.length; i++) {
+        const day = newPeriodDays[i];
+        if (day.isPeriod) {
+          if (!currentCycle) {
+            currentCycle = {
+              startDate: day.date,
+              endDate: day.date,
+              periodLength: 1
+            };
+          } else {
+            // Check if previous day is consecutive
+            const prevDay = newPeriodDays[i - 1];
+            const prevDate = new Date(prevDay.date);
+            const currDate = new Date(day.date);
+            if ((currDate.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24) === 1 && prevDay.isPeriod) {
+              currentCycle.endDate = day.date;
+              currentCycle.periodLength += 1;
+            } else {
+              cycles.push(currentCycle);
+              currentCycle = {
+                startDate: day.date,
+                endDate: day.date,
+                periodLength: 1
+              };
+            }
+          }
+        } else if (currentCycle) {
+          cycles.push(currentCycle);
+          currentCycle = null;
+        }
+      }
+      if (currentCycle) cycles.push(currentCycle);
+
+      // Calculate cycle lengths (interval between first days of cycles)
       const cycleHistory = [];
-      for (let i = 1; i < periodStarts.length; i++) {
-        const cycleLength = Math.floor((periodStarts[i].getTime() - periodStarts[i-1].getTime()) / (1000 * 60 * 60 * 24));
+      for (let i = 1; i < cycles.length; i++) {
+        const cycleLength = Math.floor((new Date(cycles[i].startDate).getTime() - new Date(cycles[i - 1].startDate).getTime()) / (1000 * 60 * 60 * 24));
         cycleHistory.push({
-          startDate: periodStarts[i-1].toISOString().split('T')[0],
-          endDate: periodStarts[i].toISOString().split('T')[0],
-          cycleLength
+          startDate: cycles[i - 1].startDate,
+          endDate: cycles[i].startDate,
+          cycleLength,
+          periodLength: cycles[i - 1].periodLength
         });
       }
 
-      const averageCycleLength = cycleHistory.length > 0 
+      const averageCycleLength = cycleHistory.length > 0
         ? Math.round(cycleHistory.reduce((sum, cycle) => sum + cycle.cycleLength, 0) / cycleHistory.length)
         : 28;
+      const averagePeriodLength = cycles.length > 0
+        ? Math.round(cycles.reduce((sum, cycle) => sum + cycle.periodLength, 0) / cycles.length)
+        : 5;
 
       const updatedData = {
         ...prev,
         periodDays: newPeriodDays,
         cycleHistory,
         averageCycleLength,
-        lastPeriodStart: periodStarts.length > 0 ? periodStarts[periodStarts.length - 1].toISOString().split('T')[0] : undefined
+        averagePeriodLength,
+        lastPeriodStart: cycles.length > 0 ? cycles[cycles.length - 1].startDate : undefined
       };
-
-      // Save to localStorage
       localStorage.setItem('cycleData', JSON.stringify(updatedData));
-
       return updatedData;
     });
   };
@@ -157,10 +200,9 @@ export const CalendarPage = () => {
   };
 
   const handleLogSymptomsToday = () => {
-    const today = new Date().toISOString().split('T')[0];
-    setSelectedCalendarDate(today);
-    setSelectedDateForSymptoms(today);
-    setIsSymptomModalOpen(true);
+  const today = new Date().toISOString().split('T')[0];
+  setSelectedCalendarDate(today);
+  handleOpenSymptoms(today);
   };
 
   // Calendar navigation
@@ -266,6 +308,18 @@ export const CalendarPage = () => {
   };
 
   const nextPeriodDays = calculateNextPeriodDays();
+
+  // Save symptoms for a given date
+  const handleSaveSymptoms = (date: string, symptoms: string[]) => {
+    setCycleData(prev => {
+      const newPeriodDays = prev.periodDays.map(day =>
+        day.date === date ? { ...day, symptoms } : day
+      );
+      const updatedData = { ...prev, periodDays: newPeriodDays };
+      localStorage.setItem('cycleData', JSON.stringify(updatedData));
+      return updatedData;
+    });
+  };
 
   return (
     <div className="space-y-6 pb-32">
@@ -388,57 +442,15 @@ export const CalendarPage = () => {
         </Button>
       </div>
 
-      {/* Reports Section */}
-      {showReports && (
-        <div className="px-6">
-          <div className="card-soft p-6 space-y-4">
-            <div className="flex items-center space-x-2 mb-4">
-              <TrendingUp className="text-accent-600" size={20} />
-              <h3 className="text-lg font-semibold text-foreground">Cycle Statistics</h3>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div className="card-elevated p-4 text-center">
-                <div className="text-2xl font-bold text-accent-600">
-                  {cycleData.averageCycleLength}
-                </div>
-                <div className="text-sm text-muted-foreground">Average Cycle Length</div>
-              </div>
-              
-              <div className="card-elevated p-4 text-center">
-                <div className="text-2xl font-bold text-accent-600">
-                  {cycleData.cycleHistory.length}
-                </div>
-                <div className="text-sm text-muted-foreground">Cycles Tracked</div>
-              </div>
-            </div>
-
-            {cycleData.cycleHistory.length > 0 && (
-              <div className="space-y-2">
-                <h4 className="font-medium text-foreground">Recent Cycles</h4>
-                {cycleData.cycleHistory.slice(-3).reverse().map((cycle, index) => (
-                  <div key={index} className="flex justify-between items-center p-2 bg-accent-50 rounded-lg">
-                    <span className="text-sm text-foreground">
-                      {new Date(cycle.startDate).toLocaleDateString()}
-                    </span>
-                    <span className="text-sm font-medium text-accent-600">
-                      {cycle.cycleLength} days
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <Button
-              variant="outline"
-              onClick={() => setShowReports(false)}
-              className="w-full"
-            >
-              Close Reports
-            </Button>
-          </div>
-        </div>
-      )}
+      {/* Reports Modal */}
+      <ReportsModal
+        isOpen={reportsModalOpen}
+        onClose={() => setReportsModalOpen(false)}
+        averageCycleLength={cycleData.averageCycleLength}
+        averagePeriodLength={cycleData.averagePeriodLength}
+        cycleHistory={cycleData.cycleHistory}
+        periodDays={cycleData.periodDays}
+      />
 
       {/* Bottom Action Buttons */}
       <div className="px-6">
@@ -457,18 +469,14 @@ export const CalendarPage = () => {
               {notificationsEnabled ? 'Notifications On' : 'Notifications Off'}
             </span>
           </Button>
-          
           <Button
             variant="outline"
             className="w-full h-16 spring-tap flex flex-col items-center justify-center space-y-1 hover:bg-accent-50"
-            onClick={() => setShowReports(!showReports)}
+            onClick={() => setReportsModalOpen(true)}
           >
             <BarChart3 className="text-accent-600" size={20} />
-            <span className="text-xs font-medium">
-              {showReports ? 'Hide Reports' : 'View Reports'}
-            </span>
+            <span className="text-xs font-medium">View Reports</span>
           </Button>
-          
           <Button
             variant="outline"
             className="w-full h-16 spring-tap flex flex-col items-center justify-center space-y-1 hover:bg-accent-50"
@@ -485,6 +493,8 @@ export const CalendarPage = () => {
         isOpen={isSymptomModalOpen}
         onClose={() => setIsSymptomModalOpen(false)}
         selectedDate={selectedDateForSymptoms}
+        initialSymptoms={symptomsModalInitial}
+        onSaveSymptoms={handleSaveSymptoms}
       />
     </div>
   );

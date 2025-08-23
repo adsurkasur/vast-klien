@@ -6,6 +6,8 @@ interface SymptomsModalProps {
   isOpen: boolean;
   onClose: () => void;
   selectedDate: string;
+  initialSymptoms?: string[];
+  onSaveSymptoms?: (date: string, symptoms: string[]) => void;
 }
 
 const symptomCategories = {
@@ -36,12 +38,18 @@ const symptomCategories = {
 };
 
 export const SymptomsModal: React.FC<SymptomsModalProps> = ({ 
-  isOpen, 
-  onClose, 
-  selectedDate 
+  isOpen,
+  onClose,
+  selectedDate,
+  initialSymptoms = [],
+  onSaveSymptoms
 }) => {
-  const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
+  const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>(initialSymptoms);
 
+  // Update symptoms when modal opens for a new date
+  React.useEffect(() => {
+    setSelectedSymptoms(initialSymptoms);
+  }, [initialSymptoms, selectedDate, isOpen]);
 
   // Focus trap for accessibility
   const modalRef = React.useRef<HTMLDivElement>(null);
@@ -54,7 +62,7 @@ export const SymptomsModal: React.FC<SymptomsModalProps> = ({
   if (!isOpen) return null;
 
   const toggleSymptom = (symptom: string) => {
-    setSelectedSymptoms(prev => 
+    setSelectedSymptoms(prev =>
       prev.includes(symptom)
         ? prev.filter(s => s !== symptom)
         : [...prev, symptom]
@@ -66,8 +74,9 @@ export const SymptomsModal: React.FC<SymptomsModalProps> = ({
       alert('Please select at least one symptom.');
       return;
     }
-    // Here you would save to your state management system
-    console.log('Saving symptoms for', selectedDate, selectedSymptoms);
+    if (onSaveSymptoms) {
+      onSaveSymptoms(selectedDate, selectedSymptoms);
+    }
     onClose();
   };
 

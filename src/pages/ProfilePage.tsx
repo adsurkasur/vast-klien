@@ -9,13 +9,16 @@ export const ProfilePage: React.FC = () => {
   // Registration state: false = not registered, true = registered
   const [isRegistered, setIsRegistered] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  // Placeholder for Google profile data
+  // Placeholder for Google profile data and future cloud sync
+  // In a real app, this would be replaced with Google OAuth and cloud sync logic
   const getGoogleProfile = () => ({
     name: 'Sarah Johnson',
     email: 'sarah.johnson@email.com',
     age: '28',
     cycleLength: '28',
-    periodLength: '5'
+    periodLength: '5',
+    googleUserId: 'google-uid-placeholder', // Placeholder for Google user ID
+    cloudSync: false // Placeholder for cloud sync status
   });
 
   // Use Google profile if registered
@@ -26,13 +29,14 @@ export const ProfilePage: React.FC = () => {
     // Simulate Google login
     setIsRegistered(true);
     setProfile(getGoogleProfile());
-    // In real app, trigger Google OAuth flow here
+    // TODO: In real app, trigger Google OAuth flow and sync data to cloud
   };
 
   // Placeholder for logout
   const handleLogout = () => {
     setIsRegistered(false);
     setProfile(getGoogleProfile()); // Optionally reset profile to placeholder
+    // TODO: In real app, disconnect Google account and stop cloud sync
   };
 
   const handleSave = () => {
@@ -46,7 +50,9 @@ export const ProfilePage: React.FC = () => {
       {/* Unified Page Header */}
       <PageHeader title="My Profile" subtitle="Personalize your experience" />
 
-      {/* Profile Card */}
+  {/* Profile Card */}
+  {/* Google Auth and Cloud Sync Placeholder UI */}
+  {/* In a real app, this would show Google account info and cloud sync status */}
       <div className="px-6">
         <div className="card-elevated p-6 accent-profile">
           {!isRegistered ? (
