@@ -84,13 +84,13 @@ export const SymptomsModal: React.FC<SymptomsModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="symptoms-modal-title" ref={modalRef} tabIndex={-1}>
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/20 backdrop-blur-sm"
+        className="fixed inset-0 bg-black/40 backdrop-blur-sm"
         onClick={onClose}
         aria-label="Close modal"
       />
       
       {/* Modal */}
-      <div className="relative card-elevated w-full max-w-md max-h-[80vh] overflow-y-auto animate-in zoom-in-95 duration-200">
+  <div className="relative card-elevated w-full max-w-md max-h-[80vh] overflow-y-auto animate-in zoom-in-95 duration-200 mb-20">
         {/* Header */}
         <div className="flex items-center justify-between p-6 pb-4">
           <h3 className="text-lg font-semibold text-foreground" id="symptoms-modal-title">
@@ -132,7 +132,7 @@ export const SymptomsModal: React.FC<SymptomsModalProps> = ({
                     key={symptom}
                     onClick={() => toggleSymptom(symptom)}
                     className={`
-                      flex items-center justify-between p-3 rounded-xl text-sm transition-all duration-200 spring-tap
+                      flex items-center p-3 rounded-xl text-sm transition-all duration-200 spring-tap
                       ${selectedSymptoms.includes(symptom)
                         ? 'bg-primary text-primary-foreground shadow-soft'
                         : 'bg-white/50 text-foreground hover:bg-white/70 border border-card-border'
@@ -141,7 +141,7 @@ export const SymptomsModal: React.FC<SymptomsModalProps> = ({
                     aria-pressed={selectedSymptoms.includes(symptom)}
                     aria-label={symptom}
                   >
-                    <span className="text-xs">{symptom}</span>
+                    <span className="text-xs text-left flex-1">{symptom}</span>
                     {selectedSymptoms.includes(symptom) && (
                       <Check size={14} />
                     )}

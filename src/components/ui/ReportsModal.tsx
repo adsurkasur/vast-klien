@@ -38,7 +38,7 @@ export const ReportsModal: React.FC<ReportsModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
-      <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={onClose} aria-label="Tutup modal" />
+  <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} aria-label="Tutup modal" />
       <div className="relative card-elevated w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200">
         <div className="flex items-center justify-between p-6 pb-4">
           <h3 className="text-lg font-semibold text-foreground">Laporan Siklus & Gejala</h3>
@@ -58,24 +58,33 @@ export const ReportsModal: React.FC<ReportsModalProps> = ({
           <div className="space-y-2">
             <h4 className="font-medium text-foreground">Semua Siklus</h4>
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full text-sm border border-accent-200 rounded-lg">
                 <thead>
-                  <tr>
-                    <th className="text-left">Tanggal Mulai</th>
-                    <th className="text-left">Tanggal Selesai</th>
-                    <th className="text-left">Panjang Siklus</th>
-                    <th className="text-left">Panjang Menstruasi</th>
+                  <tr className="bg-accent-50">
+                    <th className="text-left border border-accent-200 px-2 py-1">Tanggal Mulai</th>
+                    <th className="text-left border border-accent-200 px-2 py-1">Tanggal Selesai</th>
+                    <th className="text-left border border-accent-200 px-2 py-1">Panjang Siklus</th>
+                    <th className="text-left border border-accent-200 px-2 py-1">Panjang Menstruasi</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {cycleHistory.map((cycle, idx) => (
-                    <tr key={idx} className="border-b border-accent-100">
-                      <td>{new Date(cycle.startDate).toLocaleDateString()}</td>
-                      <td>{new Date(cycle.endDate).toLocaleDateString()}</td>
-                      <td>{cycle.cycleLength}</td>
-                      <td>{cycle.periodLength ?? '-'}</td>
+                  {cycleHistory.length === 0 ? (
+                    <tr>
+                      <td className="border border-accent-200 px-2 py-1 text-center">-</td>
+                      <td className="border border-accent-200 px-2 py-1 text-center">-</td>
+                      <td className="border border-accent-200 px-2 py-1 text-center">-</td>
+                      <td className="border border-accent-200 px-2 py-1 text-center">-</td>
                     </tr>
-                  ))}
+                  ) : (
+                    cycleHistory.map((cycle, idx) => (
+                      <tr key={idx}>
+                        <td className="border border-accent-200 px-2 py-1">{new Date(cycle.startDate).toLocaleDateString()}</td>
+                        <td className="border border-accent-200 px-2 py-1">{new Date(cycle.endDate).toLocaleDateString()}</td>
+                        <td className="border border-accent-200 px-2 py-1">{cycle.cycleLength}</td>
+                        <td className="border border-accent-200 px-2 py-1">{cycle.periodLength ?? '-'}</td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
