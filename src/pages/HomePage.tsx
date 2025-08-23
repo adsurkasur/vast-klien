@@ -43,7 +43,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       <div className="px-6">
         <div className="grid grid-cols-3 gap-4">
           <h1 className="col-span-3 text-lg font-semibold text-foreground">
-            Berita
+            Artikel
           </h1>
           {newsItems.map((item) => (
             <div

@@ -37,7 +37,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
                   className="transition-all duration-300"
                 />
               </div>
-              <span className="text-xs font-medium">Home</span>
+              <span className="text-xs font-medium">Beranda</span>
             </button>
 
             {/* Contact */}
@@ -60,7 +60,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
                   className="transition-all duration-300"
                 />
               </div>
-              <span className="text-xs font-medium">Contact</span>
+              <span className="text-xs font-medium">Kontak</span>
             </button>
 
             {/* Trolley - popping out effect, scale and ring only, equal gap */}
@@ -86,7 +86,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
                   />
                 </div>
               </button>
-              <span className="text-xs font-medium mt-10 text-red-500 drop-shadow">Shop</span>
+              <span className="text-xs font-medium mt-10 text-red-500 drop-shadow">Belanja</span>
             </div>
 
             {/* Profile */}
@@ -109,7 +109,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
                   <span className="text-white text-xs font-bold">SJ</span>
                 </div>
               </div>
-              <span className="text-xs font-medium">Profile</span>
+              <span className="text-xs font-medium">Profil</span>
             </button>
 
             {/* About */}
@@ -132,7 +132,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
                   className="transition-all duration-300"
                 />
               </div>
-              <span className="text-xs font-medium">About</span>
+              <span className="text-xs font-medium">Tentang</span>
             </button>
           </div>
     </nav>
