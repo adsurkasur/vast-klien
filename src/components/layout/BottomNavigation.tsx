@@ -63,8 +63,8 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
               <span className="text-xs font-medium">Contact</span>
             </button>
 
-            {/* Trolley - popping out effect, scale and ring only */}
-            <div className="relative w-full flex flex-col items-center" style={{zIndex: 10}}>
+            {/* Trolley - popping out effect, scale and ring only, equal gap */}
+            <div className="relative w-16 flex flex-col items-center" style={{zIndex: 10}}>
               <button
                 onClick={() => onNavigate('trolley')}
                 className={cn(
