@@ -30,6 +30,21 @@ interface CycleData {
 }
 
 const CalendarPage = () => {
+  // Unified function: track period and open symptoms modal
+  const trackPeriodAndOpenSymptoms = (dateStr: string) => {
+    // Determine previous tracking state
+    const prevDay = cycleData.periodDays.find(d => d.date === dateStr);
+    const wasTracked = !!prevDay?.isPeriod;
+    setSelectedCalendarDate(dateStr);
+    updatePeriodData(dateStr, true);
+    // Only open modal if the date was not tracked before (i.e., now being tracked)
+    if (!wasTracked) {
+      const updatedDay = cycleData.periodDays.find(d => d.date === dateStr);
+      setSelectedDateForSymptoms(dateStr);
+      setSymptomsModalInitial(updatedDay?.symptoms ?? []);
+      setIsSymptomModalOpen(true);
+    }
+  };
   const [isSymptomModalOpen, setIsSymptomModalOpen] = useState(false);
   const [selectedDateForSymptoms, setSelectedDateForSymptoms] = useState<string>('');
   const [symptomsModalInitial, setSymptomsModalInitial] = useState<string[]>([]);
@@ -240,12 +255,13 @@ const CalendarPage = () => {
           key={day}
           onClick={() => {
             if (selectedCalendarDate === dateStr) {
-              togglePeriodDay(dateStr);
+              // Second click: track period and open modal
+              trackPeriodAndOpenSymptoms(dateStr);
             } else {
+              // First click: select date only
               setSelectedCalendarDate(dateStr);
             }
           }}
-          onDoubleClick={() => handleOpenSymptoms(dateStr)}
           className={cn(
             "p-2 text-sm font-medium rounded-xl transition-all duration-200 spring-tap relative min-h-[40px] flex flex-col items-center justify-center",
             "hover:bg-accent-100 border-2 border-transparent",
@@ -435,7 +451,7 @@ const CalendarPage = () => {
           <Button
             variant="outline"
             className="w-full h-16 spring-tap flex flex-col items-center justify-center space-y-1 hover:bg-accent-50"
-            onClick={handleLogSymptomsToday}
+            onClick={() => trackPeriodAndOpenSymptoms(new Date().toISOString().split('T')[0])}
           >
             <Heart className="text-accent-600" size={20} />
             <span className="text-xs font-medium">Catat Gejala</span>
