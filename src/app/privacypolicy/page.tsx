@@ -47,7 +47,7 @@ const PrivacyPolicyContent = () => {
           </ul>
           <h3 className="font-semibold mt-6 mb-2">7. Kontak</h3>
           <p>
-            Jika Anda memiliki pertanyaan atau permintaan terkait privasi, silakan hubungi kami di <a href="mailto:support@serenecycle.com" className="text-primary underline">support@serenecycle.com</a>.
+            Jika Anda memiliki pertanyaan atau permintaan terkait privasi, silakan hubungi kami di <a href="mailto:selamatvastemas@gmail.com" className="text-primary underline">selamatvastemas@gmail.com</a>.
           </p>
         </div>
       </div>

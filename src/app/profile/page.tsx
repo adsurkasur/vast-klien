@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Edit, User, Shield, Bell, Heart, Calendar, Settings } from 'lucide-react';
 import { Button } from '../../components/ui/button';
+import Link from 'next/link';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { PageHeader } from '../../components/layout/PageHeader';
@@ -210,7 +211,7 @@ const ProfilePage = () => {
             </p>
             <div className="pt-3 border-t border-card-border">
               <p className="text-xs text-muted-foreground">
-                Terakhir diperbarui: Januari 2024 • <span className="text-primary underline cursor-pointer">Baca kebijakan privasi lengkap</span>
+                Terakhir diperbarui: Januari 2024 • <Link href="/privacypolicy" className="text-primary underline cursor-pointer">Baca kebijakan privasi lengkap</Link>
               </p>
             </div>
           </div>
