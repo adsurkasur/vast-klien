@@ -1,65 +1,45 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+
+"use client";
+import { useState } from 'react';
 import { Edit, User, Shield, Bell, Heart, Calendar, Settings } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { PageHeader } from '../components/layout/PageHeader';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { Label } from '../../components/ui/label';
+import { PageHeader } from '../../components/layout/PageHeader';
 
-import { Page } from '@/components/layout/BottomNavigation';
+const getGoogleProfile = () => ({
+  name: 'Sarah Johnson',
+  email: 'sarah.johnson@email.com',
+  age: '28',
+  cycleLength: '28',
+  periodLength: '5',
+  googleUserId: 'google-uid-placeholder',
+  cloudSync: false
+});
 
-interface ProfilePageProps {
-  onNavigate?: (page: Page) => void;
-}
-
-export const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate }) => {
-  // Registration state: false = not registered, true = registered
+const ProfilePage = () => {
   const [isRegistered, setIsRegistered] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  // Placeholder for Google profile data and future cloud sync
-  // In a real app, this would be replaced with Google OAuth and cloud sync logic
-  const getGoogleProfile = () => ({
-    name: 'Sarah Johnson',
-    email: 'sarah.johnson@email.com',
-    age: '28',
-    cycleLength: '28',
-    periodLength: '5',
-    googleUserId: 'google-uid-placeholder', // Placeholder for Google user ID
-    cloudSync: false // Placeholder for cloud sync status
-  });
-
-  // Use Google profile if registered
   const [profile, setProfile] = useState(getGoogleProfile());
 
-  // Placeholder for Google login
   const handleGoogleLogin = () => {
-    // Simulate Google login
     setIsRegistered(true);
     setProfile(getGoogleProfile());
-    // TODO: In real app, trigger Google OAuth flow and sync data to cloud
   };
 
-  // Placeholder for logout
   const handleLogout = () => {
     setIsRegistered(false);
-    setProfile(getGoogleProfile()); // Optionally reset profile to placeholder
-    // TODO: In real app, disconnect Google account and stop cloud sync
+    setProfile(getGoogleProfile());
   };
 
   const handleSave = () => {
     setIsEditing(false);
-    // Here you would save to your state management system
     console.log('Saving profile:', profile);
   };
 
   return (
     <div className="space-y-6 pb-32">
-      {/* Unified Page Header */}
-  <PageHeader title="Profil Saya" subtitle="Personalisasi pengalaman Anda" />
-
-  {/* Profile Card */}
-  {/* Google Auth and Cloud Sync Placeholder UI */}
-  {/* In a real app, this would show Google account info and cloud sync status */}
+      <PageHeader title="Profil Saya" subtitle="Personalisasi pengalaman Anda" />
       <div className="px-6">
         <div className="card-elevated p-6 accent-profile">
           {!isRegistered ? (
@@ -73,7 +53,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate }) => {
                 onClick={handleGoogleLogin}
                 className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl spring-tap"
               >
-                {/* Placeholder for Google icon */}
                 <span className="mr-2">G</span>
                 Masuk dengan Google
               </Button>
@@ -89,7 +68,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate }) => {
                   <p className="text-muted-foreground">{profile.email}</p>
                 </div>
               </div>
-
               {isEditing ? (
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
@@ -112,7 +90,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate }) => {
                       />
                     </div>
                   </div>
-
                   <div>
                     <Label htmlFor="email" className="text-sm font-medium text-foreground">Email</Label>
                     <Input
@@ -123,7 +100,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate }) => {
                       className="mt-1 bg-white/50 border-card-border"
                     />
                   </div>
-
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="cycleLength" className="text-sm font-medium text-foreground">Panjang Siklus (hari)</Label>
@@ -144,7 +120,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate }) => {
                       />
                     </div>
                   </div>
-
                   <Button
                     onClick={handleSave}
                     className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl spring-tap"
@@ -168,7 +143,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate }) => {
                   </div>
                 </div>
               )}
-              {/* Move Edit button to bottom */}
               {!isEditing && (
                 <>
                   <Button
@@ -194,21 +168,16 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate }) => {
           )}
         </div>
       </div>
-
-      {/* Settings Options (Notifications always visible) */}
-      {/*
-        NOTE: Notifications and other local features work for all users (localStorage or mobile equivalent).
-        Google Auth is only used for data syncing.
-      */}
+      {/* Settings Options */}
       <div className="px-6">
-  <h3 className="text-lg font-semibold text-foreground mb-4">Pengaturan</h3>
+        <h3 className="text-lg font-semibold text-foreground mb-4">Pengaturan</h3>
         <div className="space-y-3">
           {[
             { icon: Bell, label: 'Notifikasi', sublabel: 'Pengingat menstruasi dan tips' },
-            //  { icon: Shield, label: 'Privacy', sublabel: 'Data and account security' },
-            //  { icon: Heart, label: 'Health Data', sublabel: 'Export your cycle data' },
-            //  { icon: Calendar, label: 'Sync Calendar', sublabel: 'Connect with your calendar app' },
-            //  { icon: Settings, label: 'App Preferences', sublabel: 'Customize your experience' }
+            { icon: Shield, label: 'Privasi', sublabel: 'Keamanan data dan akun' },
+            { icon: Heart, label: 'Data Kesehatan', sublabel: 'Ekspor data siklus Anda' },
+            { icon: Calendar, label: 'Sinkronisasi Kalender', sublabel: 'Hubungkan dengan aplikasi kalender Anda' },
+            { icon: Settings, label: 'Preferensi Aplikasi', sublabel: 'Sesuaikan pengalaman Anda' }
           ].map((item) => (
             <div
               key={item.label}
@@ -226,8 +195,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate }) => {
           ))}
         </div>
       </div>
-
-      {/* Privacy Notice (always show) */}
+      {/* Privacy Notice */}
       <div className="px-6">
         <div className="card-elevated p-6 accent-profile">
           <h3 className="text-lg font-semibold text-foreground mb-4">Pemberitahuan Privasi</h3>
@@ -242,7 +210,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate }) => {
             </p>
             <div className="pt-3 border-t border-card-border">
               <p className="text-xs text-muted-foreground">
-                Terakhir diperbarui: Januari 2024 • <span className="text-primary underline cursor-pointer" onClick={() => typeof onNavigate === 'function' && onNavigate('privacy')}>Baca kebijakan privasi lengkap</span>
+                Terakhir diperbarui: Januari 2024 • <span className="text-primary underline cursor-pointer">Baca kebijakan privasi lengkap</span>
               </p>
             </div>
           </div>
@@ -250,4 +218,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate }) => {
       </div>
     </div>
   );
-}
+};
+
+export default ProfilePage;

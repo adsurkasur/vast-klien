@@ -7,6 +7,40 @@ import { buttonVariants } from "@/components/ui/button";
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
+interface CustomNavigationProps {
+  onPreviousClick?: React.MouseEventHandler<HTMLButtonElement>;
+  onNextClick?: React.MouseEventHandler<HTMLButtonElement>;
+  previousMonth?: Date;
+  nextMonth?: Date;
+  label?: React.ReactNode;
+}
+
+function CustomNavigation(props: CustomNavigationProps) {
+  return (
+    <div className="flex items-center space-x-2">
+      <button
+        type="button"
+        onClick={props.onPreviousClick}
+        disabled={!props.previousMonth}
+        aria-label="Previous month"
+        className="h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100"
+      >
+        <ChevronLeft className="h-4 w-4" />
+      </button>
+      <span className="mx-2">{props.label}</span>
+      <button
+        type="button"
+        onClick={props.onNextClick}
+        disabled={!props.nextMonth}
+        aria-label="Next month"
+        className="h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100"
+      >
+        <ChevronRight className="h-4 w-4" />
+      </button>
+    </div>
+  );
+}
+
 function Calendar({
   className,
   classNames,
@@ -61,9 +95,8 @@ function Calendar({
           ...classNames,
         }}
         components={{
-          IconLeft: ({ ..._props }) => <ChevronLeft className="h-4 w-4" aria-label="Previous month" />,
-          IconRight: ({ ..._props }) => <ChevronRight className="h-4 w-4" aria-label="Next month" />,
-        }}
+          Navigation: CustomNavigation,
+        } as Record<string, unknown>}
         {...props}
       />
     </div>

@@ -1,7 +1,6 @@
-// ...existing code...
+"use client";
 
-import * as React from 'react';
-const { useState, useEffect } = React;
+import React, { useState, useEffect } from 'react';
 import { SymptomsModal } from '@/components/ui/SymptomsModal';
 import { ReportsModal } from '@/components/ui/ReportsModal';
 import { PageHeader } from '@/components/layout/PageHeader';
@@ -30,7 +29,7 @@ interface CycleData {
   nextPeriodPrediction?: string;
 }
 
-export const CalendarPage = () => {
+const CalendarPage = () => {
   const [isSymptomModalOpen, setIsSymptomModalOpen] = useState(false);
   const [selectedDateForSymptoms, setSelectedDateForSymptoms] = useState<string>('');
   const [symptomsModalInitial, setSymptomsModalInitial] = useState<string[]>([]);
@@ -82,23 +81,20 @@ export const CalendarPage = () => {
   }, [notificationsEnabled]);
 
   const handleOpenSymptoms = (date: string) => {
-  setSelectedDateForSymptoms(date);
-  const day = cycleData.periodDays.find(d => d.date === date);
-  setSymptomsModalInitial(day?.symptoms ?? []);
-  setIsSymptomModalOpen(true);
+    setSelectedDateForSymptoms(date);
+    const day = cycleData.periodDays.find(d => d.date === date);
+    setSymptomsModalInitial(day?.symptoms ?? []);
+    setIsSymptomModalOpen(true);
   };
 
   const calculateNextPeriodDays = () => {
     if (!cycleData.lastPeriodStart) return null;
-    
     const lastPeriod = new Date(cycleData.lastPeriodStart);
     const nextPeriod = new Date(lastPeriod);
     nextPeriod.setDate(nextPeriod.getDate() + cycleData.averageCycleLength);
-    
     const today = new Date();
     const diffTime = nextPeriod.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
     return diffDays;
   };
 
@@ -120,11 +116,7 @@ export const CalendarPage = () => {
           flow: 'medium' as const
         }];
       }
-
-      // Sort by date
       newPeriodDays = newPeriodDays.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
-      // Group consecutive period days into cycles
       const cycles = [];
       let currentCycle = null;
       for (let i = 0; i < newPeriodDays.length; i++) {
@@ -137,7 +129,6 @@ export const CalendarPage = () => {
               periodLength: 1
             };
           } else {
-            // Check if previous day is consecutive
             const prevDay = newPeriodDays[i - 1];
             const prevDate = new Date(prevDay.date);
             const currDate = new Date(day.date);
@@ -159,8 +150,6 @@ export const CalendarPage = () => {
         }
       }
       if (currentCycle) cycles.push(currentCycle);
-
-      // Calculate cycle lengths (interval between first days of cycles)
       const cycleHistory = [];
       for (let i = 1; i < cycles.length; i++) {
         const cycleLength = Math.floor((new Date(cycles[i].startDate).getTime() - new Date(cycles[i - 1].startDate).getTime()) / (1000 * 60 * 60 * 24));
@@ -171,14 +160,12 @@ export const CalendarPage = () => {
           periodLength: cycles[i - 1].periodLength
         });
       }
-
       const averageCycleLength = cycleHistory.length > 0
         ? Math.round(cycleHistory.reduce((sum, cycle) => sum + cycle.cycleLength, 0) / cycleHistory.length)
         : 28;
       const averagePeriodLength = cycles.length > 0
         ? Math.round(cycles.reduce((sum, cycle) => sum + cycle.periodLength, 0) / cycles.length)
         : 5;
-
       const updatedData = {
         ...prev,
         periodDays: newPeriodDays,
@@ -203,12 +190,11 @@ export const CalendarPage = () => {
   };
 
   const handleLogSymptomsToday = () => {
-  const today = new Date().toISOString().split('T')[0];
-  setSelectedCalendarDate(today);
-  handleOpenSymptoms(today);
+    const today = new Date().toISOString().split('T')[0];
+    setSelectedCalendarDate(today);
+    handleOpenSymptoms(today);
   };
 
-  // Calendar navigation
   const navigateMonth = (direction: 'prev' | 'next') => {
     setCurrentDate(prev => {
       const newDate = new Date(prev);
@@ -221,7 +207,6 @@ export const CalendarPage = () => {
     });
   };
 
-  // Calendar helper functions
   const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
   const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
 
@@ -240,13 +225,9 @@ export const CalendarPage = () => {
 
   const renderCalendarDays = () => {
     const days = [];
-    
-    // Empty cells for days before the first day of the month
     for (let i = 0; i < firstDayOfMonth; i++) {
       days.push(<div key={`empty-${i}`} className="p-3"></div>);
     }
-    
-    // Days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       const dateStr = formatDateString(day);
       const isSelected = selectedCalendarDate === dateStr;
@@ -254,16 +235,13 @@ export const CalendarPage = () => {
       const hasSymptom = hasSymptoms(dateStr);
       const dayData = cycleData.periodDays.find(d => d.date === dateStr);
       const isToday = dateStr === new Date().toISOString().split('T')[0];
-      
       days.push(
         <button
           key={day}
           onClick={() => {
             if (selectedCalendarDate === dateStr) {
-              // If clicking the same date twice, toggle period
               togglePeriodDay(dateStr);
             } else {
-              // First click: select the date
               setSelectedCalendarDate(dateStr);
             }
           }}
@@ -271,19 +249,14 @@ export const CalendarPage = () => {
           className={cn(
             "p-2 text-sm font-medium rounded-xl transition-all duration-200 spring-tap relative min-h-[40px] flex flex-col items-center justify-center",
             "hover:bg-accent-100 border-2 border-transparent",
-            // Today styling (gold/yellow theme for better distinction)
             isToday && !isSelected && "border-yellow-400 bg-yellow-50 text-yellow-800 shadow-sm",
-            // Selected day styling (blue theme for better distinction) 
             isSelected && !isPeriod && "border-blue-500 bg-blue-100 text-blue-800 shadow-md ring-2 ring-blue-200",
             isSelected && isPeriod && "border-red-500 bg-red-500 text-white shadow-lg ring-2 ring-red-300",
-            // Period day styling (not selected)
             isPeriod && !isSelected && "bg-red-100 text-red-800 border-red-300",
-            // Symptom day styling (not period, not selected)
             hasSymptom && !isPeriod && !isSelected && "bg-blue-50 border-blue-200 text-blue-800"
           )}
         >
           <span className="text-center leading-none">{day}</span>
-          {/* Visual indicators */}
           <div className="flex space-x-1 mt-1">
             {isPeriod && (
               <div className={cn(
@@ -292,7 +265,6 @@ export const CalendarPage = () => {
                 dayData?.flow === 'medium' && "bg-red-500",
                 dayData?.flow === 'heavy' && "bg-red-700",
                 !dayData?.flow && "bg-red-500",
-                // Make dots white when selected
                 isSelected && "bg-white"
               )} />
             )}
@@ -306,13 +278,11 @@ export const CalendarPage = () => {
         </button>
       );
     }
-    
     return days;
   };
 
   const nextPeriodDays = calculateNextPeriodDays();
 
-  // Save symptoms for a given date
   const handleSaveSymptoms = (date: string, symptoms: string[]) => {
     setCycleData(prev => {
       const newPeriodDays = prev.periodDays.map(day =>
@@ -326,10 +296,7 @@ export const CalendarPage = () => {
 
   return (
     <div className="space-y-6 pb-32">
-      {/* Header with Logo and Title */}
-  <PageHeader title="Kalender Saya" subtitle="Lacak siklus dan gejala Anda" />
-
-      {/* Custom Calendar for Period Tracking */}
+      <PageHeader title="Kalender Saya" subtitle="Lacak siklus dan gejala Anda" />
       <div className="px-6">
         <div className="card-soft p-6">
           <div className="flex items-center justify-between mb-4">
@@ -343,7 +310,6 @@ export const CalendarPage = () => {
             </div>
           </div>
           <div className="space-y-6">
-            {/* Calendar Header */}
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-foreground">
                 {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
@@ -367,8 +333,6 @@ export const CalendarPage = () => {
                 </Button>
               </div>
             </div>
-
-            {/* Day Names */}
             <div className="grid grid-cols-7 gap-1">
               {dayNames.map(day => (
                 <div key={day} className="p-3 text-xs font-medium text-muted-foreground text-center">
@@ -376,24 +340,20 @@ export const CalendarPage = () => {
                 </div>
               ))}
             </div>
-
-            {/* Calendar Grid */}
             <div className="grid grid-cols-7 gap-1">
               {renderCalendarDays()}
             </div>
-
-            {/* Legend */}
             <div className="flex flex-wrap gap-4 text-xs text-muted-foreground justify-center pt-4 border-t border-accent-100">
               <div className="flex items-center space-x-2">
                 <div className="w-4 h-4 bg-red-100 border border-red-300 rounded"></div>
                 <span>Hari Menstruasi</span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-4 h-4 bg-blue-50 border border-blue-200 rounded"></div>
+                <div className="w-4 h-4 bg-blue-50 border-blue-200 rounded"></div>
                 <span>Gejala</span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-4 h-4 bg-yellow-50 border border-yellow-400 rounded"></div>
+                <div className="w-4 h-4 bg-yellow-50 border-yellow-400 rounded"></div>
                 <span>Hari Ini</span>
               </div>
               <div className="flex items-center space-x-2">
@@ -404,8 +364,6 @@ export const CalendarPage = () => {
           </div>
         </div>
       </div>
-
-      {/* Upcoming period notice */}
       <div className="px-6">
         <div className="card-elevated p-4 bg-gradient-to-r from-pink-50 to-purple-50 border-l-4 border-accent-500">
           <div className="flex items-center space-x-3">
@@ -431,8 +389,6 @@ export const CalendarPage = () => {
           </div>
         </div>
       </div>
-
-      {/* Record Period Button */}
       <div className="px-6">
         <Button
           className="w-full bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white h-12 spring-tap shadow-lg"
@@ -444,8 +400,6 @@ export const CalendarPage = () => {
           </div>
         </Button>
       </div>
-
-      {/* Reports Modal */}
       <ReportsModal
         isOpen={reportsModalOpen}
         onClose={() => setReportsModalOpen(false)}
@@ -454,8 +408,6 @@ export const CalendarPage = () => {
         cycleHistory={cycleData.cycleHistory}
         periodDays={cycleData.periodDays}
       />
-
-      {/* Bottom Action Buttons */}
       <div className="px-6">
         <div className="grid grid-cols-3 gap-4">
           <Button
@@ -490,8 +442,6 @@ export const CalendarPage = () => {
           </Button>
         </div>
       </div>
-
-      {/* Symptoms Modal */}
       <SymptomsModal
         isOpen={isSymptomModalOpen}
         onClose={() => setIsSymptomModalOpen(false)}
@@ -502,3 +452,5 @@ export const CalendarPage = () => {
     </div>
   );
 };
+
+export default CalendarPage;

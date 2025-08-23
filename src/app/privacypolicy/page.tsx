@@ -1,11 +1,10 @@
-import React from 'react';
-import { PageHeader } from '../components/layout/PageHeader';
+import { PageHeader } from '../../components/layout/PageHeader';
 
-const PrivacyPolicyContent: React.FC = () => {
+const PrivacyPolicyContent = () => {
   return (
     <>
       <PageHeader title="Kebijakan Privasi" subtitle="Perlindungan data Anda adalah prioritas kami" />
-  <div className="space-y-6 pb-32 px-6 pt-6">
+      <div className="space-y-6 pb-32 px-6 pt-6">
         <div className="card-elevated p-6 accent-profile space-y-6">
           <h2 className="text-xl font-bold mb-4">Kebijakan Privasi Serene Cycle Companion</h2>
           <p className="text-sm text-muted-foreground">Terakhir diperbarui: Agustus 2025</p>

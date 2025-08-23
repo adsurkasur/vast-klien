@@ -1,42 +1,38 @@
-import React from 'react';
-import { PageHeader } from '@/components/layout/PageHeader';
+import { PageHeader } from '../../components/layout/PageHeader';
 import { Users, MessageCircle, Heart, Share2, ExternalLink } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '../../components/ui/button';
 
-export const CommunityPage = () => {
-  const communityLinks = [
-    {
-      name: 'Gabung Grup Telegram Kami',
-      description: 'Terhubung dengan wanita dengan pengalaman serupa',
-      icon: MessageCircle,
-      url: 'https://t.me/vastcommunity',
-      color: 'bg-blue-100 text-blue-700',
-      members: '2.5k+'
-    },
-    {
-      name: 'Ikuti di Instagram',
-      description: 'Tips harian dan konten kesehatan',
-      icon: Heart,
-      url: 'https://instagram.com/vast.pkm',
-      color: 'bg-pink-100 text-pink-700',
-      members: '1.2k+'
-    },
-    {
-      name: 'Komunitas Facebook',
-      description: 'Berbagi cerita dan saling mendukung',
-      icon: Users,
-      url: 'https://facebook.com/groups/vastcommunity',
-      color: 'bg-purple-100 text-purple-700',
-      members: '890+'
-    }
-  ];
+const communityLinks = [
+  {
+    name: 'Gabung Grup Telegram Kami',
+    description: 'Terhubung dengan wanita dengan pengalaman serupa',
+    icon: MessageCircle,
+    url: 'https://t.me/vastcommunity',
+    color: 'bg-blue-100 text-blue-700',
+    members: '2.5k+'
+  },
+  {
+    name: 'Ikuti di Instagram',
+    description: 'Tips harian dan konten kesehatan',
+    icon: Heart,
+    url: 'https://instagram.com/vast.pkm',
+    color: 'bg-pink-100 text-pink-700',
+    members: '1.2k+'
+  },
+  {
+    name: 'Komunitas Facebook',
+    description: 'Berbagi cerita dan saling mendukung',
+    icon: Users,
+    url: 'https://facebook.com/groups/vastcommunity',
+    color: 'bg-purple-100 text-purple-700',
+    members: '890+'
+  }
+];
 
+const CommunityPage = () => {
   return (
     <div className="space-y-6 pb-32">
-      {/* Header with Logo and Title */}
-  <PageHeader title="Komunitas" subtitle="Terhubung dengan orang lain" />
-
-      {/* Hero Section */}
+      <PageHeader title="Komunitas" subtitle="Terhubung dengan orang lain" />
       <div className="px-6">
         <div className="card-soft p-6 text-center">
           <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full mx-auto mb-4 flex items-center justify-center">
@@ -50,8 +46,6 @@ export const CommunityPage = () => {
           </p>
         </div>
       </div>
-
-      {/* Community Links */}
       <div className="px-6 space-y-4">
         {communityLinks.map((link) => (
           <div key={link.name} className="card-elevated p-6">
@@ -62,21 +56,16 @@ export const CommunityPage = () => {
                 </div>
                 <div className="flex-1">
                   <h3 className="font-semibold text-foreground mb-1">{link.name}</h3>
-                 {/* Description and Members
-
+                  {/* Description and Members */}
                   <p className="text-sm text-muted-foreground mb-2">{link.description}</p>
                   <div className="flex items-center space-x-1">
                     <Users size={14} className="text-muted-foreground" />
                     <span className="text-xs text-muted-foreground">{link.members} members</span>
                   </div>
-                  
-                  */}
                 </div>
-
               </div>
               <ExternalLink size={20} className="text-muted-foreground" />
             </div>
-
             <a
               href={link.url}
               target="_blank"
@@ -94,8 +83,6 @@ export const CommunityPage = () => {
           </div>
         ))}
       </div>
-
-      {/* Community Guidelines */}
       <div className="px-6">
         <div className="card-soft p-6">
           <h3 className="font-semibold text-foreground mb-3 flex items-center space-x-2">
@@ -114,3 +101,5 @@ export const CommunityPage = () => {
     </div>
   );
 };
+
+export default CommunityPage;
