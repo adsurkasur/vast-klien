@@ -1,11 +1,11 @@
+"use client";
 // Extend Window type for gapi
 declare global {
   interface Window {
-    gapi: any;
+    gapi: unknown; // Use 'unknown' instead of 'any' for ESLint compliance
   }
 }
 
-"use client";
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Edit, User as UserIcon, Shield, Bell, Heart, Calendar, Settings } from 'lucide-react';
@@ -347,7 +347,15 @@ const ProfilePage = () => {
                       debug("Signed in to Google Drive.");
                       resolve(true);
                     } catch (err) {
-                      debug("Error during gapi client init/sign-in: " + String(err));
+                      let errorDetails = '';
+                      if (err instanceof Error) {
+                        errorDetails = err.message;
+                      } else if (typeof err === 'object' && err !== null) {
+                        errorDetails = JSON.stringify(err);
+                      } else {
+                        errorDetails = String(err);
+                      }
+                      debug("Error during gapi client init/sign-in: " + errorDetails);
                       reject(err);
                     }
                   });
