@@ -11,8 +11,6 @@ const nextConfig = {
       },
     ],
   },
-  // Set metadataBase for social open graph and twitter images
-  metadataBase: new URL('http://localhost:3000'),
   // Allow local network origins for development
   allowedDevOrigins: ['http://localhost:3000', 'http://192.168.1.4:3000'],
 };
