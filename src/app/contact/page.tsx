@@ -37,11 +37,26 @@ const ContactPage = () => {
               </div>
             </div>
             <div className="space-y-4">
-              <a href="https://x.com/vast_id" target="_blank" rel="noopener noreferrer" className="block w-full p-4 border-2 border-white/30 rounded-full text-center font-medium hover:bg-white/10 transition-all duration-200 spring-tap">X</a>
-              <a href="https://www.facebook.com/profile.php?id=61578620750547" target="_blank" rel="noopener noreferrer" className="block w-full p-4 border-2 border-white/30 rounded-full text-center font-medium hover:bg-white/10 transition-all duration-200 spring-tap">Facebook</a>
-              <a href="https://www.tiktok.com/@vast_pkmk" target="_blank" rel="noopener noreferrer" className="block w-full p-4 border-2 border-white/30 rounded-full text-center font-medium hover:bg-white/10 transition-all duration-200 spring-tap">TikTok</a>
-              <a href="https://youtube.com/@pkmkvast?si=DAcIERI2AM5_928s" target="_blank" rel="noopener noreferrer" className="block w-full p-4 border-2 border-white/30 rounded-full text-center font-medium hover:bg-white/10 transition-all duration-200 spring-tap">YouTube</a>
-              <a href="https://www.instagram.com/_vast.id" target="_blank" rel="noopener noreferrer" className="block w-full p-4 border-2 border-white/30 rounded-full text-center font-medium hover:bg-white/10 transition-all duration-200 spring-tap">Instagram</a>
+              <a href="https://x.com/vast_id" target="_blank" rel="noopener noreferrer" className="w-full p-4 border-2 border-white/30 rounded-full text-center font-medium flex items-center justify-center gap-2 hover:bg-white/10 transition-all duration-200 spring-tap">
+                <XIcon size={20} />
+                X
+              </a>
+              <a href="https://www.facebook.com/profile.php?id=61578620750547" target="_blank" rel="noopener noreferrer" className="w-full p-4 border-2 border-white/30 rounded-full text-center font-medium flex items-center justify-center gap-2 hover:bg-white/10 transition-all duration-200 spring-tap">
+                <FacebookIcon size={28} />
+                Facebook
+              </a>
+              <a href="https://www.tiktok.com/@vast_pkmk" target="_blank" rel="noopener noreferrer" className="w-full p-4 border-2 border-white/30 rounded-full text-center font-medium flex items-center justify-center gap-2 hover:bg-white/10 transition-all duration-200 spring-tap">
+                <TikTokIcon size={28} />
+                TikTok
+              </a>
+              <a href="https://youtube.com/@pkmkvast?si=DAcIERI2AM5_928s" target="_blank" rel="noopener noreferrer" className="w-full p-4 border-2 border-white/30 rounded-full text-center font-medium flex items-center justify-center gap-2 hover:bg-white/10 transition-all duration-200 spring-tap">
+                <Youtube size={28} />
+                YouTube
+              </a>
+              <a href="https://www.instagram.com/_vast.id" target="_blank" rel="noopener noreferrer" className="w-full p-4 border-2 border-white/30 rounded-full text-center font-medium flex items-center justify-center gap-2 hover:bg-white/10 transition-all duration-200 spring-tap">
+                <InstagramIcon size={28} />
+                Instagram
+              </a>
             </div>
           </div>
         </div>
