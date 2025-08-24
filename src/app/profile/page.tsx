@@ -240,7 +240,7 @@ const ProfilePage = () => {
             <button
               className={cn(
                 "relative w-14 h-7 flex items-center bg-gray-200 rounded-full p-1 transition-colors duration-200 focus:outline-none",
-                notificationsEnabled ? "bg-primary/80" : "bg-gray-200"
+                notificationsEnabled ? "bg-primary" : "bg-gray-200"
               )}
               aria-pressed={notificationsEnabled}
               aria-label="Aktifkan/Nonaktifkan Notifikasi"
