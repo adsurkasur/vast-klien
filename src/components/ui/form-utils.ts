@@ -45,8 +45,10 @@ const FormItemContext = React.createContext<FormItemContextValue>(
 
 export {
   FormFieldContext,
-  FormFieldContextValue,
   FormItemContext,
-  FormItemContextValue,
   useFormField,
+}
+export type {
+  FormFieldContextValue,
+  FormItemContextValue,
 }

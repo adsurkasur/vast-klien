@@ -10,7 +10,7 @@ export const sidebarVariants = cva(
       },
     },
     defaultVariants: {
-      collapsed: "false",
+      collapsed: false,
     },
   }
 )

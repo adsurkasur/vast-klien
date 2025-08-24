@@ -1,20 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import type { Toast, ToastType, ToastContextProps } from './custom-toast-types';
 
-export type ToastType = 'success' | 'error' | 'info' | 'warning';
-export interface Toast {
-  id: string;
-  message: string;
-  type: ToastType;
-  duration?: number;
-}
-
-interface ToastContextProps {
-  toasts: Toast[];
-  showToast: (message: string, type?: ToastType, duration?: number) => void;
-  removeToast: (id: string) => void;
-}
-
-const ToastContext = createContext<ToastContextProps | undefined>(undefined);
+import { ToastContext } from './custom-toast-context';
 
 export const CustomToastProvider = ({ children }: { children: ReactNode }) => {
   const [toasts, setToasts] = useState<Toast[]>([]);
@@ -62,8 +49,3 @@ export const CustomToastProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export function useCustomToast() {
-  const ctx = useContext(ToastContext);
-  if (!ctx) throw new Error('useCustomToast must be used within CustomToastProvider');
-  return ctx;
-}

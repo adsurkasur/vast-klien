@@ -23,6 +23,7 @@ type SidebarMenuSubButtonProps = React.ComponentProps<'a'> & {
 };
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
+import { PanelLeft } from "lucide-react";
 import { VariantProps, cva } from "class-variance-authority"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Separator } from "@/components/ui/separator"
@@ -78,8 +79,12 @@ const SidebarProvider = React.forwardRef<HTMLDivElement, React.ComponentProps<'d
   }, [setOpenProp]);
 
   const toggleSidebar = React.useCallback(() => {
-    return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open);
-  }, [isMobile, setOpen, setOpenMobile]);
+    if (isMobile) {
+      setOpenMobile((open) => !open);
+    } else {
+      setOpen(!open);
+    }
+  }, [isMobile, setOpen, setOpenMobile, open]);
 
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -95,7 +100,7 @@ const SidebarProvider = React.forwardRef<HTMLDivElement, React.ComponentProps<'d
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [toggleSidebar]);
 
-  const state = open ? 'expanded' : 'collapsed';
+  const state: 'expanded' | 'collapsed' = open ? 'expanded' : 'collapsed';
   const contextValue = React.useMemo(() => ({
     state,
     open,
