@@ -4,13 +4,17 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Edit, User as UserIcon, Shield, Bell, Heart, Calendar, Settings } from 'lucide-react';
 import { Button } from '../../components/ui/button';
+import { useToast } from '../../hooks/use-toast';
+import { useGoogleAuth } from '../../hooks/useGoogleAuth';
+import { useRef } from 'react';
+import { loadGapiInsideDOM } from 'gapi-script';
+import { Cloud } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { PageHeader } from '../../components/layout/PageHeader';
 import { GoogleAuthButton } from '../../components/ui/GoogleAuthButton';
-import { useGoogleAuth } from '../../hooks/useGoogleAuth';
 import type { User as FirebaseUser } from 'firebase/auth';
 
 interface CycleData {
@@ -47,6 +51,10 @@ const getGoogleProfile = (user: FirebaseUser | null, cycleData?: CycleData | nul
 
 const ProfilePage = () => {
   const { user } = useGoogleAuth();
+  const { toast } = useToast();
+  const syncLoadingRef = useRef(false);
+  const [syncDebugInfo, setSyncDebugInfo] = useState<string[]>([]);
+  const isClient = typeof window !== "undefined";
   const [isEditing, setIsEditing] = useState(false);
 
   const [profile, setProfile] = useState(getGoogleProfile(user));
@@ -255,6 +263,136 @@ const ProfilePage = () => {
             </button>
           </div>
           {/* Add other settings items here if needed */}
+          <div
+            className={cn(
+              "card-soft p-4 flex items-center justify-between spring-tap cursor-pointer hover:shadow-card transition-all duration-200",
+              syncLoadingRef.current && "opacity-60 pointer-events-none"
+            )}
+            onClick={async () => {
+              const debug = (msg: string) => {
+                setSyncDebugInfo(prev => [...prev, `[${new Date().toLocaleTimeString()}] ${msg}`]);
+                console.log(msg);
+              };
+              setSyncDebugInfo([]);
+              if (typeof window === 'undefined') {
+                debug("Sync attempted on server. Aborting.");
+                toast({ title: "Sync hanya dapat dilakukan di browser", description: "Fitur ini hanya tersedia di sisi client." });
+                return;
+              }
+              // Dynamically import gapi-script only on client
+              const { loadGapiInsideDOM } = await import('gapi-script');
+              if (!user) {
+                debug("User not logged in.");
+                toast({ title: "Harus login dengan Google", description: "Silakan login terlebih dahulu." });
+                return;
+              }
+              syncLoadingRef.current = true;
+              try {
+                debug("NEXT_PUBLIC_GOOGLE_API_KEY: " + process.env.NEXT_PUBLIC_GOOGLE_API_KEY);
+                debug("NEXT_PUBLIC_GOOGLE_CLIENT_ID: " + process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
+                debug("Loading gapi...");
+                await loadGapiInsideDOM();
+                // @ts-expect-error: gapi is injected globally by gapi-script and not typed
+                const gapi = window.gapi;
+                debug("gapi loaded. Initializing client...");
+                await new Promise((resolve, reject) => {
+                  gapi.load('client:auth2', async () => {
+                    try {
+                      await gapi.client.init({
+                        apiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
+                        clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+                        discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"],
+                        scope: "https://www.googleapis.com/auth/drive.file"
+                      });
+                      debug("gapi client initialized. Checking auth instance...");
+                      const authInstance = gapi.auth2.getAuthInstance();
+                      if (!authInstance) {
+                        debug("gapi.auth2.getAuthInstance() returned null. Check clientId and scope.");
+                        toast({ title: "Konfigurasi Google Drive salah", description: "clientId atau scope tidak valid." });
+                        syncLoadingRef.current = false;
+                        return;
+                      }
+                      debug("Signing in...");
+                      await authInstance.signIn();
+                      debug("Signed in to Google Drive.");
+                      resolve(true);
+                    } catch (err) {
+                      debug("Error during gapi client init/sign-in: " + String(err));
+                      reject(err);
+                    }
+                  });
+                });
+                debug("Getting cycle data from localStorage...");
+                const cycleData = localStorage.getItem('cycleData');
+                if (!cycleData) {
+                  debug("No cycle data found in localStorage.");
+                  toast({ title: "Tidak ada data siklus", description: "Data siklus tidak ditemukan di perangkat." });
+                  syncLoadingRef.current = false;
+                  return;
+                }
+                debug("Cycle data found. Creating file blob...");
+                const fileContent = cycleData;
+                const file = new Blob([fileContent], { type: 'application/json' });
+                const metadata = {
+                  name: `vast-cycle-data-${new Date().toISOString()}.json`,
+                  mimeType: 'application/json'
+                };
+                debug("Preparing FormData for upload...");
+                const form = new FormData();
+                form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+                form.append('file', file);
+                const accessToken = gapi.auth.getToken().access_token;
+                debug("Uploading file to Google Drive...");
+                const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+                  method: 'POST',
+                  headers: new Headers({ 'Authorization': 'Bearer ' + accessToken }),
+                  body: form
+                });
+                debug("Upload response status: " + response.status);
+                const responseText = await response.text();
+                debug("Upload response body: " + responseText);
+                if (response.ok) {
+                  debug("File uploaded successfully.");
+                  toast({ title: "Berhasil disinkronkan", description: "Data siklus berhasil diunggah ke Google Drive." });
+                } else {
+                  debug("File upload failed.");
+                  toast({ title: "Gagal sinkronisasi", description: "Terjadi kesalahan saat mengunggah data." });
+                }
+              } catch (err) {
+                let errorMessage = "";
+                if (err && typeof err === "object" && "message" in err) {
+                  errorMessage = (err as { message?: string }).message ?? String(err);
+                } else {
+                  errorMessage = String(err);
+                }
+                debug("Sync error: " + errorMessage);
+                toast({ title: "Gagal sinkronisasi", description: "Terjadi kesalahan: " + errorMessage });
+              }
+              syncLoadingRef.current = false;
+            }}
+            role="button"
+            tabIndex={0}
+            aria-label="Sinkronkan Data"
+          >
+            <div className="flex items-center space-x-3">
+              <Cloud size={20} className="text-primary" />
+              <div>
+                <div className="font-medium text-foreground text-sm">Sinkronkan Data</div>
+                <div className="text-xs text-muted-foreground">Sinkronkan data siklus ke cloud</div>
+              </div>
+            </div>
+          </div>
+        {/* Debug Info Panel (below sync card) */}
+        {typeof window !== 'undefined' && syncDebugInfo.length > 0 && (
+          <div className="mt-2 p-2 bg-muted rounded text-xs text-muted-foreground">
+            <div className="font-semibold mb-1">Debug Info:</div>
+            <ul className="space-y-1">
+              {syncDebugInfo.map((msg, idx) => (
+                <li key={idx}>{msg}</li>
+              ))}
+            </ul>
+          </div>
+        )}
         </div>
       </div>
       {/* Privacy Notice */}
