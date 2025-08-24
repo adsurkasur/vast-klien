@@ -47,7 +47,7 @@ import { useGoogleAuth } from '../../hooks/GoogleAuthContext';
 import { useRef } from 'react';
 // Remove gapi-script; load gapi via script tag
 // See useEffect below for script loading
-import { Cloud } from 'lucide-react';
+import { Cloud, Upload, Download } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { Input } from '../../components/ui/input';
@@ -132,6 +132,7 @@ const ProfilePage = () => {
       }
       // Prompt user before restoring
       setPendingCloudData(cloudData);
+      toast({ title: "Sinkronisasi dari Cloud selesai", description: "Data siklus berhasil diunduh dari cloud.", duration: 3000 });
       if (!cloudRestorePromptDismissed) {
         setShowCloudPrompt(true);
       }
@@ -405,6 +406,7 @@ const ProfilePage = () => {
             </button>
           </div>
           {/* Add other settings items here if needed */}
+          {/* Sinkronisasi ke Cloud (Upload) */}
           <div
             className={cn(
               "card-soft p-4 flex items-center justify-between spring-tap cursor-pointer hover:shadow-card transition-all duration-200",
@@ -412,7 +414,7 @@ const ProfilePage = () => {
             )}
             onClick={async () => {
               if (typeof window === 'undefined') {
-                toast({ title: "Sync hanya dapat dilakukan di browser", description: "Fitur ini hanya tersedia di sisi client.", duration: 3000 });
+                toast({ title: "Sinkronisasi hanya dapat dilakukan di browser", description: "Fitur ini hanya tersedia di sisi client.", duration: 3000 });
                 return;
               }
               if (!user) {
@@ -420,6 +422,7 @@ const ProfilePage = () => {
                 return;
               }
               syncLoadingRef.current = true;
+              toast({ title: "Sinkronisasi ke Cloud dimulai", description: "Mengunggah data siklus ke cloud...", duration: 3000 });
               try {
                 // Gather all relevant data for sync
                 const cycleDataRaw = localStorage.getItem('cycleData');
@@ -470,7 +473,7 @@ const ProfilePage = () => {
                         });
                         const responseText = await response.text();
                         if (response.ok) {
-                          toast({ title: "Berhasil disinkronkan", description: "Data profil, pengaturan, dan siklus berhasil diunggah ke Google Drive.", duration: 3000 });
+                          toast({ title: "Sinkronisasi ke Cloud selesai", description: "Data siklus berhasil diunggah ke cloud.", duration: 3000 });
                         } else {
                           toast({ title: "Gagal sinkronisasi", description: "Terjadi kesalahan saat mengunggah data.", duration: 3000 });
                         }
@@ -504,13 +507,54 @@ const ProfilePage = () => {
             }}
             role="button"
             tabIndex={0}
-            aria-label="Sinkronkan Data"
+            aria-label="Sinkronisasi ke Cloud"
           >
             <div className="flex items-center space-x-3">
-              <Cloud size={20} className="text-primary" />
+              <Upload size={20} className="text-primary" />
               <div>
-                <div className="font-medium text-foreground text-sm">Sinkronkan Data</div>
-                <div className="text-xs text-muted-foreground">Sinkronkan data siklus ke cloud</div>
+                <div className="font-medium text-foreground text-sm">Sinkronisasi ke Cloud</div>
+                <div className="text-xs text-muted-foreground">Unggah data siklus ke cloud</div>
+              </div>
+            </div>
+          </div>
+          {/* Sinkronisasi dari Cloud (Download) */}
+          <div
+            className={cn(
+              "card-soft p-4 flex items-center justify-between spring-tap cursor-pointer hover:shadow-card transition-all duration-200"
+            )}
+            onClick={async () => {
+              if (typeof window === 'undefined') {
+                toast({ title: "Sinkronisasi hanya dapat dilakukan di browser", description: "Fitur ini hanya tersedia di sisi client.", duration: 3000 });
+                return;
+              }
+              if (!user) {
+                toast({ title: "Harus login dengan Google", description: "Silakan login terlebih dahulu.", duration: 3000 });
+                return;
+              }
+              toast({ title: "Sinkronisasi dari Cloud dimulai", description: "Mengunduh data siklus dari cloud...", duration: 3000 });
+              const initTokenClient = window.google?.accounts?.oauth2?.initTokenClient;
+              if (typeof initTokenClient === 'function') {
+                const tokenClient = initTokenClient({
+                  client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? '',
+                  scope: 'https://www.googleapis.com/auth/drive.file',
+                  callback: (tokenResponse: { access_token: string }) => {
+                    restoreFromDrive(tokenResponse.access_token);
+                  }
+                });
+                tokenClient.requestAccessToken();
+              } else {
+                toast({ title: "Google Identity Services tidak tersedia", description: "Pastikan koneksi internet dan coba lagi.", duration: 3000 });
+              }
+            }}
+            role="button"
+            tabIndex={0}
+            aria-label="Sinkronisasi dari Cloud"
+          >
+            <div className="flex items-center space-x-3">
+              <Download size={20} className="text-primary" />
+              <div>
+                <div className="font-medium text-foreground text-sm">Sinkronisasi dari Cloud</div>
+                <div className="text-xs text-muted-foreground">Unduh data siklus dari cloud</div>
               </div>
             </div>
           </div>
