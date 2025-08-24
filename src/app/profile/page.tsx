@@ -12,24 +12,65 @@ import { GoogleAuthButton } from '../../components/ui/GoogleAuthButton';
 import { useGoogleAuth } from '../../hooks/useGoogleAuth';
 import type { User as FirebaseUser } from 'firebase/auth';
 
-const getGoogleProfile = (user: FirebaseUser | null) => ({
-  name: user?.displayName || 'Sarah Johnson',
-  email: user?.email || 'sarah.johnson@email.com',
-  age: '28',
-  cycleLength: '28',
-  periodLength: '5',
-  googleUserId: user?.uid || '',
+interface CycleData {
+  periodDays: Array<{
+    date: string;
+    isPeriod: boolean;
+    symptoms: string[];
+    flow?: 'light' | 'medium' | 'heavy';
+    mood?: string[];
+    notes?: string;
+  }>;
+  cycleHistory: Array<{
+    startDate: string;
+    endDate: string;
+    cycleLength: number;
+    periodLength?: number;
+  }>;
+  averageCycleLength: number | null;
+  averagePeriodLength: number | null;
+  lastPeriodStart?: string;
+  nextPeriodPrediction?: string;
+}
+
+const getGoogleProfile = (user: FirebaseUser | null, cycleData?: CycleData | null) => ({
+  name: user?.displayName || 'Nama',
+  email: user?.email || 'Email',
+  age: '-',
+  cycleLength: cycleData?.averageCycleLength ? String(cycleData.averageCycleLength) : '-',
+  periodLength: cycleData?.averagePeriodLength ? String(cycleData.averagePeriodLength) : '-',
+  googleUserId: user?.uid || '-',
   cloudSync: false
 });
 
 const ProfilePage = () => {
   const { user } = useGoogleAuth();
   const [isEditing, setIsEditing] = useState(false);
+
   const [profile, setProfile] = useState(getGoogleProfile(user));
+  const [cycleData, setCycleData] = useState<CycleData | null>(null);
 
   useEffect(() => {
-    setProfile(getGoogleProfile(user));
+    // Load cycleData from localStorage
+    const savedCycleData = localStorage.getItem('cycleData');
+    let parsedCycleData = null;
+    if (savedCycleData) {
+      try {
+        parsedCycleData = JSON.parse(savedCycleData);
+        setCycleData(parsedCycleData);
+      } catch (error) {
+        setCycleData(null);
+      }
+    } else {
+      setCycleData(null);
+    }
+    setProfile(getGoogleProfile(user, parsedCycleData));
   }, [user]);
+
+  useEffect(() => {
+    // Update profile when cycleData or user changes
+    setProfile(getGoogleProfile(user, cycleData));
+  }, [cycleData, user]);
 
   const handleSave = () => {
     setIsEditing(false);
