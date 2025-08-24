@@ -1,8 +1,8 @@
 
-"use client";
-
 import "./globals.css";
 import AppShell from "./AppShell";
+import { metadata } from "./metadata";
+export { metadata };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

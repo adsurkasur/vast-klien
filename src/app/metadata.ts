@@ -15,9 +15,9 @@ export const metadata = {
   themeColor: "#f97316",
   viewport: "width=device-width, initial-scale=1",
   openGraph: {
-    title: "Vast ID – Serene Cycle Companion",
+    title: "Vast ID",
     description: "Empowering women’s health with science-based, innovative, and functional products for menstrual comfort and wellbeing.",
-    url: "https://vast.id",
+    url: "https://vast-id.vercel.app",
     siteName: "Vast ID",
     images: [
       {
