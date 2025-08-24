@@ -3,9 +3,6 @@
   "references": [
     {
       "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.node.json"
     }
   ],
   "compilerOptions": {
@@ -40,10 +37,8 @@
     ]
   },
   "include": [
-    "next-env.d.ts",
-    ".next/types/**/*.ts",
-    "**/*.ts",
-    "**/*.tsx"
+  "next-env.d.ts",
+  ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"
