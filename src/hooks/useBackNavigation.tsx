@@ -58,7 +58,7 @@ export const useBackNavigation = (
         }
         // First back press at home: show toast, set flag, and prevent exit
         backPressedOnce.current = true;
-        toast({ title: 'Press back again to exit' });
+  toast({ title: 'Press back again to exit', duration: 3000 });
         timeoutRef.current = window.setTimeout(() => {
           backPressedOnce.current = false;
         }, 2000);

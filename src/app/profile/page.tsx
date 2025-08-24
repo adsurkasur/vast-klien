@@ -317,11 +317,11 @@ const ProfilePage = () => {
             )}
             onClick={async () => {
               if (typeof window === 'undefined') {
-                toast({ title: "Sync hanya dapat dilakukan di browser", description: "Fitur ini hanya tersedia di sisi client." });
+                toast({ title: "Sync hanya dapat dilakukan di browser", description: "Fitur ini hanya tersedia di sisi client.", duration: 3000 });
                 return;
               }
               if (!user) {
-                toast({ title: "Harus login dengan Google", description: "Silakan login terlebih dahulu." });
+                toast({ title: "Harus login dengan Google", description: "Silakan login terlebih dahulu.", duration: 3000 });
                 return;
               }
               syncLoadingRef.current = true;
@@ -330,7 +330,7 @@ const ProfilePage = () => {
                 const cycleDataRaw = localStorage.getItem('cycleData');
                 const notificationsEnabledRaw = localStorage.getItem('notificationsEnabled');
                 if (!cycleDataRaw) {
-                  toast({ title: "Tidak ada data siklus", description: "Data siklus tidak ditemukan di perangkat." });
+                  toast({ title: "Tidak ada data siklus", description: "Data siklus tidak ditemukan di perangkat.", duration: 3000 });
                   syncLoadingRef.current = false;
                   return;
                 }
@@ -375,9 +375,9 @@ const ProfilePage = () => {
                         });
                         const responseText = await response.text();
                         if (response.ok) {
-                          toast({ title: "Berhasil disinkronkan", description: "Data profil, pengaturan, dan siklus berhasil diunggah ke Google Drive." });
+                          toast({ title: "Berhasil disinkronkan", description: "Data profil, pengaturan, dan siklus berhasil diunggah ke Google Drive.", duration: 3000 });
                         } else {
-                          toast({ title: "Gagal sinkronisasi", description: "Terjadi kesalahan saat mengunggah data." });
+                          toast({ title: "Gagal sinkronisasi", description: "Terjadi kesalahan saat mengunggah data.", duration: 3000 });
                         }
                       } catch (err) {
                         let errorMessage = "";
@@ -386,14 +386,14 @@ const ProfilePage = () => {
                         } else {
                           errorMessage = String(err);
                         }
-                        toast({ title: "Gagal sinkronisasi", description: "Terjadi kesalahan: " + errorMessage });
+                        toast({ title: "Gagal sinkronisasi", description: "Terjadi kesalahan: " + errorMessage, duration: 3000 });
                       }
                       syncLoadingRef.current = false;
                     }
                   });
                   tokenClient.requestAccessToken();
                 } else {
-                  toast({ title: "Google Identity Services tidak tersedia", description: "Pastikan koneksi internet dan coba lagi." });
+                  toast({ title: "Google Identity Services tidak tersedia", description: "Pastikan koneksi internet dan coba lagi.", duration: 3000 });
                   syncLoadingRef.current = false;
                 }
               } catch (err) {
@@ -403,7 +403,7 @@ const ProfilePage = () => {
                 } else {
                   errorMessage = String(err);
                 }
-                toast({ title: "Gagal sinkronisasi", description: "Terjadi kesalahan: " + errorMessage });
+                toast({ title: "Gagal sinkronisasi", description: "Terjadi kesalahan: " + errorMessage, duration: 3000 });
                 syncLoadingRef.current = false;
               }
             }}
