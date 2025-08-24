@@ -1,38 +1,35 @@
 
 "use client";
 import { useState, useEffect } from 'react';
-import { Edit, User, Shield, Bell, Heart, Calendar, Settings } from 'lucide-react';
+import { Edit, User as UserIcon, Shield, Bell, Heart, Calendar, Settings } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { PageHeader } from '../../components/layout/PageHeader';
+import { GoogleAuthButton } from '../../components/ui/GoogleAuthButton';
+import { useGoogleAuth } from '../../hooks/useGoogleAuth';
+import type { User as FirebaseUser } from 'firebase/auth';
 
-const getGoogleProfile = () => ({
-  name: 'Sarah Johnson',
-  email: 'sarah.johnson@email.com',
+const getGoogleProfile = (user: FirebaseUser | null) => ({
+  name: user?.displayName || 'Sarah Johnson',
+  email: user?.email || 'sarah.johnson@email.com',
   age: '28',
   cycleLength: '28',
   periodLength: '5',
-  googleUserId: 'google-uid-placeholder',
+  googleUserId: user?.uid || '',
   cloudSync: false
 });
 
 const ProfilePage = () => {
-  const [isRegistered, setIsRegistered] = useState(false);
+  const { user } = useGoogleAuth();
   const [isEditing, setIsEditing] = useState(false);
-  const [profile, setProfile] = useState(getGoogleProfile());
+  const [profile, setProfile] = useState(getGoogleProfile(user));
 
-  const handleGoogleLogin = () => {
-    setIsRegistered(true);
-    setProfile(getGoogleProfile());
-  };
-
-  const handleLogout = () => {
-    setIsRegistered(false);
-    setProfile(getGoogleProfile());
-  };
+  useEffect(() => {
+    setProfile(getGoogleProfile(user));
+  }, [user]);
 
   const handleSave = () => {
     setIsEditing(false);
@@ -58,26 +55,20 @@ const ProfilePage = () => {
       <PageHeader title="Profil Saya" subtitle="Personalisasi pengalaman Anda" />
       <div className="px-6">
         <div className="card-elevated p-6 accent-profile">
-          {!isRegistered ? (
+          {!user ? (
             <div className="flex flex-col items-center justify-center space-y-4">
               <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-2">
-                <User size={28} className="text-primary-foreground" />
+                <UserIcon size={28} className="text-primary-foreground" />
               </div>
               <h2 className="text-xl font-semibold text-foreground">Belum terdaftar</h2>
               <p className="text-muted-foreground text-center">Masuk untuk personalisasi pengalaman Anda dan sinkronkan data siklus Anda dengan aman.</p>
-              <Button
-                onClick={handleGoogleLogin}
-                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl spring-tap"
-              >
-                <span className="mr-2">G</span>
-                Masuk dengan Google
-              </Button>
+              <GoogleAuthButton />
             </div>
           ) : (
             <>
               <div className="flex items-center mb-6 space-x-4">
                 <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center">
-                  <User size={24} className="text-primary-foreground" />
+                  <UserIcon size={24} className="text-primary-foreground" />
                 </div>
                 <div>
                   <h2 className="text-xl font-semibold text-foreground">{profile.name}</h2>
@@ -170,14 +161,7 @@ const ProfilePage = () => {
                     <Edit size={16} className="mr-2" />
                     Edit
                   </Button>
-                  <Button
-                    onClick={handleLogout}
-                    variant="ghost"
-                    size="sm"
-                    className="w-full mt-2 text-destructive border-card-border spring-tap"
-                  >
-                    Keluar
-                  </Button>
+                  <GoogleAuthButton />
                 </>
               )}
             </>
