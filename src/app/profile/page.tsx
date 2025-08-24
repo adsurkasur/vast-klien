@@ -2,8 +2,29 @@
 // Extend Window type for gapi
 declare global {
   interface Window {
-    gapi: unknown; // Use 'unknown' instead of 'any' for ESLint compliance
+    gapi: Gapi | undefined;
   }
+}
+
+// Minimal Gapi interface for Google Drive sync
+interface Gapi {
+  load: (name: string, callback: () => void) => void;
+  client: {
+    init: (config: {
+      apiKey: string;
+      clientId: string;
+      discoveryDocs: string[];
+      scope: string;
+    }) => Promise<void>;
+  };
+  auth: {
+    getToken: () => { access_token: string };
+  };
+  auth2: {
+    getAuthInstance: () => {
+      signIn: () => Promise<void>;
+    } | null;
+  };
 }
 
 import { useState, useEffect } from 'react';
@@ -323,14 +344,14 @@ const ProfilePage = () => {
                     }, 5000);
                   }
                 });
-                const gapi = window.gapi;
+                const gapi = window.gapi as Gapi;
                 debug("gapi loaded. Initializing client...");
                 await new Promise((resolve, reject) => {
                   gapi.load('client:auth2', async () => {
                     try {
                       await gapi.client.init({
-                        apiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
-                        clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+                        apiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY ?? "",
+                        clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "",
                         discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"],
                         scope: "https://www.googleapis.com/auth/drive.file"
                       });
