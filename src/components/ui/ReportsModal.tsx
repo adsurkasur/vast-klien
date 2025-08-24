@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Button } from '@/components/ui/button';
 
 interface CycleHistory {
@@ -11,8 +11,8 @@ interface CycleHistory {
 interface ReportsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  averageCycleLength: number;
-  averagePeriodLength: number;
+  averageCycleLength: number | null;
+  averagePeriodLength: number | null;
   cycleHistory: CycleHistory[];
   periodDays: Array<{ date: string; isPeriod: boolean; symptoms: string[] }>;
 }
@@ -24,13 +24,13 @@ export const ReportsModal: React.FC<ReportsModalProps> = ({
   averagePeriodLength,
   cycleHistory,
   periodDays
-}) => {
+}: ReportsModalProps) => {
   if (!isOpen) return null;
 
   // Hitung gejala paling sering
   const symptomCounts: Record<string, number> = {};
-  periodDays.forEach(day => {
-    day.symptoms.forEach(symptom => {
+  periodDays.forEach((day: { date: string; isPeriod: boolean; symptoms: string[] }) => {
+    day.symptoms.forEach((symptom: string) => {
       symptomCounts[symptom] = (symptomCounts[symptom] || 0) + 1;
     });
   });
@@ -38,6 +38,10 @@ export const ReportsModal: React.FC<ReportsModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
+      <div>
+        <div>Rata-rata panjang siklus: {averageCycleLength ?? 'Data tidak tersedia'}</div>
+        <div>Rata-rata panjang periode: {averagePeriodLength ?? 'Data tidak tersedia'}</div>
+      </div>
   <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} aria-label="Tutup modal" />
       <div className="relative card-elevated w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200">
         <div className="flex items-center justify-between p-6 pb-4">
@@ -76,7 +80,7 @@ export const ReportsModal: React.FC<ReportsModalProps> = ({
                       <td className="border border-accent-200 px-2 py-1 text-center">-</td>
                     </tr>
                   ) : (
-                    cycleHistory.map((cycle, idx) => (
+                    cycleHistory.map((cycle: CycleHistory, idx: number) => (
                       <tr key={idx}>
                         <td className="border border-accent-200 px-2 py-1">{new Date(cycle.startDate).toLocaleDateString()}</td>
                         <td className="border border-accent-200 px-2 py-1">{new Date(cycle.endDate).toLocaleDateString()}</td>

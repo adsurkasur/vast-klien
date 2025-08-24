@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { getExpectedMenstruationDate, triggerMenstruationNotification } from '@/lib/notifications';
 import { SymptomsModal } from '@/components/ui/SymptomsModal';
 import { ModalEditDelete } from '../../components/ui/ModalEditDelete';
