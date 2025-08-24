@@ -53,6 +53,7 @@ import Link from 'next/link';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { PageHeader } from '../../components/layout/PageHeader';
+import CloudRestorePrompt from '../../components/ui/CloudRestorePrompt';
 import { GoogleAuthButton } from '../../components/ui/GoogleAuthButton';
 import type { User as FirebaseUser } from 'firebase/auth';
 
@@ -89,6 +90,56 @@ const getGoogleProfile = (user: FirebaseUser | null, cycleData?: CycleData | nul
 });
 
 const ProfilePage = () => {
+  // Prompt state for cloud restore
+  const [showCloudPrompt, setShowCloudPrompt] = useState(false);
+  interface CloudData {
+    profile?: ReturnType<typeof getGoogleProfile>;
+    notificationsEnabled?: boolean;
+    cycleData?: CycleData;
+  }
+  const [pendingCloudData, setPendingCloudData] = useState<CloudData | null>(null);
+  // Helper: Fetch latest backup file from Google Drive and restore local data
+  const restoreFromDrive = async (accessToken: string) => {
+    try {
+      // 1. List files with name starting with 'vast-profile-sync-'
+      const listRes = await fetch('https://www.googleapis.com/drive/v3/files?q=name contains "vast-profile-sync-" and mimeType="application/json"&orderBy=modifiedTime desc&pageSize=1', {
+        headers: { Authorization: 'Bearer ' + accessToken }
+      });
+      const listData = await listRes.json();
+      if (!listRes.ok || !listData.files || listData.files.length === 0) {
+        toast({ title: "Tidak ada backup di cloud", description: "Belum ada data yang disimpan di Google Drive.", duration: 3000 });
+        return;
+      }
+      const fileId = listData.files[0].id;
+      // 2. Download file content
+      const fileRes = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
+        headers: { Authorization: 'Bearer ' + accessToken }
+      });
+      const fileText = await fileRes.text();
+      if (!fileRes.ok) {
+        toast({ title: "Gagal mengunduh backup", description: "Terjadi kesalahan saat mengunduh data dari Drive.", duration: 3000 });
+        return;
+      }
+      let cloudData;
+      try {
+        cloudData = JSON.parse(fileText);
+      } catch {
+        toast({ title: "Backup rusak", description: "Data cloud tidak dapat diproses.", duration: 3000 });
+        return;
+      }
+      // Prompt user before restoring
+      setPendingCloudData(cloudData);
+      setShowCloudPrompt(true);
+    } catch (err) {
+      let errorMessage = "";
+      if (err && typeof err === "object" && "message" in err) {
+        errorMessage = (err as { message?: string }).message ?? String(err);
+      } else {
+        errorMessage = String(err);
+      }
+      toast({ title: "Gagal sinkronisasi", description: "Terjadi kesalahan: " + errorMessage, duration: 3000 });
+    }
+  };
   const { user } = useGoogleAuth();
   const { toast } = useToast();
   const syncLoadingRef = useRef(false);
@@ -108,6 +159,13 @@ const ProfilePage = () => {
       document.body.appendChild(script);
     }
   }, []);
+
+  // Two-way sync: On login, restore from Drive
+  // Two-way sync: On login, show cloud restore modal
+  useEffect(() => {
+    if (typeof window === 'undefined' || !user) return;
+    setShowCloudPrompt(true);
+  }, [user]);
   useEffect(() => {
     // Load cycleData from localStorage when user changes
     const savedCycleData = localStorage.getItem('cycleData');
@@ -123,6 +181,8 @@ const ProfilePage = () => {
       setCycleData(null);
     }
     setProfile(getGoogleProfile(user, parsedCycleData));
+    // Only run when user changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   useEffect(() => {
@@ -144,6 +204,7 @@ const ProfilePage = () => {
     if (savedNotifications !== null) {
       setNotificationsEnabled(JSON.parse(savedNotifications));
     }
+  // Only run once on mount
   }, []);
 
   useEffect(() => {
@@ -152,6 +213,30 @@ const ProfilePage = () => {
 
   return (
     <div className="space-y-6 pb-32">
+      <CloudRestorePrompt
+        open={showCloudPrompt}
+        onKeepLocal={() => {
+          setShowCloudPrompt(false);
+          setPendingCloudData(null);
+          toast({ title: "Data lokal dipertahankan", description: "Sinkronisasi cloud dibatalkan.", duration: 3000 });
+        }}
+        onRestoreCloud={() => {
+          if (typeof window === 'undefined') return;
+          const initTokenClient = window.google?.accounts?.oauth2?.initTokenClient;
+          if (typeof initTokenClient === 'function') {
+            const tokenClient = initTokenClient({
+              client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? '',
+              scope: 'https://www.googleapis.com/auth/drive.file',
+              callback: (tokenResponse: { access_token: string }) => {
+                restoreFromDrive(tokenResponse.access_token);
+                setShowCloudPrompt(false);
+                setPendingCloudData(null);
+              }
+            });
+            tokenClient.requestAccessToken();
+          }
+        }}
+      />
       <PageHeader title="Profil Saya" subtitle="Personalisasi pengalaman Anda" />
       <div className="px-6">
         <div className="card-elevated p-6 accent-profile">

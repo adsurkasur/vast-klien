@@ -16,7 +16,7 @@ export const VastLogo: React.FC<IconProps> = ({ size = 24, className = "" }) => 
     width={size}
     height={size}
     className={className}
-    style={{ objectFit: 'contain' }}
+    style={{ objectFit: 'contain', width: 'auto', height: 'auto' }}
   />
 );
 
