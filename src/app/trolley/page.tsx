@@ -1,6 +1,8 @@
+
 import { ExternalLink, MapPin, ShoppingBag } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { PageHeader } from '../../components/layout/PageHeader';
+import Image from 'next/image';
 
 const shopLinks = [
   {
@@ -69,7 +71,7 @@ const TrolleyPage = () => {
                 <div className="flex items-center space-x-3">
                   <div className={`p-3 rounded-xl ${shop.color}`}>
                     {shop.svgIcon ? (
-                      <img src={shop.svgPath} alt={shop.name} style={{ width: 24, height: 24 }} />
+                      <Image src={shop.svgPath} alt={shop.name} width={24} height={24} />
                     ) : (
                       shop.icon && <shop.icon size={24} />
                     )}

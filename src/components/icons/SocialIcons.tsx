@@ -1,6 +1,8 @@
+
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faInstagram, faTiktok, faXTwitter } from '@fortawesome/free-brands-svg-icons';
+import Image from 'next/image';
 
 interface IconProps {
   size?: number;
@@ -8,7 +10,7 @@ interface IconProps {
 }
 
 export const VastLogo: React.FC<IconProps> = ({ size = 24, className = "" }) => (
-  <img
+  <Image
     src="/png/vast-beta.png"
     alt="Vast Logo"
     width={size}

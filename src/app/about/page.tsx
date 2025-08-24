@@ -1,5 +1,7 @@
+
 import { PageHeader } from '../../components/layout/PageHeader';
 import { Suspense } from 'react';
+import Image from 'next/image';
 
 const AboutPage = () => {
   return (
@@ -16,12 +18,12 @@ const AboutPage = () => {
             <h3 className="text-lg font-semibold mb-4 text-primary">Produk Kami</h3>
             <div className="flex flex-col md:flex-row items-center gap-8 mb-6">
               <div className="bg-card rounded-xl shadow-sm p-4 flex flex-col items-center w-full md:w-1/2">
-                <img src="/png/kotak.png" alt="Vast Product Box and Sachet" className="w-full max-w-xs object-contain mb-2" />
+                <Image src="/png/kotak.png" alt="Vast Product Box and Sachet" width={300} height={200} className="w-full max-w-xs object-contain mb-2" />
                 <span className="text-sm text-muted-foreground text-center">Vast: Minuman Serbuk Rempah Terfermentasi Water Kefir</span>
               </div>
               <div className="bg-card rounded-xl shadow-sm p-4 flex flex-col items-center w-full md:w-1/2">
                 <div className="flex gap-4 justify-center">
-                  <img src="/png/saset.png" alt="Vast Sachet Front" className="w-full max-w-xs object-contain mb-2" />
+                  <Image src="/png/saset.png" alt="Vast Sachet Front" width={300} height={200} className="w-full max-w-xs object-contain mb-2" />
                 </div>
                 <span className="text-sm text-muted-foreground text-center mt-2">Sachet depan & belakang: Informasi nutrisi dan QR website</span>
               </div>
