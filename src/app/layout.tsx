@@ -1,5 +1,7 @@
 
 import "./globals.css";
+
+
 import AppShell from "./AppShell";
 import { metadata, viewport } from "./metadata";
 
@@ -9,7 +11,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <AppShell>{children}</AppShell>
+  <AppShell>{children}</AppShell>
       </body>
     </html>
   );

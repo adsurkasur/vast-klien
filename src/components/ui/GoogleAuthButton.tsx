@@ -1,6 +1,6 @@
 // src/components/ui/GoogleAuthButton.tsx
 import React from "react";
-import { useGoogleAuth } from "../../hooks/useGoogleAuth";
+import { useGoogleAuth } from "../../hooks/GoogleAuthContext";
 import { Button } from "./button";
 
 export function GoogleAuthButton() {
