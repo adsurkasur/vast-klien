@@ -3,7 +3,13 @@ const nextConfig = {
   reactStrictMode: true,
   // swcMinify: true, // Removed for Next.js 15+
   images: {
-    unoptimized: true // If you want to use static images from public/
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+        pathname: '/**',
+      },
+    ],
   },
   // Set metadataBase for social open graph and twitter images
   metadataBase: new URL('http://localhost:3000'),

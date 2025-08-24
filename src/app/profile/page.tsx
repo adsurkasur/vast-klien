@@ -1,6 +1,7 @@
 
 "use client";
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Edit, User as UserIcon, Shield, Bell, Heart, Calendar, Settings } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { cn } from '@/lib/utils';
@@ -36,6 +37,7 @@ interface CycleData {
 const getGoogleProfile = (user: FirebaseUser | null, cycleData?: CycleData | null) => ({
   name: user?.displayName || 'Nama',
   email: user?.email || 'Email',
+  photoURL: user?.photoURL || '',
   age: '-',
   cycleLength: cycleData?.averageCycleLength ? String(cycleData.averageCycleLength) : '-',
   periodLength: cycleData?.averagePeriodLength ? String(cycleData.averagePeriodLength) : '-',
@@ -48,6 +50,7 @@ const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   const [profile, setProfile] = useState(getGoogleProfile(user));
+  const [profileImageError, setProfileImageError] = useState(false);
   const [cycleData, setCycleData] = useState<CycleData | null>(null);
 
   useEffect(() => {
@@ -70,6 +73,7 @@ const ProfilePage = () => {
   useEffect(() => {
     // Update profile when cycleData or user changes
     setProfile(getGoogleProfile(user, cycleData));
+    setProfileImageError(false); // Reset error when user or profile changes
   }, [cycleData, user]);
 
   const handleSave = () => {
@@ -108,8 +112,19 @@ const ProfilePage = () => {
           ) : (
             <>
               <div className="flex items-center mb-6 space-x-4">
-                <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center">
-                  <UserIcon size={24} className="text-primary-foreground" />
+                <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center overflow-hidden">
+                  {profile.photoURL && !profileImageError ? (
+                    <Image
+                      src={profile.photoURL}
+                      alt="Profile"
+                      width={64}
+                      height={64}
+                      className="object-cover rounded-full"
+                      onError={() => setProfileImageError(true)}
+                    />
+                  ) : (
+                    <UserIcon size={24} className="text-primary-foreground" />
+                  )}
                 </div>
                 <div>
                   <h2 className="text-xl font-semibold text-foreground">{profile.name}</h2>
