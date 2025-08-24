@@ -92,6 +92,9 @@ const getGoogleProfile = (user: FirebaseUser | null, cycleData?: CycleData | nul
 const ProfilePage = () => {
   // Prompt state for cloud restore
   const [showCloudPrompt, setShowCloudPrompt] = useState(false);
+  const [cloudRestorePromptDismissed, setCloudRestorePromptDismissed] = useState(() => {
+    return localStorage.getItem('cloudRestorePromptDismissed') === 'true';
+  });
   interface CloudData {
     profile?: ReturnType<typeof getGoogleProfile>;
     notificationsEnabled?: boolean;
@@ -129,7 +132,9 @@ const ProfilePage = () => {
       }
       // Prompt user before restoring
       setPendingCloudData(cloudData);
-      setShowCloudPrompt(true);
+      if (!cloudRestorePromptDismissed) {
+        setShowCloudPrompt(true);
+      }
     } catch (err) {
       let errorMessage = "";
       if (err && typeof err === "object" && "message" in err) {
@@ -161,11 +166,13 @@ const ProfilePage = () => {
   }, []);
 
   // Two-way sync: On login, restore from Drive
-  // Two-way sync: On login, show cloud restore modal
+  // Two-way sync: On login, show cloud restore modal (only if not dismissed)
   useEffect(() => {
     if (typeof window === 'undefined' || !user) return;
-    setShowCloudPrompt(true);
-  }, [user]);
+    if (!cloudRestorePromptDismissed) {
+      setShowCloudPrompt(true);
+    }
+  }, [user, cloudRestorePromptDismissed]);
   useEffect(() => {
     // Load cycleData from localStorage when user changes
     const savedCycleData = localStorage.getItem('cycleData');
@@ -180,9 +187,8 @@ const ProfilePage = () => {
     } else {
       setCycleData(null);
     }
-    setProfile(getGoogleProfile(user, parsedCycleData));
-    // Only run when user changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  setProfile(getGoogleProfile(user, parsedCycleData));
+  // Only run when user changes
   }, [user]);
 
   useEffect(() => {
@@ -218,6 +224,8 @@ const ProfilePage = () => {
         onKeepLocal={() => {
           setShowCloudPrompt(false);
           setPendingCloudData(null);
+          setCloudRestorePromptDismissed(true);
+          localStorage.setItem('cloudRestorePromptDismissed', 'true');
           toast({ title: "Data lokal dipertahankan", description: "Sinkronisasi cloud dibatalkan.", duration: 3000 });
         }}
         onRestoreCloud={() => {
@@ -231,6 +239,8 @@ const ProfilePage = () => {
                 restoreFromDrive(tokenResponse.access_token);
                 setShowCloudPrompt(false);
                 setPendingCloudData(null);
+                setCloudRestorePromptDismissed(true);
+                localStorage.setItem('cloudRestorePromptDismissed', 'true');
               }
             });
             tokenClient.requestAccessToken();
