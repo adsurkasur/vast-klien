@@ -13,6 +13,9 @@ export const metadata = {
     "Indonesia"
   ],
   // themeColor and viewport moved to viewport export below
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+  ),
   openGraph: {
     title: "Vast ID",
     description: "Empowering women’s health with science-based, innovative, and functional products for menstrual comfort and wellbeing.",
