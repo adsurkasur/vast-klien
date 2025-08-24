@@ -326,16 +326,36 @@ const ProfilePage = () => {
               }
               syncLoadingRef.current = true;
               try {
-                const cycleData = localStorage.getItem('cycleData');
-                if (!cycleData) {
+                // Gather all relevant data for sync
+                const cycleDataRaw = localStorage.getItem('cycleData');
+                const notificationsEnabledRaw = localStorage.getItem('notificationsEnabled');
+                if (!cycleDataRaw) {
                   toast({ title: "Tidak ada data siklus", description: "Data siklus tidak ditemukan di perangkat." });
                   syncLoadingRef.current = false;
                   return;
                 }
-                const fileContent = cycleData;
+                let cycleDataParsed = null;
+                try {
+                  cycleDataParsed = JSON.parse(cycleDataRaw);
+                } catch {
+                  cycleDataParsed = cycleDataRaw;
+                }
+                let notificationsEnabledParsed = null;
+                try {
+                  notificationsEnabledParsed = JSON.parse(notificationsEnabledRaw ?? 'true');
+                } catch {
+                  notificationsEnabledParsed = true;
+                }
+                // Compose sync payload
+                const syncPayload = {
+                  profile,
+                  notificationsEnabled: notificationsEnabledParsed,
+                  cycleData: cycleDataParsed
+                };
+                const fileContent = JSON.stringify(syncPayload, null, 2);
                 const file = new Blob([fileContent], { type: 'application/json' });
                 const metadata = {
-                  name: `vast-cycle-data-${new Date().toISOString()}.json`,
+                  name: `vast-profile-sync-${new Date().toISOString()}.json`,
                   mimeType: 'application/json'
                 };
                 const form = new FormData();
@@ -355,7 +375,7 @@ const ProfilePage = () => {
                         });
                         const responseText = await response.text();
                         if (response.ok) {
-                          toast({ title: "Berhasil disinkronkan", description: "Data siklus berhasil diunggah ke Google Drive." });
+                          toast({ title: "Berhasil disinkronkan", description: "Data profil, pengaturan, dan siklus berhasil diunggah ke Google Drive." });
                         } else {
                           toast({ title: "Gagal sinkronisasi", description: "Terjadi kesalahan saat mengunggah data." });
                         }
