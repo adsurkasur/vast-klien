@@ -483,24 +483,10 @@ const CalendarPage = () => {
         periodDays={cycleData.periodDays}
       />
       <div className="px-6">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4">
           <Button
             variant="outline"
-            className="w-full h-16 spring-tap flex flex-col items-center justify-center space-y-1 hover:bg-accent-50"
-            onClick={() => setNotificationsEnabled(!notificationsEnabled)}
-          >
-            {notificationsEnabled ? (
-              <Bell className="text-accent-600" size={20} />
-            ) : (
-              <BellOff className="text-muted-foreground" size={20} />
-            )}
-            <span className="text-xs font-medium">
-              {notificationsEnabled ? 'Notifikasi Aktif' : 'Notifikasi Nonaktif'}
-            </span>
-          </Button>
-          <Button
-            variant="outline"
-            className="w-full h-16 spring-tap flex flex-col items-center justify-center space-y-1 hover:bg-accent-50"
+            className="w-full h-16 spring-tap flex flex-col items-center justify-center space-y-1 bg-white hover:bg-accent-50 border border-accent-200 shadow-sm"
             onClick={() => setReportsModalOpen(true)}
           >
             <BarChart3 className="text-accent-600" size={20} />
