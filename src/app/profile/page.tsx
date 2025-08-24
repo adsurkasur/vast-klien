@@ -1,3 +1,9 @@
+// Extend Window type for gapi
+declare global {
+  interface Window {
+    gapi: any;
+  }
+}
 
 "use client";
 import { useState, useEffect } from 'react';
@@ -7,7 +13,8 @@ import { Button } from '../../components/ui/button';
 import { useToast } from '../../hooks/use-toast';
 import { useGoogleAuth } from '../../hooks/useGoogleAuth';
 import { useRef } from 'react';
-import { loadGapiInsideDOM } from 'gapi-script';
+// Remove gapi-script; load gapi via script tag
+// See useEffect below for script loading
 import { Cloud } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
@@ -53,7 +60,6 @@ const ProfilePage = () => {
   const { user } = useGoogleAuth();
   const { toast } = useToast();
   const syncLoadingRef = useRef(false);
-  const [syncDebugInfo, setSyncDebugInfo] = useState<string[]>([]);
   const isClient = typeof window !== "undefined";
   const [isEditing, setIsEditing] = useState(false);
 
@@ -61,8 +67,20 @@ const ProfilePage = () => {
   const [profileImageError, setProfileImageError] = useState(false);
   const [cycleData, setCycleData] = useState<CycleData | null>(null);
 
+  // Load Google API script securely (top-level hook)
   useEffect(() => {
-    // Load cycleData from localStorage
+    if (typeof window !== 'undefined' && !window.gapi) {
+      const script = document.createElement('script');
+      script.src = 'https://apis.google.com/js/api.js';
+      script.async = true;
+      script.onload = () => {
+        // gapi loaded
+      };
+      document.body.appendChild(script);
+    }
+  }, []);
+  useEffect(() => {
+    // Load cycleData from localStorage when user changes
     const savedCycleData = localStorage.getItem('cycleData');
     let parsedCycleData = null;
     if (savedCycleData) {
@@ -270,17 +288,14 @@ const ProfilePage = () => {
             )}
             onClick={async () => {
               const debug = (msg: string) => {
-                setSyncDebugInfo(prev => [...prev, `[${new Date().toLocaleTimeString()}] ${msg}`]);
-                console.log(msg);
+                console.log(`[${new Date().toLocaleTimeString()}] ${msg}`);
               };
-              setSyncDebugInfo([]);
+              // removed debug info panel state
               if (typeof window === 'undefined') {
                 debug("Sync attempted on server. Aborting.");
                 toast({ title: "Sync hanya dapat dilakukan di browser", description: "Fitur ini hanya tersedia di sisi client." });
                 return;
               }
-              // Dynamically import gapi-script only on client
-              const { loadGapiInsideDOM } = await import('gapi-script');
               if (!user) {
                 debug("User not logged in.");
                 toast({ title: "Harus login dengan Google", description: "Silakan login terlebih dahulu." });
@@ -291,8 +306,23 @@ const ProfilePage = () => {
                 debug("NEXT_PUBLIC_GOOGLE_API_KEY: " + process.env.NEXT_PUBLIC_GOOGLE_API_KEY);
                 debug("NEXT_PUBLIC_GOOGLE_CLIENT_ID: " + process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
                 debug("Loading gapi...");
-                await loadGapiInsideDOM();
-                // @ts-expect-error: gapi is injected globally by gapi-script and not typed
+                // Wait for gapi to be loaded
+                await new Promise((resolve, reject) => {
+                  if (window.gapi) {
+                    resolve(true);
+                  } else {
+                    const interval = setInterval(() => {
+                      if (window.gapi) {
+                        clearInterval(interval);
+                        resolve(true);
+                      }
+                    }, 100);
+                    setTimeout(() => {
+                      clearInterval(interval);
+                      reject(new Error('gapi load timeout'));
+                    }, 5000);
+                  }
+                });
                 const gapi = window.gapi;
                 debug("gapi loaded. Initializing client...");
                 await new Promise((resolve, reject) => {
@@ -382,17 +412,6 @@ const ProfilePage = () => {
               </div>
             </div>
           </div>
-        {/* Debug Info Panel (below sync card) */}
-        {typeof window !== 'undefined' && syncDebugInfo.length > 0 && (
-          <div className="mt-2 p-2 bg-muted rounded text-xs text-muted-foreground">
-            <div className="font-semibold mb-1">Debug Info:</div>
-            <ul className="space-y-1">
-              {syncDebugInfo.map((msg, idx) => (
-                <li key={idx}>{msg}</li>
-              ))}
-            </ul>
-          </div>
-        )}
         </div>
       </div>
       {/* Privacy Notice */}
