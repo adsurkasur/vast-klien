@@ -12,8 +12,7 @@ export const metadata = {
     "PKM_K",
     "Indonesia"
   ],
-  themeColor: "#f97316",
-  viewport: "width=device-width, initial-scale=1",
+  // themeColor and viewport moved to viewport export below
   openGraph: {
     title: "Vast ID",
     description: "Empowering women’s health with science-based, innovative, and functional products for menstrual comfort and wellbeing.",
@@ -37,4 +36,10 @@ export const metadata = {
     site: "@vast_id",
     images: ["/png/vast-beta.png"]
   }
+};
+
+export const viewport = {
+  themeColor: "#f97316",
+  width: "device-width",
+  initialScale: 1
 };

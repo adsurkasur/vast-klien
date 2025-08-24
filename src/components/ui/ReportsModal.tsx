@@ -38,12 +38,14 @@ export const ReportsModal: React.FC<ReportsModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
-      <div>
-        <div>Rata-rata panjang siklus: {averageCycleLength ?? 'Data tidak tersedia'}</div>
-        <div>Rata-rata panjang periode: {averagePeriodLength ?? 'Data tidak tersedia'}</div>
-      </div>
-  <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} aria-label="Tutup modal" />
-      <div className="relative card-elevated w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200">
+      {/* Backdrop first, behind modal content */}
+      <div
+        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-0"
+        onClick={onClose}
+        aria-label="Tutup modal"
+      />
+      {/* Modal content above backdrop */}
+      <div className="relative card-elevated w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200 z-10">
         <div className="flex items-center justify-between p-6 pb-4">
           <h3 className="text-lg font-semibold text-foreground">Laporan Siklus & Gejala</h3>
           <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0 hover:bg-primary-muted" aria-label="Tutup">✕</Button>

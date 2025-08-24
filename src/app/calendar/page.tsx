@@ -307,7 +307,6 @@ const CalendarPage = () => {
     }
     for (let day = 1; day <= daysInMonth; day++) {
       const dateStr = formatDateString(day);
-      const isSelected = selectedCalendarDate === dateStr;
       const isPeriod = isPeriodDay(dateStr);
       const hasSymptom = hasSymptoms(dateStr);
       const dayData = cycleData.periodDays.find(d => d.date === dateStr);
@@ -325,11 +324,9 @@ const CalendarPage = () => {
           className={cn(
             "p-2 text-sm font-medium rounded-xl transition-all duration-200 spring-tap relative min-h-[40px] flex flex-col items-center justify-center",
             "hover:bg-accent-100 border-2 border-transparent",
-            isToday && !isSelected && "border-yellow-400 bg-yellow-50 text-yellow-800 shadow-sm",
-            isSelected && !isPeriod && "border-blue-500 bg-blue-100 text-blue-800 shadow-md ring-2 ring-blue-200",
-            isSelected && isPeriod && "border-red-500 bg-red-500 text-white shadow-lg ring-2 ring-red-300",
-            isPeriod && !isSelected && "bg-red-100 text-red-800 border-red-300",
-            hasSymptom && !isPeriod && !isSelected && "bg-blue-50 border-blue-200 text-blue-800"
+            isToday && "border-yellow-400 bg-yellow-50 text-yellow-800 shadow-sm",
+            isPeriod && "bg-red-100 text-red-800 border-red-300",
+            hasSymptom && !isPeriod && "bg-blue-50 border-blue-200 text-blue-800"
           )}
         >
           <span className="text-center leading-none">{day}</span>
@@ -340,14 +337,12 @@ const CalendarPage = () => {
                 dayData?.flow === 'light' && "bg-pink-400",
                 dayData?.flow === 'medium' && "bg-red-500",
                 dayData?.flow === 'heavy' && "bg-red-700",
-                !dayData?.flow && "bg-red-500",
-                isSelected && "bg-white"
+                !dayData?.flow && "bg-red-500"
               )} />
             )}
             {hasSymptom && !isPeriod && (
               <div className={cn(
-                "w-1.5 h-1.5 rounded-full bg-blue-500",
-                isSelected && "bg-white"
+                "w-1.5 h-1.5 rounded-full bg-blue-500"
               )} />
             )}
           </div>
@@ -432,10 +427,6 @@ const CalendarPage = () => {
                 <div className="w-4 h-4 bg-yellow-50 border-yellow-400 rounded"></div>
                 <span>Hari Ini</span>
               </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-4 h-4 bg-blue-100 border-2 border-blue-500 rounded"></div>
-                <span>Terpilih</span>
-              </div>
             </div>
           </div>
         </div>
@@ -492,7 +483,7 @@ const CalendarPage = () => {
         periodDays={cycleData.periodDays}
       />
       <div className="px-6">
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 gap-4">
           <Button
             variant="outline"
             className="w-full h-16 spring-tap flex flex-col items-center justify-center space-y-1 hover:bg-accent-50"
@@ -514,14 +505,6 @@ const CalendarPage = () => {
           >
             <BarChart3 className="text-accent-600" size={20} />
             <span className="text-xs font-medium">Lihat Laporan</span>
-          </Button>
-          <Button
-            variant="outline"
-            className="w-full h-16 spring-tap flex flex-col items-center justify-center space-y-1 hover:bg-accent-50"
-            onClick={() => trackPeriodAndOpenSymptoms(new Date().toISOString().split('T')[0])}
-          >
-            <Heart className="text-accent-600" size={20} />
-            <span className="text-xs font-medium">Catat Gejala</span>
           </Button>
         </div>
       </div>
