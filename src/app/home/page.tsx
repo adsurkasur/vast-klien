@@ -2,25 +2,29 @@
 import { Heart, Calendar as CalendarIcon, Users } from 'lucide-react';
 import { PageHeader } from '../../components/layout/PageHeader';
 import { useRouter } from 'next/navigation';
+import { url } from 'inspector';
 
 const newsItems = [
   {
     id: 1,
-    title: 'Understanding Your Cycle',
-    category: 'Education',
-    image: '🌸'
+    title: 'Tips Menjaga Pola Makan agar Sirkulasi Haid Lancar',
+    category: 'Panduan Kesehatan',
+    image: '🥗',
+    url: 'https://vastdotid.wordpress.com/2025/08/27/tips-menjaga-pola-makan-yang-baik-agar-sirkulasi-haid-lancar/'
   },
   {
     id: 2,
-    title: 'Nutrition Tips for PMS',
-    category: 'Health',
-    image: '🥗'
+    title: 'Tips Merawat Kesehatan Reproduksi saat Menstruasi',
+    category: 'Panduan Kesehatan',
+    image: '🌸',
+    url: 'https://vastdotid.wordpress.com/2025/08/27/tips-merawat-kesehatan-reproduksi-saat-menstruasi/'
   },
   {
     id: 3,
-    title: 'Exercise During Periods',
-    category: 'Fitness',
-    image: '🧘‍♀️'
+    title: 'Artikel lain menyusul',
+    category: 'Tunggu update dari Vast ya!',
+    image: '😊',
+    url: 'https://www.example.com'
   }
 ];
 
@@ -89,14 +93,18 @@ const HomePage = () => {
             Artikel
           </h1>
           {newsItems.map((item) => (
-            <div
+            <a
               key={item.id}
+              href={item.url}
+              target="_blank"
+              rel="noopener noreferrer"
               className="card-soft p-4 spring-tap cursor-pointer hover:shadow-card transition-all duration-200 text-center"
+              aria-label={item.title}
             >
               <div className="text-2xl mb-2">{item.image}</div>
               <h3 className="font-medium text-foreground text-xs mb-1">{item.title}</h3>
               <p className="text-xs text-muted-foreground">{item.category}</p>
-            </div>
+            </a>
           ))}
         </div>
       </div>

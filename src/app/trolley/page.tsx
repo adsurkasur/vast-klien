@@ -9,14 +9,14 @@ const shopLinks = [
     name: 'Tokopedia',
     svgIcon: true,
     svgPath: '/svg/tokopedia.svg',
-    url: 'https://tokopedia.com',
+    url: 'https://tk.tokopedia.com/ZSAHy9tas/',
     color: ' bg-green-100 text-green-700',
   },
   {
     name: 'Shopee',
     svgIcon: true,
     svgPath: '/svg/shopee.svg',
-    url: 'https://shopee.co.id',
+    url: 'http://shopee.co.id/wilianiwjy',
     color: 'bg-orange-100 text-orange-700',
   },
   {

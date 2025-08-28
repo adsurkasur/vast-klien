@@ -7,25 +7,25 @@ const communityLinks = [
     name: 'Gabung Grup Telegram Kami',
     description: 'Terhubung dengan wanita dengan pengalaman serupa',
     icon: MessageCircle,
-    url: 'https://t.me/vastcommunity',
+    url: 'https://www.example.com/',
     color: 'bg-blue-100 text-blue-700',
-    members: '2.5k+'
-  },
-  {
-    name: 'Ikuti di Instagram',
-    description: 'Tips harian dan konten kesehatan',
-    icon: Heart,
-    url: 'https://instagram.com/vast.pkm',
-    color: 'bg-pink-100 text-pink-700',
-    members: '1.2k+'
+    members: 'Jumlah member menyusul!'
   },
   {
     name: 'Komunitas Facebook',
     description: 'Berbagi cerita dan saling mendukung',
     icon: Users,
-    url: 'https://facebook.com/groups/vastcommunity',
+    url: 'https://www.example.com/',
     color: 'bg-purple-100 text-purple-700',
-    members: '890+'
+    members: 'Jumlah member menyusul!'
+  },
+  {
+    name: 'Komunitas WhatsApp',
+    description: 'Diskusi dan dukungan cepat',
+    icon: MessageCircle,
+    url: 'https://www.example.com/',
+    color: 'bg-green-100 text-green-700',
+    members: 'Jumlah member menyusul!'
   }
 ];
 
@@ -60,11 +60,10 @@ const CommunityPage = () => {
                   <p className="text-sm text-muted-foreground mb-2">{link.description}</p>
                   <div className="flex items-center space-x-1">
                     <Users size={14} className="text-muted-foreground" />
-                    <span className="text-xs text-muted-foreground">{link.members} members</span>
+                    <span className="text-xs text-muted-foreground">{link.members}</span>
                   </div>
                 </div>
               </div>
-              <ExternalLink size={20} className="text-muted-foreground" />
             </div>
             <a
               href={link.url}
@@ -76,8 +75,8 @@ const CommunityPage = () => {
                 className="w-full spring-tap"
                 variant="outline"
               >
-                <Share2 size={16} className="mr-2" />
-                Gabung Komunitas
+                <ExternalLink size={16} className="mr-2" />
+                Periksa
               </Button>
             </a>
           </div>
