@@ -23,7 +23,7 @@ const communityLinks = [
     name: 'Komunitas WhatsApp',
     description: 'Diskusi dan dukungan cepat',
     icon: MessageCircle,
-    url: 'https://www.example.com/',
+    url: 'https://chat.whatsapp.com/JJ8ZNgtRPcP0vDEwlf3mRX',
     color: 'bg-green-100 text-green-700',
     members: 'Jumlah member menyusul!'
   }
