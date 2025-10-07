@@ -4,7 +4,7 @@ import AppShell from "./AppShell";
 import { Suspense } from "react";
 
 import { Analytics } from "@vercel/analytics/next";
-import Script from "next/script";
+
 
 import GoogleAnalytics from "../components/GoogleAnalytics";
 
@@ -13,21 +13,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <head>
         <title>Sobat Vast</title>
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-SSXNMH6N0M"
-          strategy="afterInteractive"
-        />
-        <Script id="gtag-init" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-SSXNMH6N0M');
-          `}
-        </Script>
+        {/* Google Analytics scripts are injected via the GoogleAnalytics component below */}
       </head>
       <body>
         <AppShell>{children}</AppShell>
+        {/* Google Analytics: only loads in production */}
         <Suspense fallback={null}>
           <GoogleAnalytics />
         </Suspense>
