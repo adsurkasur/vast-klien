@@ -5,7 +5,8 @@ import Script from "next/script";
 import "./globals.css";
 
 
-import AppShell from "./AppShell";
+
+import GoogleAnalytics from "../components/GoogleAnalytics";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <AppShell>{children}</AppShell>
+        <GoogleAnalytics />
         <Analytics />
       </body>
     </html>
