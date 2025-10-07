@@ -11,6 +11,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
+        <title>Sobat Vast</title>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-SSXNMH6N0M"
           strategy="afterInteractive"
