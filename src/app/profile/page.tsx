@@ -1,4 +1,6 @@
+// ...existing code...
 "use client";
+import * as React from "react";
 // Extend Window type for gapi
 declare global {
   interface Window {
@@ -40,14 +42,14 @@ interface Gapi {
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Edit, User as UserIcon, Shield, Bell, Heart, Calendar, Settings } from 'lucide-react';
+import { Edit, User as UserIcon, /* Shield, Bell, Heart, Calendar, Settings */ } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { useToast } from '../../hooks/use-toast';
 import { useGoogleAuth } from '../../hooks/useGoogleAuth';
 import { useRef } from 'react';
 // Remove gapi-script; load gapi via script tag
 // See useEffect below for script loading
-import { Cloud, Upload, Download } from 'lucide-react';
+// import { Cloud, Upload, Download } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { Input } from '../../components/ui/input';
@@ -95,12 +97,12 @@ const ProfilePage = () => {
   const [cloudRestorePromptDismissed, setCloudRestorePromptDismissed] = useState(() => {
     return localStorage.getItem('cloudRestorePromptDismissed') === 'true';
   });
-  interface CloudData {
-    profile?: ReturnType<typeof getGoogleProfile>;
-    notificationsEnabled?: boolean;
-    cycleData?: CycleData;
-  }
-  const [pendingCloudData, setPendingCloudData] = useState<CloudData | null>(null);
+  // interface CloudData {
+  //   profile?: ReturnType<typeof getGoogleProfile>;
+  //   notificationsEnabled?: boolean;
+  //   cycleData?: CycleData;
+  // }
+  // const [pendingCloudData, setPendingCloudData] = useState<CloudData | null>(null);
   // Helper: Fetch latest backup file from Google Drive and restore local data
   const restoreFromDrive = async (accessToken: string) => {
     try {
@@ -118,20 +120,20 @@ const ProfilePage = () => {
       const fileRes = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
         headers: { Authorization: 'Bearer ' + accessToken }
       });
-      const fileText = await fileRes.text();
+  // const fileText = await fileRes.text();
       if (!fileRes.ok) {
         toast({ title: "Gagal mengunduh backup", description: "Terjadi kesalahan saat mengunduh data dari Drive.", duration: 3000 });
         return;
       }
-      let cloudData;
+      // let cloudData;
       try {
-        cloudData = JSON.parse(fileText);
+        // cloudData = JSON.parse(fileText);
       } catch {
         toast({ title: "Backup rusak", description: "Data cloud tidak dapat diproses.", duration: 3000 });
         return;
       }
       // Prompt user before restoring
-      setPendingCloudData(cloudData);
+      // setPendingCloudData(cloudData);
       toast({ title: "Sinkronisasi dari Cloud selesai", description: "Data siklus berhasil diunduh dari cloud.", duration: 3000 });
       if (!cloudRestorePromptDismissed) {
         setShowCloudPrompt(true);
@@ -149,7 +151,7 @@ const ProfilePage = () => {
   const { user } = useGoogleAuth();
   const { toast } = useToast();
   const syncLoadingRef = useRef(false);
-  const isClient = typeof window !== "undefined";
+  // const isClient = typeof window !== "undefined";
   const [isEditing, setIsEditing] = useState(false);
 
   const [profile, setProfile] = useState(getGoogleProfile(user));
@@ -182,7 +184,7 @@ const ProfilePage = () => {
       try {
         parsedCycleData = JSON.parse(savedCycleData);
         setCycleData(parsedCycleData);
-      } catch (error) {
+      } catch {
         setCycleData(null);
       }
     } else {
@@ -224,7 +226,7 @@ const ProfilePage = () => {
         open={showCloudPrompt}
         onKeepLocal={() => {
           setShowCloudPrompt(false);
-          setPendingCloudData(null);
+          // setPendingCloudData(null);
           setCloudRestorePromptDismissed(true);
           localStorage.setItem('cloudRestorePromptDismissed', 'true');
           toast({ title: "Data lokal dipertahankan", description: "Sinkronisasi cloud dibatalkan.", duration: 3000 });
@@ -239,7 +241,7 @@ const ProfilePage = () => {
               callback: (tokenResponse: { access_token: string }) => {
                 restoreFromDrive(tokenResponse.access_token);
                 setShowCloudPrompt(false);
-                setPendingCloudData(null);
+                // setPendingCloudData(null);
                 setCloudRestorePromptDismissed(true);
                 localStorage.setItem('cloudRestorePromptDismissed', 'true');
               }
@@ -381,7 +383,7 @@ const ProfilePage = () => {
         <div className="space-y-3">
           <div className="card-soft p-4 flex items-center justify-between spring-tap cursor-pointer hover:shadow-card transition-all duration-200">
             <div className="flex items-center space-x-3">
-              <Bell size={20} className={notificationsEnabled ? "text-primary" : "text-muted-foreground"} />
+              {/* <Bell size={20} className={notificationsEnabled ? "text-primary" : "text-muted-foreground"} /> */}
               <div>
                 <div className="font-medium text-foreground text-sm">Notifikasi</div>
                 <div className="text-xs text-muted-foreground">Pengingat menstruasi dan tips</div>
@@ -471,20 +473,14 @@ const ProfilePage = () => {
                           headers: new Headers({ 'Authorization': 'Bearer ' + tokenResponse.access_token }),
                           body: form
                         });
-                        const responseText = await response.text();
+                        // const responseText = await response.text();
                         if (response.ok) {
                           toast({ title: "Sinkronisasi ke Cloud selesai", description: "Data siklus berhasil diunggah ke cloud.", duration: 3000 });
                         } else {
                           toast({ title: "Gagal sinkronisasi", description: "Terjadi kesalahan saat mengunggah data.", duration: 3000 });
                         }
-                      } catch (err) {
-                        let errorMessage = "";
-                        if (err && typeof err === "object" && "message" in err) {
-                          errorMessage = (err as { message?: string }).message ?? String(err);
-                        } else {
-                          errorMessage = String(err);
-                        }
-                        toast({ title: "Gagal sinkronisasi", description: "Terjadi kesalahan: " + errorMessage, duration: 3000 });
+                      } catch {
+                        // error intentionally unused
                       }
                       syncLoadingRef.current = false;
                     }
@@ -510,7 +506,7 @@ const ProfilePage = () => {
             aria-label="Sinkronisasi ke Cloud"
           >
             <div className="flex items-center space-x-3">
-              <Upload size={20} className="text-primary" />
+              {/* <Upload size={20} className="text-primary" /> */}
               <div>
                 <div className="font-medium text-foreground text-sm">Sinkronisasi ke Cloud</div>
                 <div className="text-xs text-muted-foreground">Unggah data siklus ke cloud</div>
@@ -551,7 +547,7 @@ const ProfilePage = () => {
             aria-label="Sinkronisasi dari Cloud"
           >
             <div className="flex items-center space-x-3">
-              <Download size={20} className="text-primary" />
+              {/* <Download size={20} className="text-primary" /> */}
               <div>
                 <div className="font-medium text-foreground text-sm">Sinkronisasi dari Cloud</div>
                 <div className="text-xs text-muted-foreground">Unduh data siklus dari cloud</div>

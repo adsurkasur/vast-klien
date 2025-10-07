@@ -4,10 +4,15 @@ import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import tseslintPlugin from "@typescript-eslint/eslint-plugin";
 import tseslintParser from "@typescript-eslint/parser";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
 import { FlatCompat } from "@eslint/eslintrc"; // Importing FlatCompat
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const compat = new FlatCompat({
-  baseDirectory: import.meta.dirname,
+  baseDirectory: __dirname,
 });
 
 const config = [
@@ -54,8 +59,7 @@ const config = [
         "warn",
         { allowConstantExport: true },
       ],
-      "@typescript-eslint/no-unused-vars": "off",
-      "no-undef": "off", // Disable no-undef for React 17+ JSX transform
+  // Show all errors, do not disable no-unused-vars or no-undef
     },
   },
   ...compat.config({ extends: ["plugin:@next/next/recommended"] })

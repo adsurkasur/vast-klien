@@ -1,5 +1,6 @@
+import React from "react";
 import AppShell from "./AppShell";
-
+import { Suspense } from "react";
 
 import { Analytics } from "@vercel/analytics/next";
 import Script from "next/script";
@@ -27,7 +28,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <AppShell>{children}</AppShell>
-        <GoogleAnalytics />
+        <Suspense fallback={null}>
+          <GoogleAnalytics />
+        </Suspense>
         <Analytics />
       </body>
     </html>

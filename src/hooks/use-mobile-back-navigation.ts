@@ -7,7 +7,7 @@ interface MobileBackNavigationOptions {
 
 export function useMobileBackNavigation({ isOpen, onClose }: MobileBackNavigationOptions) {
   useEffect(() => {
-    function handlePopState(event: PopStateEvent) {
+  function handlePopState(/* event: PopStateEvent */) {
       if (isOpen) {
         onClose();
         // Optionally, push the state back to prevent further navigation

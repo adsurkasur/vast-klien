@@ -1,5 +1,5 @@
 import { PageHeader } from '../../components/layout/PageHeader';
-import { Users, MessageCircle, Heart, Share2, ExternalLink } from 'lucide-react';
+import { Users, MessageCircle, Heart, /* Share2, */ ExternalLink } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 
 const communityLinks = [

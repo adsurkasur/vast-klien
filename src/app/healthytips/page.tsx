@@ -1,4 +1,6 @@
-import { Heart, Droplets, Moon, Activity } from 'lucide-react';
+import * as React from "react";
+// import { Moon, Activity } from 'lucide-react';
+import { Heart, Droplets } from 'lucide-react';
 import { PageHeader } from '../../components/layout/PageHeader';
 import { Suspense } from 'react';
 

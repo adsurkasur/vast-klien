@@ -25,16 +25,12 @@ interface CycleData {
 }
 
 interface PeriodCalendarProps {
-  onOpenSymptoms: (date: string) => void;
-  onTogglePeriod?: (date: string) => void;
   selectedDate?: string | null;
   onDataUpdate?: (data: CycleData) => void;
   initialData?: CycleData;
 }
 
 export const PeriodCalendar: React.FC<PeriodCalendarProps> = ({ 
-  onOpenSymptoms, 
-  onTogglePeriod,
   selectedDate: externalSelectedDate,
   onDataUpdate,
   initialData 
@@ -88,24 +84,6 @@ export const PeriodCalendar: React.FC<PeriodCalendarProps> = ({
     }
     onDataUpdateRef.current?.(cycleData);
   }, [cycleData, initialData]); // Remove onDataUpdate from deps to avoid infinite loop
-
-  // Calculate next period prediction
-  const calculateNextPeriod = () => {
-    if (cycleData.periodDays.length === 0) return null;
-    
-    const periodStarts = cycleData.periodDays
-      .filter(day => day.isPeriod)
-      .map(day => new Date(day.date))
-      .sort((a, b) => b.getTime() - a.getTime());
-    
-    if (periodStarts.length === 0) return null;
-    
-    const lastPeriodStart = periodStarts[0];
-    const nextPeriod = new Date(lastPeriodStart);
-    nextPeriod.setDate(nextPeriod.getDate() + cycleData.averageCycleLength);
-    
-    return nextPeriod.toISOString().split('T')[0];
-  };
 
   const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
   const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
@@ -188,28 +166,6 @@ export const PeriodCalendar: React.FC<PeriodCalendarProps> = ({
   const hasSymptoms = (dateStr: string) => {
     const day = cycleData.periodDays.find(day => day.date === dateStr);
     return day && day.symptoms.length > 0;
-  };
-
-  const updateDayData = (date: string, updates: Partial<PeriodDay>) => {
-    setCycleData(prev => {
-      const existing = prev.periodDays.find(day => day.date === date);
-      let newPeriodDays;
-      
-      if (existing) {
-        newPeriodDays = prev.periodDays.map(day => 
-          day.date === date ? { ...day, ...updates } : day
-        );
-      } else {
-        newPeriodDays = [...prev.periodDays, { 
-          date, 
-          isPeriod: false, 
-          symptoms: [],
-          ...updates 
-        }];
-      }
-      
-      return { ...prev, periodDays: newPeriodDays };
-    });
   };
 
   const formatDateString = (day: number) => {

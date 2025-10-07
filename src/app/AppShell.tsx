@@ -1,4 +1,6 @@
 "use client";
+
+import * as React from "react";
 import ClientProviders from "./ClientProviders";
 import { BottomNavigation } from "@/components/layout/BottomNavigation";
 import { Suspense } from "react";

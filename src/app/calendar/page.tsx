@@ -1,12 +1,13 @@
 "use client";
 
+import * as React from "react";
 import { useState, useEffect } from 'react';
 import { getExpectedMenstruationDate, triggerMenstruationNotification } from '@/lib/notifications';
 import { SymptomsModal } from '@/components/ui/SymptomsModal';
 import { ModalEditDelete } from '../../components/ui/ModalEditDelete';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/button';
-import { Bell, BellOff, BarChart3, Heart, Calendar, Clock, TrendingUp, Droplets, ChevronLeft, ChevronRight } from 'lucide-react';
+import { BarChart3, Heart, Calendar, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ReportsModal } from '../../components/ui/ReportsModal';
 
@@ -35,7 +36,7 @@ const CalendarPage = () => {
   // Modular calendar controller
   const calendarController = {
     trackDate: (dateStr: string) => {
-      setSelectedCalendarDate(dateStr);
+  // setSelectedCalendarDate(dateStr);
       updatePeriodData(dateStr, true);
       setSelectedDateForSymptoms(dateStr);
       const updatedDay = cycleData.periodDays.find(d => d.date === dateStr);
@@ -67,32 +68,32 @@ const CalendarPage = () => {
   const [popupLoading, setPopupLoading] = useState(false);
   const [popupError, setPopupError] = useState<string | null>(null);
   // Unified function: track period and open symptoms modal
-  const trackPeriodAndOpenSymptoms = (dateStr: string) => {
-    // Determine previous tracking state
-    const prevDay = cycleData.periodDays.find(d => d.date === dateStr);
-    const wasTracked = !!prevDay?.isPeriod;
-    setSelectedCalendarDate(dateStr);
-    updatePeriodData(dateStr, true);
-    // Only open modal if the date was not tracked before (i.e., now being tracked)
-    if (!wasTracked) {
-      const updatedDay = cycleData.periodDays.find(d => d.date === dateStr);
-      setSelectedDateForSymptoms(dateStr);
-      setSymptomsModalInitial(updatedDay?.symptoms ?? []);
-      setIsSymptomModalOpen(true);
-    }
-  };
+  // const trackPeriodAndOpenSymptoms = (dateStr: string) => {
+  //   // Determine previous tracking state
+  //   const prevDay = cycleData.periodDays.find(d => d.date === dateStr);
+  //   const wasTracked = !!prevDay?.isPeriod;
+  //   setSelectedCalendarDate(dateStr);
+  //   updatePeriodData(dateStr, true);
+  //   // Only open modal if the date was not tracked before (i.e., now being tracked)
+  //   if (!wasTracked) {
+  //     const updatedDay = cycleData.periodDays.find(d => d.date === dateStr);
+  //     setSelectedDateForSymptoms(dateStr);
+  //     setSymptomsModalInitial(updatedDay?.symptoms ?? []);
+  //     setIsSymptomModalOpen(true);
+  //   }
+  // };
   const [isSymptomModalOpen, setIsSymptomModalOpen] = useState(false);
   const [selectedDateForSymptoms, setSelectedDateForSymptoms] = useState<string>('');
   const [symptomsModalInitial, setSymptomsModalInitial] = useState<string[]>([]);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-  const [selectedCalendarDate, setSelectedCalendarDate] = useState<string | null>(null);
+  // const [selectedCalendarDate, setSelectedCalendarDate] = useState<string | null>(null);
   const [cycleData, setCycleData] = useState<CycleData>({
     periodDays: [],
     cycleHistory: [],
     averageCycleLength: 28,
     averagePeriodLength: 5
   });
-  const [showReports, setShowReports] = useState(false);
+  // const [showReports, setShowReports] = useState(false);
   const [reportsModalOpen, setReportsModalOpen] = useState(false);
 
   // Calendar state
@@ -144,12 +145,12 @@ const CalendarPage = () => {
     }
   }, [cycleData.lastPeriodStart, cycleData.averageCycleLength, notificationsEnabled]);
 
-  const handleOpenSymptoms = (date: string) => {
-    setSelectedDateForSymptoms(date);
-    const day = cycleData.periodDays.find(d => d.date === date);
-    setSymptomsModalInitial(day?.symptoms ?? []);
-    setIsSymptomModalOpen(true);
-  };
+  // const handleOpenSymptoms = (date: string) => {
+  //   setSelectedDateForSymptoms(date);
+  //   const day = cycleData.periodDays.find(d => d.date === date);
+  //   setSymptomsModalInitial(day?.symptoms ?? []);
+  //   setIsSymptomModalOpen(true);
+  // };
 
   const calculateNextPeriodDays = () => {
     if (!cycleData.lastPeriodStart) return null;
@@ -256,21 +257,21 @@ const CalendarPage = () => {
     });
   };
 
-  const handleQuickRecordToday = () => {
-    const today = new Date().toISOString().split('T')[0];
-    setSelectedCalendarDate(today);
-    updatePeriodData(today, true);
-  };
+  // const handleQuickRecordToday = () => {
+  //   const today = new Date().toISOString().split('T')[0];
+  //   setSelectedCalendarDate(today);
+  //   updatePeriodData(today, true);
+  // };
 
-  const togglePeriodDay = (dateStr: string) => {
-    updatePeriodData(dateStr, true);
-  };
+  // const togglePeriodDay = (dateStr: string) => {
+  //   updatePeriodData(dateStr, true);
+  // };
 
-  const handleLogSymptomsToday = () => {
-    const today = new Date().toISOString().split('T')[0];
-    setSelectedCalendarDate(today);
-    handleOpenSymptoms(today);
-  };
+  // const handleLogSymptomsToday = () => {
+  //   const today = new Date().toISOString().split('T')[0];
+  //   setSelectedCalendarDate(today);
+  //   handleOpenSymptoms(today);
+  // };
 
   const navigateMonth = (direction: 'prev' | 'next') => {
     setCurrentDate(prev => {

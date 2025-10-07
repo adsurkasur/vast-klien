@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
-import type { Toast, ToastType, ToastContextProps } from './custom-toast-types';
+import React, { useState, useCallback, ReactNode } from 'react';
+import type { Toast, ToastType } from './custom-toast-types';
 
 import { ToastContext } from './custom-toast-context';
 

@@ -1,5 +1,7 @@
 
-import { PageHeader } from '../../components/layout/PageHeader';
+import * as React from "react";
+
+import { PageHeader } from '../../components/layout/PageHeader.tsx';
 import { Suspense } from 'react';
 import Image from 'next/image';
 

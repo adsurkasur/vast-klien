@@ -1,3 +1,4 @@
+import * as React from "react";
 // ...existing code...
 
 import { Home, ShoppingCart, Phone, User, Users } from 'lucide-react';

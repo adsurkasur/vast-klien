@@ -20,7 +20,7 @@ const SidebarMenuBadge = React.forwardRef<HTMLDivElement, SidebarMenuBadgeProps>
 );
 SidebarMenuBadge.displayName = "SidebarMenuBadge";
 import React from "react";
-import type { ReactNode, ElementType } from "react";
+import type { ReactNode } from "react";
 
 type SidebarBaseButtonProps = {
   asChild?: boolean;
@@ -28,13 +28,6 @@ type SidebarBaseButtonProps = {
   className?: string;
   children?: ReactNode;
   [key: string]: unknown;
-};
-
-type WithSidebarTooltipProps = {
-  tooltip?: string | React.ComponentProps<typeof TooltipContent>;
-  button: ReactNode;
-  state: string;
-  isMobile: boolean;
 };
 
 // Update SidebarBaseButton signature
@@ -54,21 +47,6 @@ const SidebarBaseButton = React.forwardRef<HTMLElement, SidebarBaseButtonProps>(
 );
 SidebarBaseButton.displayName = "SidebarBaseButton";
 
-function WithSidebarTooltip({ tooltip, button, state, isMobile }: WithSidebarTooltipProps) {
-  if (!tooltip) return button;
-  const tooltipProps = typeof tooltip === "string" ? { children: tooltip } : (tooltip ?? {});
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>{button}</TooltipTrigger>
-      <TooltipContent
-        side="right"
-        align="center"
-        hidden={state !== "collapsed" || isMobile}
-        {...tooltipProps}
-      />
-    </Tooltip>
-  );
-}
 type SidebarGroupActionProps = React.ComponentProps<'button'> & { asChild?: boolean; className?: string };
 type SidebarGroupContentProps = React.ComponentProps<'div'> & { className?: string };
 type SidebarMenuProps = React.ComponentProps<'ul'> & { className?: string };
@@ -94,14 +72,13 @@ type SidebarMenuSubButtonProps = React.ComponentProps<'a'> & {
 };
 import { Slot } from "@radix-ui/react-slot"
 import { PanelLeft } from "lucide-react";
-import { VariantProps, cva } from "class-variance-authority"
+import { cva } from "class-variance-authority"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
@@ -111,9 +88,7 @@ import { Input } from "@/components/ui/input"
 import {
   SIDEBAR_COOKIE_NAME,
   SIDEBAR_COOKIE_MAX_AGE,
-  SIDEBAR_WIDTH,
   SIDEBAR_WIDTH_MOBILE,
-  SIDEBAR_WIDTH_ICON,
   SIDEBAR_KEYBOARD_SHORTCUT,
   SidebarContext,
   useSidebar
