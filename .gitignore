@@ -36,3 +36,4 @@ dist-ssr
 # OS/other
 .env.local
 .env.*
+ai-context.md
