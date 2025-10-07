@@ -93,21 +93,22 @@ const getGoogleProfile = (user: FirebaseUser | null, cycleData?: CycleData | nul
 
 const ProfilePage = () => {
   // Prompt state for cloud restore
-  const [showCloudPrompt, setShowCloudPrompt] = useState(false);
-  const [cloudRestorePromptDismissed, setCloudRestorePromptDismissed] = useState(false);
-  // Safely read localStorage on client only
-  useEffect(() => {
+  // Persist prompt dismissal for current login session using sessionStorage
+  const [cloudRestorePromptDismissed, setCloudRestorePromptDismissed] = useState(() => {
     if (typeof window !== 'undefined') {
-      setCloudRestorePromptDismissed(localStorage.getItem('cloudRestorePromptDismissed') === 'true');
+      return sessionStorage.getItem('cloudRestorePromptDismissed') === 'true';
     }
-  }, []);
-  // interface CloudData {
-  //   profile?: ReturnType<typeof getGoogleProfile>;
-  //   notificationsEnabled?: boolean;
-  //   cycleData?: CycleData;
-  // }
-  // const [pendingCloudData, setPendingCloudData] = useState<CloudData | null>(null);
-  // Helper: Fetch latest backup file from Google Drive and restore local data
+    return false;
+  });
+  const [showCloudPrompt, setShowCloudPrompt] = useState(false);
+  const { user } = useGoogleAuth();
+  // Clear sessionStorage flag when user signs out
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !user) {
+      sessionStorage.removeItem('cloudRestorePromptDismissed');
+      setCloudRestorePromptDismissed(false);
+    }
+  }, [user]);
   const restoreFromDrive = async (accessToken: string) => {
     try {
       // 1. List files with name starting with 'vast-profile-sync-'
@@ -152,7 +153,7 @@ const ProfilePage = () => {
       toast({ title: "Gagal sinkronisasi", description: "Terjadi kesalahan: " + errorMessage, duration: 3000 });
     }
   };
-  const { user } = useGoogleAuth();
+  // (declaration moved to top, see above)
   const { toast } = useToast();
   const syncLoadingRef = useRef(false);
   // const isClient = typeof window !== "undefined";
@@ -174,8 +175,10 @@ const ProfilePage = () => {
 
   // Two-way sync: On login, restore from Drive
   // Two-way sync: On login, show cloud restore modal (only if not dismissed)
+  // Show prompt only on first login (when user becomes defined and not dismissed)
   useEffect(() => {
     if (typeof window === 'undefined' || !user) return;
+    // Show prompt on every login unless dismissed for this session
     if (!cloudRestorePromptDismissed) {
       setShowCloudPrompt(true);
     }
@@ -232,7 +235,9 @@ const ProfilePage = () => {
           setShowCloudPrompt(false);
           // setPendingCloudData(null);
           setCloudRestorePromptDismissed(true);
-          localStorage.setItem('cloudRestorePromptDismissed', 'true');
+          if (typeof window !== 'undefined') {
+            sessionStorage.setItem('cloudRestorePromptDismissed', 'true');
+          }
           toast({ title: "Data lokal dipertahankan", description: "Sinkronisasi cloud dibatalkan.", duration: 3000 });
         }}
         onRestoreCloud={() => {
@@ -247,7 +252,9 @@ const ProfilePage = () => {
                 setShowCloudPrompt(false);
                 // setPendingCloudData(null);
                 setCloudRestorePromptDismissed(true);
-                localStorage.setItem('cloudRestorePromptDismissed', 'true');
+                if (typeof window !== 'undefined') {
+                  sessionStorage.setItem('cloudRestorePromptDismissed', 'true');
+                }
               }
             });
             tokenClient.requestAccessToken();
