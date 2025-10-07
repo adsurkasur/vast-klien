@@ -9,20 +9,17 @@ const compat = new FlatCompat({
   baseDirectory: import.meta.dirname,
 });
 
-export default [
+const config = [
+  ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     ignores: [
-      "node_modules/",
-      ".git/",
-      ".next/",
+      "node_modules/**",
       ".next/**",
-      ".next/types/",
-      ".next/types/**",
-      "dist/",
-      "dist/**",
-      "dist/types/",
-      "dist/types/**",
-    ],
+      "out/**",
+      "build/**",
+      "next-env.d.ts",
+      "dist/**"
+    ]
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
@@ -45,5 +42,7 @@ export default [
       "@typescript-eslint/no-unused-vars": "off",
     },
   },
-  ...compat.config({ extends: ["plugin:@next/next/recommended"] }),
+  ...compat.config({ extends: ["plugin:@next/next/recommended"] })
 ];
+
+export default config;

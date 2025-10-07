@@ -1,3 +1,4 @@
+import AppShell from "./AppShell";
 
 
 import { Analytics } from "@vercel/analytics/next";

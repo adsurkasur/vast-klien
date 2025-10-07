@@ -52,6 +52,7 @@ const SidebarBaseButton = React.forwardRef<HTMLElement, SidebarBaseButtonProps>(
     );
   }
 );
+SidebarBaseButton.displayName = "SidebarBaseButton";
 
 function WithSidebarTooltip({ tooltip, button, state, isMobile }: WithSidebarTooltipProps) {
   if (!tooltip) return button;
@@ -188,6 +189,7 @@ const SidebarProvider = React.forwardRef<HTMLDivElement, React.ComponentProps<'d
     </SidebarContext.Provider>
   );
 });
+SidebarProvider.displayName = "SidebarProvider";
 const Sidebar = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> & {

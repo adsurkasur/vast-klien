@@ -23,7 +23,7 @@ const CloudRestorePrompt: React.FC<CloudRestorePromptProps> = ({ open, onKeepLoc
           <h2 className="text-lg font-semibold text-foreground">Sinkronkan data cloud?</h2>
         </div>
         <div className="px-6 pb-4">
-          <p className="mb-4 text-sm text-muted-foreground">Data lokal Anda akan diganti dengan data dari cloud. Pilih "Ya" untuk memulihkan dari cloud, atau "Tidak" untuk mempertahankan data lokal.</p>
+          <p className="mb-4 text-sm text-muted-foreground">Data lokal Anda akan diganti dengan data dari cloud. Pilih &quot;Ya&quot; untuk memulihkan dari cloud, atau &quot;Tidak&quot; untuk mempertahankan data lokal.</p>
         </div>
         <div className="px-6 pb-6 flex gap-3">
           <Button

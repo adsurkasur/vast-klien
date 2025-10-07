@@ -260,7 +260,6 @@ export const PeriodCalendar: React.FC<PeriodCalendarProps> = ({
             hasSymptom && !isPeriod && !isSelected && "bg-blue-50 border-blue-200 text-blue-800"
           )}
           aria-label={`Day ${day}, ${isPeriod ? 'Period' : ''} ${hasSymptom ? 'Symptoms' : ''} ${isToday ? 'Today' : ''}`}
-          aria-selected={isSelected}
           tabIndex={0}
         >
           <span className="text-center leading-none">{day}</span>
