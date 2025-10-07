@@ -1,10 +1,10 @@
 import React from "react";
+import "./globals.css";
 import AppShell from "./AppShell";
 import { Suspense } from "react";
 
 import { Analytics } from "@vercel/analytics/next";
 import Script from "next/script";
-import "./globals.css";
 
 import GoogleAnalytics from "../components/GoogleAnalytics";
 
