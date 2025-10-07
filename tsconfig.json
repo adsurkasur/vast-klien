@@ -6,16 +6,17 @@
     }
   ],
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    },
+    // "baseUrl": ".", // removed as deprecated
+    // "paths": {
+    //   "@/*": [
+    //     "./src/*"
+    //   ]
+    // },
     "skipLibCheck": true,
     "allowJs": true,
     "strict": true,
-    "moduleResolution": "node",
+    "moduleResolution": "node", 
+    "ignoreDeprecations": "6.0",
     "jsx": "preserve",
     "target": "ES2017",
     "lib": [

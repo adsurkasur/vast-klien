@@ -1,20 +1,9 @@
 
 "use client";
-import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
-
-import { GoogleAuthProvider as FirebaseGoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, User } from "firebase/auth";
+import React, { useEffect, useState, useCallback } from "react";
+import { GoogleAuthProvider as FirebaseGoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, type User } from "firebase/auth";
 import { auth } from "../lib/firebase";
-
-interface GoogleAuthContextType {
-  user: User | null;
-  loading: boolean;
-  error: string | null;
-  signIn: () => Promise<void>;
-  signOut: () => Promise<void>;
-}
-
-
-const GoogleAuthContext = createContext<GoogleAuthContextType | undefined>(undefined);
+import { GoogleAuthContext } from "./GoogleAuthContextExport";
 
 export const GoogleAuthContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);

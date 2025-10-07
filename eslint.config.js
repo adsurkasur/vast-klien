@@ -2,7 +2,8 @@ import js from "@eslint/js";
 import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
-import tseslint from "typescript-eslint";
+import tseslintPlugin from "@typescript-eslint/eslint-plugin";
+import tseslintParser from "@typescript-eslint/parser";
 import { FlatCompat } from "@eslint/eslintrc"; // Importing FlatCompat
 
 const compat = new FlatCompat({
@@ -22,7 +23,21 @@ const config = [
     ]
   },
   js.configs.recommended,
-  ...tseslint.configs.recommended,
+  {
+    files: ["**/*.{ts,tsx}"],
+    languageOptions: {
+      parser: tseslintParser,
+      parserOptions: {
+        sourceType: "module",
+      },
+    },
+    plugins: {
+      "@typescript-eslint": tseslintPlugin,
+    },
+    rules: {
+      ...tseslintPlugin.configs.recommended.rules,
+    },
+  },
   {
     files: ["**/*.{ts,tsx,js,jsx}"],
     languageOptions: {
@@ -40,6 +55,7 @@ const config = [
         { allowConstantExport: true },
       ],
       "@typescript-eslint/no-unused-vars": "off",
+      "no-undef": "off", // Disable no-undef for React 17+ JSX transform
     },
   },
   ...compat.config({ extends: ["plugin:@next/next/recommended"] })

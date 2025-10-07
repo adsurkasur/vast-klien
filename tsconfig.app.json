@@ -11,13 +11,13 @@
     "skipLibCheck": true,
 
     /* Bundler mode */
-    "moduleResolution": "node",
+  // "moduleResolution": "node", // removed as deprecated
   "jsx": "react-jsx",
     "strict": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    // "baseUrl": ".", // removed as deprecated
+    // "paths": {
+    //   "@/*": ["./src/*"]
+    // }
   },
   "include": ["src"]
 }

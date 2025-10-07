@@ -43,7 +43,7 @@ import Image from 'next/image';
 import { Edit, User as UserIcon, Shield, Bell, Heart, Calendar, Settings } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { useToast } from '../../hooks/use-toast';
-import { useGoogleAuth } from '../../hooks/GoogleAuthContext';
+import { useGoogleAuth } from '../../hooks/useGoogleAuth';
 import { useRef } from 'react';
 // Remove gapi-script; load gapi via script tag
 // See useEffect below for script loading
