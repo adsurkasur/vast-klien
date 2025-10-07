@@ -1,4 +1,13 @@
-// src/hooks/useGoogleAuth.tsx
+import { useContext } from "react";
+import { GoogleAuthContext } from "./GoogleAuthContext";
+
+export function useGoogleAuth() {
+  const context = useContext(GoogleAuthContext);
+  if (context === undefined) {
+    throw new Error("useGoogleAuth must be used within a GoogleAuthContextProvider");
+  }
+  return context;
+}// src/hooks/useGoogleAuth.tsx
 import { useEffect, useState, useCallback } from "react";
 import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "../lib/firebase";

@@ -38,9 +38,7 @@ export const GoogleAuthContextProvider: React.FC<{ children: React.ReactNode }> 
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
-      } else {
-        setError("Unknown error occurred during sign in.");
-      }
+  }
     } finally {
       setLoading(false);
     }
@@ -69,10 +67,4 @@ export const GoogleAuthContextProvider: React.FC<{ children: React.ReactNode }> 
   );
 };
 
-export function useGoogleAuth() {
-  const context = useContext(GoogleAuthContext);
-  if (context === undefined) {
-    throw new Error("useGoogleAuth must be used within a GoogleAuthContextProvider");
-  }
-  return context;
-}
+

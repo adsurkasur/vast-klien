@@ -4,8 +4,6 @@ import { Analytics } from "@vercel/analytics/next";
 import Script from "next/script";
 import "./globals.css";
 
-
-
 import GoogleAnalytics from "../components/GoogleAnalytics";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
