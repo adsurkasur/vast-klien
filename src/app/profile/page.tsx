@@ -94,9 +94,13 @@ const getGoogleProfile = (user: FirebaseUser | null, cycleData?: CycleData | nul
 const ProfilePage = () => {
   // Prompt state for cloud restore
   const [showCloudPrompt, setShowCloudPrompt] = useState(false);
-  const [cloudRestorePromptDismissed, setCloudRestorePromptDismissed] = useState(() => {
-    return localStorage.getItem('cloudRestorePromptDismissed') === 'true';
-  });
+  const [cloudRestorePromptDismissed, setCloudRestorePromptDismissed] = useState(false);
+  // Safely read localStorage on client only
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setCloudRestorePromptDismissed(localStorage.getItem('cloudRestorePromptDismissed') === 'true');
+    }
+  }, []);
   // interface CloudData {
   //   profile?: ReturnType<typeof getGoogleProfile>;
   //   notificationsEnabled?: boolean;
